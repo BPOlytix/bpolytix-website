@@ -103,7 +103,7 @@ const FAQS = [
   },
   {
     q: "Do you work with UK businesses only?",
-    a: "Primarily, yes. Our services are designed around UK business standards, HMRC compliance, and UK investor expectations. We also work with EU businesses and SA startups targeting international markets.",
+    a: "No. We work with South African startups and UK SMEs. Our finance services are HMRC-aware for UK clients and SARS-compliant for SA clients. If you're building something and need a team that understands both markets, we're built for that.",
   },
   {
     q: "What happens if I want to pause or stop mid-build?",
