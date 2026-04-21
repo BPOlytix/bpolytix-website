@@ -68,6 +68,8 @@ function CountUp({ stat, inView }: { stat: Stat; inView: boolean }) {
         letterSpacing: "-0.022em",
         lineHeight: 1.0,
         fontWeight: 600,
+        fontFeatureSettings: '"zero" 1',
+        fontVariantNumeric: "slashed-zero",
       }}
     >
       {stat.raw ? stat.raw : stat.display(value)}

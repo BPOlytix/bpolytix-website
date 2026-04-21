@@ -32,7 +32,7 @@ export function HowItWorks() {
           Process
         </p>
         <h2
-          className="mb-16 max-w-[820px]"
+          className="mb-20 max-w-[820px]"
           style={{
             fontFamily: "var(--font-syne)",
             fontSize: "clamp(32px, 5vw, 48px)",
@@ -45,49 +45,87 @@ export function HowItWorks() {
           From first call to software you own.
         </h2>
 
-        <div className="grid grid-cols-1 gap-px md:grid-cols-2 lg:grid-cols-3">
-          {STEPS.map((step, i) => (
-            <motion.div
-              key={step.num}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{
-                duration: 0.5,
-                delay: i * 0.1,
-                ease: [0.25, 0.46, 0.45, 0.94],
-              }}
-              className="relative p-8"
-              style={{
-                borderTop: "1px solid rgba(255,255,255,0.08)",
-                borderRight:
-                  (i + 1) % 3 === 0 ? "none" : "1px solid rgba(255,255,255,0.08)",
-              }}
-            >
-              <div
-                className="mb-4"
-                style={{
-                  fontFamily: "var(--font-dm-sans)",
-                  fontSize: "13px",
-                  color: "#8892A4",
-                  letterSpacing: "0.02em",
-                }}
-              >
-                {step.num} {step.name}
-              </div>
-              <p
-                style={{
-                  fontFamily: "var(--font-dm-sans)",
-                  fontSize: "16px",
-                  color: "#F5F7FA",
-                  lineHeight: 1.6,
-                  letterSpacing: "-0.011em",
-                }}
-              >
-                {step.desc}
-              </p>
-            </motion.div>
-          ))}
+        {/* Vertical timeline */}
+        <div className="relative">
+          {/* Vertical spine */}
+          <div
+            className="absolute left-[19px] top-0 bottom-0 hidden w-px md:block"
+            style={{ backgroundColor: "rgba(255,255,255,0.08)" }}
+          />
+
+          <div className="flex flex-col gap-0">
+            {STEPS.map((step, i) => {
+              const isLast = i === STEPS.length - 1;
+              return (
+                <motion.div
+                  key={step.num}
+                  initial={{ opacity: 0, x: -16 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{
+                    duration: 0.45,
+                    delay: i * 0.1,
+                    ease: [0.25, 0.46, 0.45, 0.94],
+                  }}
+                  className="relative flex gap-8 md:gap-12"
+                  style={{
+                    paddingBottom: isLast ? 0 : "48px",
+                  }}
+                >
+                  {/* Node + connector */}
+                  <div className="relative hidden flex-none md:flex" style={{ width: "40px" }}>
+                    {/* Dot */}
+                    <div
+                      className="relative z-10 mt-1 flex h-10 w-10 flex-none items-center justify-center rounded-full"
+                      style={{
+                        backgroundColor: "#0F1622",
+                        border: "1px solid rgba(255,255,255,0.12)",
+                      }}
+                    >
+                      <div
+                        className="h-2 w-2 rounded-full"
+                        style={{ backgroundColor: "#1B77F2" }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div
+                    className="flex-1 rounded-xl p-8"
+                    style={{
+                      backgroundColor: "#0F1622",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      maxWidth: "760px",
+                    }}
+                  >
+                    <div
+                      className="mb-3"
+                      style={{
+                        fontFamily: "var(--font-dm-sans)",
+                        fontSize: "13px",
+                        color: "#1B77F2",
+                        letterSpacing: "0.04em",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {step.num}&nbsp;&nbsp;{step.name.toUpperCase()}
+                    </div>
+                    <p
+                      style={{
+                        fontFamily: "var(--font-dm-sans)",
+                        fontSize: "17px",
+                        color: "#F5F7FA",
+                        lineHeight: 1.6,
+                        letterSpacing: "-0.011em",
+                      }}
+                    >
+                      {step.desc}
+                    </p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
