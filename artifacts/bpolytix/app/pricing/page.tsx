@@ -245,6 +245,117 @@ export default function PricingPage() {
         </div>
       </div>
 
+      {/* Website in 3 Days */}
+      <section className="relative overflow-hidden py-16 lg:py-20" style={{ backgroundColor: "#0A0F1A" }}>
+        <GrainOverlay />
+        <div className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8">
+          <p className="mb-3 text-[12px] uppercase tracking-widest" style={{ color: "#8892A4", fontFamily: "var(--font-dm-sans)" }}>
+            Web Design
+          </p>
+          <h2
+            className="mb-10 sm:mb-14"
+            style={{ fontFamily: "var(--font-syne)", fontSize: "clamp(26px, 3.5vw, 36px)", color: "#F5F7FA", letterSpacing: "-0.022em", lineHeight: 1.0, fontWeight: 700 }}
+          >
+            Your business online in 72 hours.
+          </h2>
+          <div className="mx-auto max-w-[520px]">
+            <div
+              className="flex flex-col rounded-2xl"
+              style={{
+                backgroundColor: "#132040",
+                border: "1px solid rgba(27,119,242,0.35)",
+                position: "relative",
+                overflow: "hidden",
+              }}
+            >
+              <div
+                className="absolute inset-x-0 top-0 h-px"
+                style={{ background: "linear-gradient(90deg, transparent, #1B77F2, transparent)" }}
+              />
+              <div className="flex-1 p-7">
+                <p
+                  className="mb-1"
+                  style={{ fontFamily: "var(--font-syne)", fontSize: "18px", color: "#F5F7FA", fontWeight: 600, letterSpacing: "-0.022em" }}
+                >
+                  Website in 3 Days
+                </p>
+                <p
+                  className="mb-5"
+                  style={{ fontFamily: "var(--font-dm-sans)", fontSize: "13px", color: "#8892A4", lineHeight: 1.5 }}
+                >
+                  Brief us on Monday. Review your site on Thursday. Pay only when you&apos;re satisfied.
+                </p>
+
+                <div className="mb-4 flex items-baseline gap-1">
+                  <span style={{ fontFamily: "var(--font-syne)", fontSize: "36px", color: "#F5F7FA", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1 }}>
+                    R850 / £40
+                  </span>
+                </div>
+                <p className="mb-6" style={{ fontFamily: "var(--font-dm-sans)", fontSize: "13px", color: "#8892A4" }}>
+                  Once-off setup
+                </p>
+
+                <div className="mb-4 flex items-baseline gap-1">
+                  <span style={{ fontFamily: "var(--font-syne)", fontSize: "32px", color: "#1B77F2", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1 }}>
+                    R299 / £15
+                  </span>
+                  <span style={{ fontFamily: "var(--font-dm-sans)", fontSize: "14px", color: "#8892A4" }}>
+                    /month
+                  </span>
+                </div>
+                <p className="mb-6" style={{ fontFamily: "var(--font-dm-sans)", fontSize: "13px", color: "#8892A4" }}>
+                  Monthly for 12 months
+                </p>
+
+                <ul className="flex flex-col gap-3">
+                  {[
+                    "See it first — pay only when you're satisfied",
+                    "Unlimited pages",
+                    "Live chat included",
+                    "Mobile friendly",
+                    "Free changes for 12 months",
+                    "Yours after 12 months — only pay domain renewal",
+                  ].map((f) => (
+                    <li key={f} className="flex items-start gap-3">
+                      <span
+                        className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full"
+                        style={{ backgroundColor: "rgba(27,119,242,0.12)", border: "1px solid rgba(27,119,242,0.3)" }}
+                      >
+                        <Check size={11} color="#1B77F2" strokeWidth={2.5} />
+                      </span>
+                      <span style={{ fontFamily: "var(--font-dm-sans)", fontSize: "14px", color: "#C8D0DC", lineHeight: 1.5 }}>
+                        {f}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="p-7 pt-0">
+                <Link
+                  href="/website-in-3-days"
+                  className="flex items-center justify-center gap-2 rounded-full py-3 text-[14px] font-medium text-white transition-transform hover:-translate-y-px"
+                  style={{
+                    backgroundColor: "#1B77F2",
+                    boxShadow: "0 4px 16px rgba(27,119,242,0.3)",
+                  }}
+                >
+                  Start my 3-day build
+                  <ArrowRight size={14} />
+                </Link>
+                <p
+                  className="mt-3 text-center"
+                  style={{ fontFamily: "var(--font-dm-sans)", fontSize: "12px", color: "#8892A4", lineHeight: 1.5 }}
+                >
+                  No contract. Cancel anytime in the first 30 days.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.08)" }} />
+
       <PracticeSection label="Technology" title="Software that becomes yours." plans={TECH_PLANS} />
 
       <div style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.08)" }} />
