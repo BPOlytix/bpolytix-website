@@ -359,7 +359,7 @@ function WhoSection() {
               <div
                 key={loc.label}
                 tabIndex={0}
-                className="glow-border"
+                className="glow-border card-hover"
                 style={{
                   backgroundColor: SURFACE,
                   borderRadius: 12,
@@ -541,9 +541,10 @@ function CTASection() {
         <div className="mt-8 flex justify-center">
           <Link
             href="/contact"
-            className="cta-glow glow-border-blue inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-medium text-white"
+            className="cta-glow glow-border-blue inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-medium"
             style={{
               backgroundColor: ACCENT,
+              color: TEXT,
               fontFamily: DM,
               boxShadow: "0 4px 16px rgba(27,119,242,0.3)",
             }}
