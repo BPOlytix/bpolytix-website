@@ -1,0 +1,40 @@
+In artifacts/bpolytix/app/website-in-3-days/page.tsx, add a file upload field to the existing intake form.
+
+FRONTEND CHANGES ONLY — do not touch the API route.
+
+Add the file upload field between the asset link field and the requirements field.
+
+Field spec:
+- Label: "Upload your logo or any existing designs (optional)"
+- Subtext below label: "Accepted: images and PDFs. Maximum file size: 4MB."
+- Input type: file
+- Accepted file types: image/*, application/pdf
+- Single file only (no multiple)
+- Drag and drop zone — a bordered dashed rectangle that:
+  - Background: rgba(255,255,255,0.03)
+  - Border: 1.5px dashed rgba(255,255,255,0.15)
+  - Border-radius: 10px
+  - Padding: 24px
+  - Shows a Lucide Upload icon (#8892A4, 24px) centred above the text
+  - Text: "Drag and drop your file here, or click to browse" — DM Sans, 14px, #8892A4
+  - On hover: border colour changes to rgba(27,119,242,0.4)
+  - When a file is selected: show the filename and file size in place of the drag text, with a Lucide X icon to remove the file
+- Client-side validation:
+  - If file exceeds 4MB: show inline error message in #FF4444 — "This file is too large. Maximum size is 4MB. Please compress it or share a link in the field above instead."
+  - If file type is not accepted: show — "This file type is not supported. Please upload an image or PDF."
+  - Validation runs on file selection, before form submission
+  - If validation fails, the file is cleared and the error shown
+- If no file selected: field is skipped silently — it is optional
+- If a valid file is selected: read it as Base64 using FileReader and store in component state as { name, type, content } where content is the Base64 string
+
+On form submit, if a file is present, include it in the POST body to /api/website-brief as:
+attachment: { name: filename, type: mimetype, content: base64string }
+
+Do not change any other part of the form — fields, styles, state machine, success/error messages, or submit button are untouched.
+Do not touch the API route.
+Do not install any new packages.
+
+Commit and push to GitHub with message:
+"Add file upload field to website brief form — frontend only"
+
+Confirm commit hash when done.
