@@ -144,8 +144,13 @@ function HeroSection() {
 
 function BridgeDiagram() {
   const ref = useRef<SVGSVGElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.4 });
+  const inView = useInView(ref, { once: false, amount: 0.4 });
+  const [labelRevealed, setLabelRevealed] = useState(false);
   const bridgeLen = 200;
+
+  useEffect(() => {
+    if (inView && !labelRevealed) setLabelRevealed(true);
+  }, [inView, labelRevealed]);
 
   return (
     <svg
@@ -197,8 +202,8 @@ function BridgeDiagram() {
         x="180" y="100" textAnchor="middle"
         fill={HIGHLIGHT} fontSize="13" fontFamily="var(--font-dm-sans)" fontWeight="500"
         initial={{ opacity: 0 }}
-        animate={inView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 0.6, delay: 1.4 }}
+        animate={labelRevealed ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 0.6, delay: labelRevealed && !inView ? 0 : 1.4 }}
       >
         BPOLytix
       </motion.text>
