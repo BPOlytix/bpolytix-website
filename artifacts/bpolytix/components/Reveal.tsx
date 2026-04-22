@@ -19,8 +19,8 @@ export function Reveal({
   amount = 0.2,
   className,
   style,
-  y = 20,
-  duration = 0.6,
+  y = 40,
+  duration = 0.7,
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount });
@@ -28,9 +28,9 @@ export function Reveal({
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+      initial={{ opacity: 0, y, filter: "blur(4px)" }}
+      animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+      transition={{ duration, delay, ease: [0.25, 0.1, 0.25, 1] }}
       className={className}
       style={style}
     >

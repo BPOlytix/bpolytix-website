@@ -58,7 +58,7 @@ export function HeroSection() {
             <a
               href="#how-it-works"
               onClick={handleScrollToHowItWorks}
-              className="btn-primary rounded-full px-6 py-3.5 text-center text-[15px] font-medium text-white transition-transform hover:-translate-y-px sm:py-3"
+              className="btn-primary glow-border-blue rounded-full px-6 py-3.5 text-center text-[15px] font-medium text-white transition-transform hover:-translate-y-px sm:py-3"
               style={{
                 backgroundColor: "#1B77F2",
                 boxShadow:

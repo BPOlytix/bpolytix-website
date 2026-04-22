@@ -64,7 +64,7 @@ export function TrustBlock() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5, delay: i * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="trust-card rounded-xl"
+                className="trust-card glow-border rounded-xl"
                 style={{
                   backgroundColor: "#0F1622",
                   border: "1px solid rgba(255,255,255,0.08)",

@@ -227,7 +227,7 @@ export default function WebsiteIn3DaysPage() {
             <button
               type="button"
               onClick={scrollToForm}
-              className="cta-glow inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-medium text-white hover:-translate-y-px"
+              className="cta-glow glow-border-blue inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-medium text-white hover:-translate-y-px"
               style={{
                 backgroundColor: "#1B77F2",
                 boxShadow: "0 4px 16px rgba(27,119,242,0.3)",
@@ -385,7 +385,7 @@ export default function WebsiteIn3DaysPage() {
               <button
                 type="button"
                 onClick={scrollToForm}
-                className="cta-glow mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-[15px] font-medium text-white hover:-translate-y-px"
+                className="cta-glow glow-border-blue mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-[15px] font-medium text-white hover:-translate-y-px"
                 style={{
                   backgroundColor: "#1B77F2",
                   boxShadow: "0 4px 16px rgba(27,119,242,0.25)",
@@ -721,7 +721,7 @@ export default function WebsiteIn3DaysPage() {
               <button
                 type="submit"
                 disabled={state === "submitting"}
-                className="cta-glow flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-[15px] font-medium text-white hover:-translate-y-px disabled:opacity-60"
+                className="cta-glow glow-border-blue flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-[15px] font-medium text-white hover:-translate-y-px disabled:opacity-60"
                 style={{
                   backgroundColor: "#1B77F2",
                   boxShadow: "0 4px 16px rgba(27,119,242,0.3)",

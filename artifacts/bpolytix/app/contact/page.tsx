@@ -174,7 +174,7 @@ export default function ContactPage() {
                   </p>
                   <Link
                     href="/"
-                    className="cta-glow inline-flex items-center gap-2 rounded-full px-6 py-3 text-[14px] font-medium text-white"
+                    className="cta-glow glow-border-blue inline-flex items-center gap-2 rounded-full px-6 py-3 text-[14px] font-medium text-white"
                     style={{ backgroundColor: "#1B77F2" }}
                   >
                     Back to home
@@ -184,8 +184,8 @@ export default function ContactPage() {
               ) : (
                 <form
                   onSubmit={handleSubmit}
-                  className="rounded-2xl p-7 sm:p-10"
-                  style={{ backgroundColor: "#0F1622", border: "1px solid rgba(255,255,255,0.08)" }}
+                  className="glow-border rounded-2xl p-7 sm:p-10"
+                  style={{ backgroundColor: "#0F1622" }}
                 >
                   <h2
                     className="mb-8"
@@ -271,7 +271,7 @@ export default function ContactPage() {
                   <button
                     type="submit"
                     disabled={state === "submitting"}
-                    className="cta-glow flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-[15px] font-medium text-white hover:-translate-y-px disabled:opacity-60"
+                    className="cta-glow glow-border-blue flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-[15px] font-medium text-white hover:-translate-y-px disabled:opacity-60"
                     style={{
                       backgroundColor: "#1B77F2",
                       boxShadow: "0 4px 16px rgba(27,119,242,0.3)",

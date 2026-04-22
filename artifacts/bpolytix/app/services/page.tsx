@@ -308,10 +308,9 @@ export default function ServicesPage() {
 
                   {/* Right — includes card */}
                   <div
-                    className="rounded-2xl"
+                    className="glow-border rounded-2xl"
                     style={{
                       backgroundColor: "#0F1622",
-                      border: "1px solid rgba(255,255,255,0.08)",
                       padding: "32px",
                       alignSelf: "start",
                     }}
@@ -377,7 +376,7 @@ export default function ServicesPage() {
                     >
                       <Link
                         href={svc.cta?.href ?? "/contact"}
-                        className="cta-glow inline-flex w-full items-center justify-center gap-2 rounded-full py-3 text-[14px] font-medium text-white hover:-translate-y-px"
+                        className="cta-glow glow-border-blue inline-flex w-full items-center justify-center gap-2 rounded-full py-3 text-[14px] font-medium text-white hover:-translate-y-px"
                         style={{
                           backgroundColor: "#1B77F2",
                           boxShadow: "0 4px 16px rgba(27,119,242,0.25)",

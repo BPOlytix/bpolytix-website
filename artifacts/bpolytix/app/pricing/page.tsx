@@ -117,7 +117,7 @@ type Plan = { name: string; from: string; period: string; desc: string; features
 function PlanCard({ plan }: { plan: Plan }) {
   return (
     <div
-      className="card-hover flex flex-col rounded-2xl"
+      className="card-hover glow-border flex flex-col rounded-2xl"
       style={{
         backgroundColor: plan.highlight ? "#132040" : "#0F1622",
         border: plan.highlight ? "1px solid rgba(27,119,242,0.35)" : "1px solid rgba(255,255,255,0.08)",
@@ -181,7 +181,7 @@ function PlanCard({ plan }: { plan: Plan }) {
       <div className="p-7 pt-0">
         <Link
           href="/contact"
-          className={`${plan.highlight ? "cta-glow " : ""}flex items-center justify-center gap-2 rounded-full py-3 text-[14px] font-medium text-white hover:-translate-y-px`}
+          className={`${plan.highlight ? "cta-glow " : ""}glow-border-blue flex items-center justify-center gap-2 rounded-full py-3 text-[14px] font-medium text-white hover:-translate-y-px`}
           style={{
             backgroundColor: plan.highlight ? "#1B77F2" : "rgba(255,255,255,0.07)",
             boxShadow: plan.highlight ? "0 4px 16px rgba(27,119,242,0.3)" : "none",
@@ -336,7 +336,7 @@ export default function PricingPage() {
               <div className="p-7 pt-0">
                 <Link
                   href="/website-in-3-days"
-                  className="cta-glow flex items-center justify-center gap-2 rounded-full py-3 text-[14px] font-medium text-white hover:-translate-y-px"
+                  className="cta-glow glow-border-blue flex items-center justify-center gap-2 rounded-full py-3 text-[14px] font-medium text-white hover:-translate-y-px"
                   style={{
                     backgroundColor: "#1B77F2",
                     boxShadow: "0 4px 16px rgba(27,119,242,0.3)",
@@ -388,7 +388,7 @@ export default function PricingPage() {
             {FAQS.map((faq, i) => (
               <Reveal key={faq.q} delay={i * 0.05} amount={0.15}>
                 <div
-                className="card-hover rounded-xl p-6"
+                className="card-hover glow-border rounded-xl p-6"
                 style={{ backgroundColor: "#0A0F1A", border: "1px solid rgba(255,255,255,0.08)" }}
               >
                 <h3
@@ -426,7 +426,7 @@ export default function PricingPage() {
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link
               href="/contact"
-              className="cta-glow inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-[15px] font-medium text-white hover:-translate-y-px"
+              className="cta-glow glow-border-blue inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-[15px] font-medium text-white hover:-translate-y-px"
               style={{ backgroundColor: "#1B77F2", boxShadow: "0 4px 16px rgba(27,119,242,0.25)", whiteSpace: "nowrap" }}
             >
               Book a scoping call

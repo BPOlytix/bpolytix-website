@@ -111,7 +111,7 @@ export function ServicesBento() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.5, delay: (i % 4) * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="bento-card"
+                className="bento-card glow-border"
                 style={cardStyle}
               >
                 {s.href ? (
@@ -173,7 +173,7 @@ export function ServicesBento() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.4, delay: 0, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="bento-card"
+                className="bento-card glow-border"
                 style={{ ...BASE_CARD, padding: "20px" }}
               >
                 {s.href ? (

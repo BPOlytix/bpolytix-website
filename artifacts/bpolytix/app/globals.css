@@ -56,9 +56,39 @@ html {
 }
 
 .card-hover {
-  transition: transform 200ms ease, border-color 200ms ease;
-  will-change: transform;
+  transition: transform 200ms ease, box-shadow 200ms ease;
 }
 .card-hover:hover {
-  transform: translateY(-4px);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.glow-border {
+  border: 1px solid #1E2D3D;
+  transition: border-color 250ms ease, box-shadow 250ms ease;
+}
+.glow-border:hover,
+.glow-border:focus-visible,
+.glow-border:active {
+  border-color: rgba(0, 212, 170, 0.6);
+  box-shadow:
+    0 0 0 1px rgba(0, 212, 170, 0.15),
+    0 0 20px rgba(0, 212, 170, 0.12),
+    inset 0 0 20px rgba(0, 212, 170, 0.04);
+  outline: none;
+}
+
+.glow-border-blue {
+  border: 1px solid transparent;
+  transition: border-color 250ms ease, box-shadow 250ms ease;
+}
+.glow-border-blue:hover,
+.glow-border-blue:focus-visible,
+.glow-border-blue:active {
+  border-color: rgba(27, 119, 242, 0.6);
+  box-shadow:
+    0 0 0 1px rgba(27, 119, 242, 0.15),
+    0 0 24px rgba(27, 119, 242, 0.2),
+    inset 0 0 20px rgba(27, 119, 242, 0.05);
+  outline: none;
 }
