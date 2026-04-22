@@ -55,18 +55,19 @@ export function CTABanner() {
           href="https://wa.me/27781790363?text=Hi%2C+I%27d+like+to+find+out+more+about+BPOLytix"
           target="_blank"
           rel="noopener noreferrer"
-          className="bpx-wa-pill inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-center"
+          aria-label="Chat on WhatsApp"
+          className="bpx-wa-pill inline-flex items-center justify-center"
           style={{
             backgroundColor: "#25D366",
             marginTop: "12px",
-            fontFamily: "var(--font-dm-sans)",
-            color: "#FFFFFF",
-            fontSize: "14px",
-            transition: "opacity 150ms ease",
+            width: "56px",
+            height: "56px",
+            borderRadius: "9999px",
+            boxShadow: "0 6px 18px rgba(37,211,102,0.35)",
+            transition: "opacity 150ms ease, transform 150ms ease",
           }}
         >
-          <MessageCircle size={18} color="#FFFFFF" />
-          WhatsApp us
+          <MessageCircle size={24} color="#FFFFFF" strokeWidth={2} />
         </a>
       </div>
 
