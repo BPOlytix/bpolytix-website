@@ -1,0 +1,222 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+REPLIT AGENT PROMPT — LEGAL PAGE BUILD
+Session: 6 | Phase: 2 | Date: 2026-04-22
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You are building bpolytix.com — a professional SaaS/BPO marketing website.
+
+BEFORE DOING ANYTHING ELSE, read and internalise these rules:
+
+TECH STACK (do not deviate):
+- Framework: Next.js 15 with App Router
+- Styling: Tailwind CSS
+- Animations: Framer Motion
+- Icons: Lucide React ONLY — no other icon libraries
+- Fonts: Syne (headings) + DM Sans (body) via next/font/google
+- No other packages without asking first
+
+COLOURS (exact hex — use only these, no others):
+- Background:  #0D1B2A
+- Surface:     #111F2E
+- Accent:      #1B77F2
+- Highlight:   #00D4AA
+- Text:        #F5F7FA
+- Muted:       #8892A4
+- Border:      #1E2D3D
+
+TYPOGRAPHY:
+- Headings: Syne, weight 700
+- Body: DM Sans, 16–18px, line-height 1.7
+- Section anchor labels: 13px, #8892A4, uppercase, letter-spacing 0.08em
+- NEVER use Inter, Roboto, Arial, or system-ui
+
+LAYOUT RULES:
+- Dark throughout — #0D1B2A on ALL sections
+- No alternating white/grey sections
+- Section padding: 100px top, 120px bottom
+- Max-width: 800px centered for legal text (readable line length)
+- NO: stock photos, blob illustrations, glassmorphism, backdrop-filter blur
+
+ANIMATION RULES:
+- Use existing Reveal component at artifacts/bpolytix/components/Reveal.tsx
+- Scroll-triggered ONLY — nothing animates on page load
+- Cards: add class "glow-border" from globals.css
+
+OUTPUT RULES:
+- Build ONLY what is in TODAY'S TASK
+- Do not modify any existing pages, components, nav, or layout.tsx
+- Do not add a nav link — this page is footer-only
+- After completing, list every file created or changed
+- If you hit an error you cannot fix in 2 attempts, stop and describe it clearly
+
+---
+
+TODAY'S TASK: Build the Legal page at route /legal.
+
+FILE TO CREATE: artifacts/bpolytix/app/legal/page.tsx
+
+---
+
+PAGE STRUCTURE (build in this order):
+
+--- PAGE HERO ---
+
+Background: #0D1B2A
+Anchor label: "Legal & Privacy" — 13px, #8892A4, uppercase
+Headline: "Legal & Privacy"
+Subtext: "Plain English. No surprises."
+Subtext style: 18px, #8892A4, DM Sans, max-width 480px, centred
+Layout: centred, padding-top 100px, padding-bottom 64px
+
+Wrap in <Reveal>.
+
+--- FOUR DOCUMENT SECTIONS ---
+
+Each section:
+- Background: #111F2E surface card
+- Border-radius: 16px
+- Padding: 48px
+- Margin-bottom: 32px
+- Max-width: 800px, centred
+- Add class "glow-border" to each card
+- Wrap each card in <Reveal delay={i * 0.1}>
+- Section title style: Syne, 28px, #F5F7FA, weight 700, margin-bottom 24px
+- Body text: DM Sans, 16px, #8892A4, line-height 1.8
+- Sub-headings within sections: DM Sans, 14px, #F5F7FA, weight 600, uppercase, letter-spacing 0.06em, margin-top 32px, margin-bottom 12px
+- Divider between sub-sections: 1px solid #1E2D3D
+
+---
+
+SECTION 1 — PRIVACY POLICY
+
+Title: "Privacy Policy"
+Effective date line: "Effective date: April 2026 · Last updated: April 2026" — 13px, #8892A4
+
+Content (use exactly as written):
+
+WHO WE ARE
+BPOLytix Business Solutions operates bpolytix.com. Our registered address is Medstone Building, 19 The High Street, Umhlanga, Durban, South Africa, 4319. You can reach us at info@bpolytix.com.
+
+WHAT INFORMATION WE COLLECT
+We collect information you provide directly — your name, company name, email address, and any details you submit through our contact or intake forms. We do not collect payment information directly; no card or banking details pass through this website.
+
+We also collect limited technical data automatically — your IP address, browser type, pages visited, and time spent on the site. This is collected via Vercel Analytics and is used solely to improve site performance.
+
+HOW WE USE YOUR INFORMATION
+- To respond to your enquiry or service request
+- To deliver the service you have engaged us for
+- To send you information relevant to your enquiry (no unsolicited marketing)
+- To comply with legal obligations
+
+We do not sell, rent, or share your personal information with third parties for marketing purposes.
+
+HOW WE STORE YOUR INFORMATION
+Form submissions are processed via Resend and delivered to our internal inbox. We retain enquiry data for a maximum of 24 months. You may request deletion at any time by emailing info@bpolytix.com.
+
+YOUR RIGHTS
+You have the right to access, correct, or delete any personal information we hold about you. To exercise these rights, contact us at info@bpolytix.com. We will respond within 30 days.
+
+---
+
+SECTION 2 — GDPR & POPIA COMPLIANCE
+
+Title: "GDPR & POPIA Compliance"
+
+Content (use exactly as written):
+
+SOUTH AFRICA — POPIA
+BPOLytix Business Solutions processes personal information in accordance with the Protection of Personal Information Act 4 of 2013 (POPIA). We process your information lawfully, for a specific purpose, and only to the extent necessary for that purpose. You have the right to lodge a complaint with the Information Regulator of South Africa at inforeg.org.za.
+
+UNITED KINGDOM — GDPR
+For users based in the United Kingdom, we process personal data in accordance with the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018. Our lawful basis for processing is legitimate interest and, where applicable, consent. You have the right to lodge a complaint with the Information Commissioner's Office (ICO) at ico.org.uk.
+
+DATA TRANSFERS
+Data submitted through this website may be processed by third-party services including Vercel (hosting, USA/EU) and Resend (email delivery, USA). Both services operate under appropriate data protection frameworks. No data is transferred to countries without adequate protection.
+
+DATA RETENTION
+We retain personal data only for as long as necessary to fulfil the purpose for which it was collected, or as required by law. Enquiry data is retained for a maximum of 24 months.
+
+---
+
+SECTION 3 — TERMS OF SERVICE
+
+Title: "Terms of Service"
+Effective date line: "Effective date: April 2026" — 13px, #8892A4
+
+Content (use exactly as written):
+
+ACCEPTANCE
+By accessing bpolytix.com or engaging BPOLytix Business Solutions for any service, you agree to these terms. If you do not agree, do not use this website or our services.
+
+OUR SERVICES
+BPOLytix Business Solutions provides technology development, automation, financial, and business consulting services to startups and SMEs. Specific terms, deliverables, timelines, and pricing for each engagement are agreed in writing before any work begins.
+
+NO INVOICE BEFORE SATISFACTION
+We do not invoice for project work until you have reviewed the deliverable and confirmed it meets the agreed brief. This applies to all development and design engagements. Ongoing service retainers (bookkeeping, CFO-as-a-Service, business development) are invoiced monthly in arrears.
+
+INTELLECTUAL PROPERTY
+All work product created by BPOLytix Business Solutions remains our intellectual property until full payment is received. Upon payment, and after the 12-month engagement period where applicable, full ownership transfers to the client. This includes source code, designs, and documentation.
+
+LIMITATION OF LIABILITY
+BPOLytix Business Solutions is not liable for any indirect, incidental, or consequential losses arising from the use of our services or this website. Our total liability in any circumstance is limited to the amount paid by the client in the three months preceding the claim.
+
+GOVERNING LAW
+These terms are governed by the laws of the Republic of South Africa. For UK-based clients, disputes may also be subject to the jurisdiction of the courts of England and Wales by mutual agreement.
+
+CHANGES TO THESE TERMS
+We may update these terms at any time. Continued use of our services after changes are posted constitutes acceptance of the revised terms.
+
+---
+
+SECTION 4 — COOKIE POLICY
+
+Title: "Cookie Policy"
+
+Content (use exactly as written):
+
+WHAT ARE COOKIES
+Cookies are small text files stored on your device when you visit a website. They help the site remember your preferences and understand how you use it.
+
+WHAT COOKIES WE USE
+This website uses a minimal set of cookies. Render this as a styled table:
+
+| Cookie | Purpose | Duration |
+|---|---|---|
+| Vercel Analytics | Anonymous page view tracking — no personal data | Session |
+| Tawk.to | Live chat functionality — stores chat session state | Session / 6 months |
+| Preference cookies | Remembers if you have dismissed banners | 30 days |
+
+Table style: full width, border-collapse, header row background #0D1B2A, header text #F5F7FA 13px uppercase, body rows background #111F2E, cell padding 12px 16px, border 1px solid #1E2D3D.
+
+We do not use advertising cookies, tracking pixels, or any third-party marketing cookies.
+
+YOUR CHOICES
+You can control cookies through your browser settings. Disabling cookies may affect the live chat functionality on this site. No other site functionality requires cookies to operate.
+
+THIRD-PARTY COOKIES
+Tawk.to may set its own cookies for live chat session management. Their cookie policy is available at tawk.to/privacy-policy.
+
+---
+
+FOOTER LINK CHECK:
+The footer already contains a link to /legal. Do NOT modify the footer. Simply confirm in your completion summary that the /legal route now resolves correctly and the footer link will work.
+
+DO NOT:
+- Add a link to the main navigation
+- Modify layout.tsx, Nav.tsx, or Footer.tsx
+- Touch any existing pages
+- Install new packages
+- Add sidebars, tab components, or anchor jump navigation
+- Rewrite or summarise any of the copy above
+
+QUALITY CHECK before committing:
+- [ ] Background is #0D1B2A throughout
+- [ ] Four sections render as surface cards (#111F2E) with glow-border
+- [ ] All copy matches the spec exactly
+- [ ] Cookie table renders correctly with dark styling
+- [ ] Scroll reveals work on each card
+- [ ] /legal route resolves — footer link will work
+- [ ] No nav link added anywhere
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Copy everything between the lines and paste into Replit Agent.
