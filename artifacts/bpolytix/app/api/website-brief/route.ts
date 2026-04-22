@@ -10,6 +10,7 @@ export async function POST(req: Request) {
       description,
       assetLink,
       requirements,
+      attachment,
     } = await req.json();
 
     if (!businessName || !name || !email || !description) {
@@ -43,13 +44,29 @@ export async function POST(req: Request) {
       `${requirements && String(requirements).trim() ? requirements : "(none provided)"}`,
     ].join("\n");
 
-    const result = await resend.emails.send({
+    const emailPayload: Parameters<typeof resend.emails.send>[0] = {
       from: "BPOLytix <no-reply@bpolytix.com>",
       to: "mitesh@bpolytix.com",
       replyTo: email,
       subject: `New website brief from ${businessName} — ${name}`,
       text,
-    });
+    };
+
+    if (
+      attachment &&
+      typeof attachment === "object" &&
+      typeof attachment.name === "string" &&
+      typeof attachment.content === "string"
+    ) {
+      emailPayload.attachments = [
+        {
+          filename: attachment.name,
+          content: attachment.content,
+        },
+      ];
+    }
+
+    const result = await resend.emails.send(emailPayload);
 
     if (result.error) {
       return NextResponse.json(
