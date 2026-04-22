@@ -31,11 +31,11 @@ export function DotGrid() {
             id="dot-grid"
             x="0"
             y="0"
-            width="24"
-            height="24"
+            width="20"
+            height="20"
             patternUnits="userSpaceOnUse"
           >
-            <circle cx="12" cy="12" r="1.5" fill="#1B77F2" opacity="0.08" />
+            <circle cx="10" cy="10" r="1.8" fill="#FFFFFF" opacity="0.08" />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#dot-grid)" />

@@ -159,7 +159,10 @@ export default function CalculatorPage() {
   const sym = symbol(currency);
 
   return (
-    <main style={{ background: "#0D1B2A", minHeight: "100vh" }}>
+    <main
+      className="min-h-screen bg-[#0D1B2A]"
+      style={{ background: "#0D1B2A", minHeight: "100vh" }}
+    >
       <Hero />
 
       <section className="px-6 pb-24 sm:px-8" style={{ paddingTop: 24 }}>
