@@ -1,0 +1,113 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+REPLIT AGENT PROMPT — CALCULATOR PHASE 2 FIXES
+Session: 7 | Date: 2026-04-22
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Three specific fixes only. Do not touch anything else.
+
+━━━
+FIX 1 — Charts render for single service without clicking "Add another service"
+
+In artifacts/bpolytix/app/calculator/page.tsx:
+
+The ResultsCharts and ScreenshotCard components currently only render
+when savedServices.length > 0. This means charts don't appear until
+the user clicks "Add another service."
+
+Fix: The charts must render as soon as the active tab has a valid
+calculation result — not only when a service is saved.
+
+Change the conditional from:
+{savedServices.length > 0 && (
+  <ResultsCharts ... />
+  <ScreenshotCard ... />
+)}
+
+To a new condition that checks:
+- Does the current active tab have a valid result? (inHouseMonthly > 0 or equivalent)
+- OR does savedServices have items?
+
+Specifically:
+1. Compute activeResult by running the calculator function for the
+   current active tab using current input state — this should already
+   be happening for the metric tiles
+2. Build a resultsToShow array:
+   - Start with [...savedServices]
+   - If activeResult is valid AND the active service is not already
+     in savedServices, append activeResult to resultsToShow
+3. Pass resultsToShow to ResultsCharts and ScreenshotCard
+4. Only render charts if resultsToShow.length > 0 AND
+   activeResult.savingMonthly > 0 (or savingTotal for project tabs)
+
+This means: as soon as the page loads with default inputs,
+the charts render immediately for Bookkeeping tab.
+The user does not need to click anything to see the visuals.
+
+━━━
+FIX 2 — Gauge percentage text vertical alignment
+
+In artifacts/bpolytix/components/calculator/ResultsCharts.tsx:
+
+The RadialBarChart gauge uses startAngle=180 endAngle=0 — a half circle
+opening downward. The center label is positioned using the chart's
+full bounding box height, which places text too high.
+
+Fix:
+- The chart height is 160px
+- The arc center is at y=0 (top of the half circle opens down)
+- The visual center of the arc is at approximately y=10px from top
+- Use a CustomLabel or absolute-positioned div overlay instead of
+  Recharts label prop
+
+Replace the existing center label with this approach:
+- Wrap the RadialBarChart in a div with position: relative
+- Set RadialBarChart height to 180px
+- Place an absolutely positioned div:
+  position: absolute
+  top: 55%  (this places it in the visual center of the half-arc)
+  left: 50%
+  transform: translate(-50%, -50%)
+  textAlign: center
+  pointerEvents: none
+- Inside this div:
+  - Saving % value: Syne font, 42px, #00D4AA, fontWeight 700
+  - "overall saving" label: DM Sans, 12px, #8892A4, marginTop: 2px
+
+Remove any existing label or customLabel prop from the RadialBar
+or RadialBarChart that was previously rendering the text.
+
+━━━
+FIX 3 — Hero background too light, dot grid not visible
+
+In artifacts/bpolytix/components/calculator/DotGrid.tsx:
+
+The component container background is not rendering as #0D1B2A.
+Something is overriding it — likely a parent section or Tailwind class.
+
+Fix:
+1. On the outer wrapper div of DotGrid, explicitly set:
+   style={{ background: '#0D1B2A' }}
+   AND add Tailwind class: className="bg-[#0D1B2A]"
+   (both inline and Tailwind to override any cascade)
+
+2. The SVG dot opacity is currently 0.05 — increase to 0.08
+   so dots are visible against the correct dark background
+
+3. In artifacts/bpolytix/app/calculator/page.tsx, find the hero
+   section wrapper. Ensure it has:
+   style={{ background: '#0D1B2A' }}
+   className="bg-[#0D1B2A]"
+   on the outermost section tag — not just on DotGrid
+
+4. Remove any className on the hero section that could be applying
+   a lighter background (e.g. bg-surface, bg-[#111F2E], bg-card,
+   or any Tailwind bg- class other than bg-[#0D1B2A])
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WHEN FIXES ARE COMPLETE:
+- Confirm charts render on page load without clicking anything
+- Confirm gauge % is vertically centered in the arc
+- Confirm hero background is visibly darker with dot grid visible
+- List every file modified
+- Do not proceed to Phase 2b or Phase 3 — wait for instruction
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

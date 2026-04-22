@@ -106,17 +106,17 @@ function GaugePanel({ combined }: { combined: CombinedResults }) {
   const data = [{ name: "saving", value: pct, fill: "#00D4AA" }];
   return (
     <CardShell heading="SAVING OVERVIEW">
-      <div className="relative mx-auto" style={{ width: 280, height: 160 }}>
+      <div className="relative mx-auto" style={{ width: 280, height: 180 }}>
         <ResponsiveContainer width="100%" height="100%">
           <RadialBarChart
             cx="50%"
-            cy="100%"
-            innerRadius="120%"
-            outerRadius="180%"
+            cy="90%"
+            innerRadius="130%"
+            outerRadius="170%"
             startAngle={180}
             endAngle={0}
             data={data}
-            barSize={28}
+            barSize={26}
           >
             <PolarAngleAxis
               type="number"
@@ -133,13 +133,18 @@ function GaugePanel({ combined }: { combined: CombinedResults }) {
           </RadialBarChart>
         </ResponsiveContainer>
         <div
-          className="pointer-events-none absolute inset-0 flex flex-col items-center justify-end pb-1"
-          style={{ textAlign: "center" }}
+          className="pointer-events-none absolute"
+          style={{
+            top: "55%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            textAlign: "center",
+          }}
         >
           <div
             style={{
               fontFamily: SYNE,
-              fontSize: 48,
+              fontSize: 42,
               fontWeight: 700,
               color: "#00D4AA",
               lineHeight: 1,
@@ -148,11 +153,11 @@ function GaugePanel({ combined }: { combined: CombinedResults }) {
             {pct.toFixed(0)}%
           </div>
           <div
-            className="mt-1"
             style={{
               fontFamily: DM,
-              fontSize: 13,
+              fontSize: 12,
               color: "#8892A4",
+              marginTop: 2,
             }}
           >
             overall saving

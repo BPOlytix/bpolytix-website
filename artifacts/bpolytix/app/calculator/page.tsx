@@ -139,6 +139,23 @@ export default function CalculatorPage() {
     return combineResults(savedServices.map((s) => s.result));
   }, [savedServices]);
 
+  const activeIsSaved = savedServices.some((s) => s.tab === activeTab);
+  const activeHasSaving =
+    result.kind === "monthly"
+      ? result.savingMonthly > 0
+      : result.savingTotal > 0;
+
+  const resultsToShow = useMemo<AnyResult[]>(() => {
+    const base = savedServices.map((s) => s.result);
+    if (!activeIsSaved && activeHasSaving) base.push(result);
+    return base;
+  }, [savedServices, activeIsSaved, activeHasSaving, result]);
+
+  const combinedToShow = useMemo(() => {
+    if (resultsToShow.length === 0) return null;
+    return combineResults(resultsToShow);
+  }, [resultsToShow]);
+
   const sym = symbol(currency);
 
   return (
@@ -341,16 +358,16 @@ export default function CalculatorPage() {
             />
           )}
 
-          {savedServices.length > 0 && combined && (
+          {resultsToShow.length > 0 && combinedToShow && (
             <div id="results-charts" className="mt-8 flex flex-col gap-6">
               <ResultsCharts
-                results={savedServices.map((s) => s.result)}
-                combined={combined}
+                results={resultsToShow}
+                combined={combinedToShow}
                 currency={currency}
               />
               <ScreenshotCard
-                results={savedServices.map((s) => s.result)}
-                combined={combined}
+                results={resultsToShow}
+                combined={combinedToShow}
                 currency={currency}
               />
             </div>
@@ -378,11 +395,8 @@ export default function CalculatorPage() {
 function Hero() {
   return (
     <section
-      className="relative overflow-hidden px-6 pt-20 pb-12 sm:px-8 sm:pt-28 sm:pb-16"
-      style={{
-        background: "#0D1B2A",
-        minHeight: undefined,
-      }}
+      className="relative overflow-hidden bg-[#0D1B2A] px-6 pt-20 pb-12 sm:px-8 sm:pt-28 sm:pb-16"
+      style={{ background: "#0D1B2A" }}
     >
       <DotGrid />
       <motion.div

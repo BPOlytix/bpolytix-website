@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 export function DotGrid() {
   return (
     <div
-      className="absolute inset-0"
+      className="absolute inset-0 bg-[#0D1B2A]"
       style={{
-        backgroundColor: "#0D1B2A",
+        background: "#0D1B2A",
         pointerEvents: "none",
       }}
       aria-hidden
@@ -35,7 +35,7 @@ export function DotGrid() {
             height="24"
             patternUnits="userSpaceOnUse"
           >
-            <circle cx="12" cy="12" r="1.5" fill="#1B77F2" opacity="0.05" />
+            <circle cx="12" cy="12" r="1.5" fill="#1B77F2" opacity="0.08" />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#dot-grid)" />
