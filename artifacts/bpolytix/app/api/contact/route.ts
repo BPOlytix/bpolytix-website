@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     if (!name || !email || !message) {
       return NextResponse.json(
         { error: "Missing required fields: name, email, message" },
-        { status: 400 }
+        { status: 500 }
       );
     }
 
@@ -21,6 +21,7 @@ export async function POST(req: Request) {
     }
 
     const resend = new Resend(apiKey);
+    const companyLabel = company && String(company).trim() ? company : "no company";
 
     const text = [
       `Name: ${name}`,
@@ -36,7 +37,7 @@ export async function POST(req: Request) {
       from: "onboarding@resend.dev",
       to: "info@bpolytix.com",
       replyTo: email,
-      subject: `New enquiry from ${name} — ${company}`,
+      subject: `New enquiry from ${name} — ${companyLabel}`,
       text,
     });
 
