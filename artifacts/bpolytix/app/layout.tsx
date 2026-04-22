@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Syne, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { TawkChat } from "@/components/TawkChat";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -41,7 +40,6 @@ export default function RootLayout({
       <body>
         {children}
         <TawkChat />
-        <WhatsAppButton />
       </body>
     </html>
   );

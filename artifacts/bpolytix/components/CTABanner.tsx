@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { MessageCircle } from "lucide-react";
 import { GrainOverlay } from "./GrainOverlay";
 
 export function CTABanner() {
@@ -50,6 +51,23 @@ export function CTABanner() {
             Get in touch
           </Link>
         </div>
+        <a
+          href="https://wa.me/27781790363?text=Hi%2C+I%27d+like+to+find+out+more+about+BPOLytix"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bpx-wa-pill inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-center"
+          style={{
+            backgroundColor: "#25D366",
+            marginTop: "12px",
+            fontFamily: "var(--font-dm-sans)",
+            color: "#FFFFFF",
+            fontSize: "14px",
+            transition: "opacity 150ms ease",
+          }}
+        >
+          <MessageCircle size={18} color="#FFFFFF" />
+          WhatsApp us
+        </a>
       </div>
 
       <style jsx>{`
@@ -73,6 +91,10 @@ export function CTABanner() {
         }
         .bpx-cta-glow:hover {
           box-shadow: 0 0 24px rgba(27, 119, 242, 0.4) !important;
+        }
+
+        .bpx-wa-pill:hover {
+          opacity: 0.9;
         }
       `}</style>
     </section>
