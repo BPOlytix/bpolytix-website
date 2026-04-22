@@ -15,6 +15,7 @@
     "next": "16.2.4",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "recharts": "^2.15.4",
     "resend": "^6.12.2"
   },
   "devDependencies": {

@@ -1,0 +1,459 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+REPLIT AGENT PROMPT — COST SAVINGS CALCULATOR (PHASE 1 OF 3)
+Session: 7 | Phase: 2 | Date: 2026-04-22
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You are building bpolytix.com — a professional SaaS/BPO marketing website.
+
+BEFORE DOING ANYTHING ELSE, read and internalise these rules:
+
+TECH STACK (do not deviate):
+- Framework: Next.js 15 with App Router
+- Styling: Tailwind CSS
+- Animations: Framer Motion
+- Charts: Recharts (install if not present: pnpm add recharts)
+- Icons: Lucide React ONLY
+- Fonts: Syne (headings) + DM Sans (body) via next/font/google
+- Backend: Supabase (@supabase/supabase-js) — for lead capture only
+- Email: Resend — for lead notification only
+- The Next.js project lives at: artifacts/bpolytix/
+- All files must be created inside this directory
+
+COLOURS (exact hex — use only these):
+- Background:  #0D1B2A
+- Surface:     #111F2E
+- Card:        #1C2A3A
+- Accent:      #1B77F2
+- Highlight:   #00D4AA
+- Text:        #F5F7FA
+- Muted:       #8892A4
+- Border:      #1E2D3D
+
+DESIGN RULES — MANDATORY:
+- Dark throughout — no white or grey backgrounds anywhere
+- Fonts: Syne for all headings, DM Sans for all body text
+- This calculator must feel like a Bloomberg terminal or a Power BI dashboard
+- NOT a generic form — every input, result, and visual must feel precision-engineered
+- Charts use #1B77F2 for BPOLytix cost bars, #8892A4 for in-house cost bars, #00D4AA for saving highlights
+- Gauge fill colour: #00D4AA
+- Mobile-first — fully responsive at 375px
+- Grain overlay on hero section (use existing /grain.png)
+- Lucide React icons only
+
+OUTPUT RULES:
+- Build ONLY what is listed under EXECUTE NOW
+- After completing, list every file created or modified
+- If you hit an error you cannot fix in 2 attempts, stop and describe it clearly
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FULL CALCULATOR BLUEPRINT — READ BUT DO NOT BUILD ALL YET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This calculator is built in 3 phases. Read all phases now.
+Execute only the phase marked EXECUTE NOW.
+
+PHASE 1 — Page shell, currency toggle, service selector, calculator logic (no charts yet)
+PHASE 2 — Results screen with Recharts visuals (gauge, bar chart, donut), screenshot card
+PHASE 3 — Lead capture (email field → Supabase → Resend notification)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COMPLETE CALCULATOR LOGIC — READ ALL OF THIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CURRENCY TOGGLE:
+- ZAR (default) or GBP
+- GBP conversion: divide all ZAR values by 22.5 (hardcoded exchange rate)
+- Show currency symbol throughout — R for ZAR, £ for GBP
+- Toggle is persistent across all service tabs
+
+SERVICE TABS (5 tabs, user can select multiple):
+Tab 1: Bookkeeping & Accounting
+Tab 2: CFO-as-a-Service
+Tab 3: AI Browser Automation
+Tab 4: Web Application Development
+Tab 5: Android App Development
+
+━━━
+TAB 1 — BOOKKEEPING & ACCOUNTING
+━━━
+
+User inputs:
+- Role type (single select): Bookkeeper | Accountant | Hybrid finance support
+- Number of entities (stepper +/-): default 1, min 1, max 10
+- Monthly transactions (stepper +/-): default 100, increment 50, min 50, max 2000
+- VAT returns required (toggle yes/no): default yes
+- Payroll employees (stepper +/-): default 5, min 0, max 200
+- Management accounts required (toggle yes/no): default no
+
+In-house cost calculation (ZAR):
+
+IF role = Bookkeeper:
+  base_salary = 15698
+IF role = Accountant:
+  base_salary = 24748
+IF role = Hybrid:
+  base_salary = 20000
+
+uif = base_salary * 0.01
+sdl = base_salary * 0.01
+seat = 4100
+software = 1045
+device = 800
+recruitment = base_salary * 0.08
+management = base_salary * 0.10
+
+in_house_monthly = base_salary + uif + sdl + seat + software + device + recruitment + management
+
+BPOLytix fee (ZAR):
+IF monthly_transactions <= 150 AND management_accounts = no:
+  bpolytix_fee = 8500   (Starter)
+ELSE IF monthly_transactions <= 500 OR management_accounts = yes:
+  bpolytix_fee = 14900  (Growth)
+ELSE:
+  bpolytix_fee = 21500  (Full)
+
+IF role = Accountant: add R3,000 to bpolytix_fee
+IF vat_returns = yes: add R1,200 to bpolytix_fee
+IF payroll_employees > 10: add R800 to bpolytix_fee
+
+saving_monthly = in_house_monthly - bpolytix_fee
+saving_percent = (saving_monthly / in_house_monthly) * 100
+saving_annual = saving_monthly * 12
+
+Breakdown for donut chart (show where saving comes from):
+- Salary burden saved: (uif + sdl + recruitment + management)
+- Seat & infrastructure saved: (seat + software + device)
+- Core salary differential: (base_salary - (bpolytix_fee * 0.7))
+
+━━━
+TAB 2 — CFO-AS-A-SERVICE
+━━━
+
+User inputs:
+- Current monthly CFO/FM salary (stepper, ZAR): default 45000, increment 2500, min 20000, max 150000
+- Number of entities (stepper +/-): default 1, min 1, max 10
+- Board reporting required (toggle yes/no): default no
+- Fundraising/investor support required (toggle yes/no): default no
+
+In-house cost calculation:
+base_salary = user_input
+uif = base_salary * 0.01
+sdl = base_salary * 0.01
+seat = 4100
+software = 1500
+device = 1500
+recruitment = base_salary * 0.08
+management = base_salary * 0.10
+
+in_house_monthly = base_salary + uif + sdl + seat + software + device + recruitment + management
+
+BPOLytix fee:
+base_fee = 18500
+IF board_reporting = yes: add 3500
+IF fundraising = yes: add 5000
+IF entities > 3: add (entities - 3) * 2000
+
+bpolytix_fee = base_fee + additions
+
+saving_monthly = in_house_monthly - bpolytix_fee
+saving_percent = (saving_monthly / in_house_monthly) * 100
+saving_annual = saving_monthly * 12
+
+━━━
+TAB 3 — AI BROWSER AUTOMATION
+━━━
+
+User inputs:
+- Manual hours per month (stepper +/-): default 100, increment 10, min 20, max 500
+- Number of workflows (stepper +/-): default 2, min 1, max 20
+- Number of platforms/websites touched (stepper +/-): default 3, min 1, max 15
+- Human review required (toggle yes/no): default yes
+- Estimated rework/error hours per month (stepper +/-): default 10, increment 5, min 0, max 100
+
+In-house cost calculation:
+loaded_hourly_rate = 105  (ZAR — loaded VA benchmark)
+productive_hours = manual_hours + rework_hours
+in_house_monthly = productive_hours * loaded_hourly_rate
+
+BPOLytix fee:
+IF workflows <= 1: bpolytix_fee = 8500
+ELSE IF workflows <= 4: bpolytix_fee = 18500
+ELSE: bpolytix_fee = 32000
+
+IF human_review = yes: add 2500
+IF platforms > 5: add (platforms - 5) * 1000
+
+saving_monthly = in_house_monthly - bpolytix_fee
+saving_percent = (saving_monthly / in_house_monthly) * 100
+saving_annual = saving_monthly * 12
+
+━━━
+TAB 4 — WEB APPLICATION DEVELOPMENT
+━━━
+
+User inputs:
+- Project type (single select): Brochure site | Internal tool | Client-facing portal | SaaS MVP
+- Build duration in months (stepper +/-): default 3, min 1, max 12
+- Developer seniority (single select): Junior | Mid-level | Senior
+- Integrations required (toggle yes/no): default no
+- Ongoing maintenance after build (toggle yes/no): default no
+
+In-house cost calculation:
+IF seniority = Junior: base_salary = 20841
+IF seniority = Mid-level: base_salary = 17791 (use mid as loaded benchmark)
+IF seniority = Senior: base_salary = 33389
+
+uif = base_salary * 0.01
+sdl = base_salary * 0.01
+seat = 4100
+software = 1500
+device = 1800
+recruitment = base_salary * 0.10
+management = base_salary * 0.15
+
+loaded_monthly = base_salary + uif + sdl + seat + software + device + recruitment + management
+team_multiplier = 1.25  (adds PM/QA share)
+true_monthly = loaded_monthly * team_multiplier
+
+in_house_total = true_monthly * build_months
+
+BPOLytix fee (once-off project):
+IF project_type = Brochure site: bpolytix_fee = 26500
+IF project_type = Internal tool: bpolytix_fee = 65000
+IF project_type = Client-facing portal: bpolytix_fee = 79000
+IF project_type = SaaS MVP: bpolytix_fee = 85000
+
+IF integrations = yes: add 12000
+IF maintenance = yes: note "+ R8,500/month retainer" separately — do not add to once-off
+
+saving_total = in_house_total - bpolytix_fee
+saving_percent = (saving_total / in_house_total) * 100
+
+Note: for web app, show TOTAL PROJECT saving (not monthly)
+
+━━━
+TAB 5 — ANDROID APP DEVELOPMENT
+━━━
+
+User inputs:
+- App type (single select): MVP / Prototype | Business tool | Consumer app
+- Build duration in months (stepper +/-): default 4, min 2, max 18
+- Backend/API integrations required (toggle yes/no): default no
+- Ongoing maintenance after build (toggle yes/no): default no
+
+In-house cost calculation:
+base_salary = 43946  (SA mobile developer benchmark)
+uif = base_salary * 0.01
+sdl = base_salary * 0.01
+seat = 4100
+software = 1800
+device = 1800
+recruitment = base_salary * 0.10
+management = base_salary * 0.15
+team_multiplier = 1.25
+
+loaded_monthly = base_salary + uif + sdl + seat + software + device + recruitment + management
+true_monthly = loaded_monthly * team_multiplier
+in_house_total = true_monthly * build_months
+
+BPOLytix fee (once-off):
+IF app_type = MVP/Prototype: bpolytix_fee = 55000
+IF app_type = Business tool: bpolytix_fee = 95000
+IF app_type = Consumer app: bpolytix_fee = 145000
+
+IF integrations = yes: add 18000
+IF maintenance = yes: note "+ R9,500/month retainer" separately
+
+saving_total = in_house_total - bpolytix_fee
+saving_percent = (saving_total / in_house_total) * 100
+
+━━━
+COMBINED RESULTS (when multiple services selected):
+━━━
+
+total_inhouse = sum of all selected service in-house costs
+total_bpolytix = sum of all selected service BPOLytix fees
+total_saving_monthly = total_inhouse - total_bpolytix (for monthly services)
+total_saving_annual = monthly savings × 12 (monthly services only)
+total_saving_percent = (total_saving / total_inhouse) * 100
+
+Show each service as its own result row, then combined total as headline.
+
+"What this saving buys you" copy (show below results based on annual saving):
+IF annual_saving < 100000: "Enough to fund 6 months of targeted digital marketing."
+IF annual_saving < 300000: "Enough to build a custom internal tool — and still have budget left."
+IF annual_saving < 600000: "Enough to fund a full product sprint and a marketing push."
+IF annual_saving >= 600000: "Enough to hire a senior developer for a year. Or reinvest into growth."
+(Convert thresholds to GBP equivalents when GBP is selected)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EXECUTE NOW — PHASE 1 ONLY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Build the calculator page shell and full calculator logic.
+Do NOT build the Recharts visuals yet — those are Phase 2.
+Do NOT build the lead capture form yet — that is Phase 3.
+
+TASK 1 — Install Recharts (needed now so it's ready for Phase 2)
+Run in Replit shell inside artifacts/bpolytix/:
+  pnpm add recharts
+
+TASK 2 — Create the calculator page
+File: artifacts/bpolytix/app/calculator/page.tsx
+
+PAGE STRUCTURE (top to bottom):
+
+A. HERO SECTION
+- Background: #0D1B2A with grain overlay (/grain.png)
+- Headline (Syne, 52px desktop / 36px mobile, weight 700, #F5F7FA):
+  "Calculate your true in-house cost."
+- Sub-headline (DM Sans, 18px, #8892A4):
+  "Most businesses underestimate what a role actually costs them. This calculator shows the full picture — then shows you what BPOLytix costs instead."
+- No CTA button in hero — the calculator IS the CTA
+- Framer Motion: fade in on scroll (y 40→0, opacity 0→1, 0.7s)
+
+B. CURRENCY TOGGLE
+- Positioned above the service tabs, right-aligned on desktop, centered on mobile
+- Two pill buttons: "ZAR (R)" and "GBP (£)"
+- Active state: #1B77F2 background, white text
+- Inactive state: #1C2A3A background, #8892A4 text
+- Border: #1E2D3D
+- Switching currency recalculates all visible outputs instantly
+
+C. SERVICE SELECTOR
+- Horizontal tab row on desktop, scrollable horizontal tabs on mobile
+- Tabs: Bookkeeping & Accounting | CFO-as-a-Service | AI Automation | Web App Dev | Android App Dev
+- Each tab has a Lucide icon:
+  - Bookkeeping: BookOpen
+  - CFO: TrendingUp
+  - AI Automation: Bot
+  - Web App: Monitor
+  - Android: Smartphone
+- Active tab: #1B77F2 bottom border, #F5F7FA text
+- Inactive tab: #8892A4 text
+- Tab background: #111F2E
+- User can be on one tab at a time
+- Multi-service combining happens on the results screen (a summary button appears: "Add another service")
+
+D. CALCULATOR INPUTS PANEL
+- Card: background #1C2A3A, border #1E2D3D, border-radius 16px, padding 32px desktop / 20px mobile
+- Each input rendered based on active tab (see logic above)
+- Input component types:
+
+STEPPER COMPONENT (for numeric inputs):
+- Minus button | value display | Plus button
+- Minus/Plus: circular buttons, #111F2E background, #1B77F2 icon, border #1E2D3D
+- Value display: Syne font, 20px, #F5F7FA, centered
+- Label above: DM Sans, 14px, #8892A4
+- Min/max enforced — minus button disabled at min, plus disabled at max
+
+TOGGLE COMPONENT (for yes/no):
+- Pill toggle switch
+- On: #1B77F2 track, white thumb
+- Off: #1E2D3D track, #8892A4 thumb
+- Label left, toggle right
+
+SINGLE SELECT COMPONENT (for role type, project type, seniority, app type):
+- Row of pill buttons (not a dropdown)
+- Selected: #1B77F2 background, white text, border-radius 9999px
+- Unselected: #111F2E background, #8892A4 text
+
+E. TRUE IN-HOUSE COST BREAKDOWN
+- Shown below inputs, updates live as user changes inputs
+- Card: background #111F2E, border #1E2D3D, border-radius 12px, padding 24px
+- Heading (Syne, 16px, #8892A4, uppercase, letter-spacing 0.08em): "YOUR TRUE IN-HOUSE COST"
+- Line items (DM Sans, 15px):
+  - Base salary: R15,698
+  - Employer UIF (1%): R157
+  - Employer SDL (1%): R157
+  - Workspace / seat: R4,100
+  - Software stack: R1,045
+  - Device amortisation: R800
+  - Recruitment & onboarding: R1,256
+  - Management overhead: R1,570
+  - ─────────────────────────
+  - TOTAL TRUE MONTHLY COST: R24,783  (Syne, 18px, #F5F7FA, bold)
+- Each line value updates in real time as inputs change
+- Framer Motion: each line animates in with 0.05s stagger on tab switch
+
+F. BPOLYTIX FEE DISPLAY
+- Below the breakdown card
+- Single line: "BPOLytix equivalent: R8,500/month" — Syne, 22px, #1B77F2
+- Sub-line: "Starter bookkeeping — includes Xero, VAT returns, monthly reconciliation"
+  DM Sans, 14px, #8892A4
+- Updates live
+
+G. PRELIMINARY SAVING SUMMARY
+- Three metric tiles in a row (stack vertically on mobile):
+  Tile 1: Monthly saving — value in #00D4AA, Syne 28px
+  Tile 2: Annual saving — value in #00D4AA, Syne 28px
+  Tile 3: Saving % — value in #00D4AA, Syne 28px
+- Tile background: #111F2E, border: #1E2D3D, border-radius: 12px, padding: 20px
+- Label: DM Sans, 13px, #8892A4, uppercase
+- Values animate (count-up, 1.2s) every time they change
+- Framer Motion: tiles fade in when first calculated
+
+H. "ADD ANOTHER SERVICE" BUTTON
+- Ghost pill button below the saving tiles: "+ Add another service"
+- Clicking opens a second tab panel above the results so user can configure a second service
+- When a second service is added, a "Combined total" row appears below the individual results
+- Maximum 3 services combinable at once
+- Each added service shows as a dismissable chip above the tab row
+
+I. RESULTS PLACEHOLDER (Phase 2 slot)
+- Render an empty div with id="results-charts" — charts will be injected here in Phase 2
+- Show a placeholder card: background #111F2E, border dashed #1E2D3D
+- Text (DM Sans, 14px, #8892A4, centered): "Visual breakdown loading in next update."
+- This placeholder is removed entirely in Phase 2
+
+J. DISCLAIMER LINE
+- DM Sans, 13px, #8892A4, centered, below all results
+- Text: "Estimates based on published SA salary benchmarks (Indeed/PayScale 2025), 
+  SARS statutory rates, and BPOLytix standard pricing. 
+  Actual costs vary by scope. Contact us for a tailored quote."
+
+TASK 3 — Create reusable input components
+Create artifacts/bpolytix/components/calculator/Stepper.tsx
+Create artifacts/bpolytix/components/calculator/ToggleSwitch.tsx
+Create artifacts/bpolytix/components/calculator/PillSelect.tsx
+Create artifacts/bpolytix/components/calculator/MetricTile.tsx
+Create artifacts/bpolytix/components/calculator/CostBreakdown.tsx
+
+Each component must:
+- Accept typed props
+- Use "use client" directive
+- Follow the design rules above exactly
+
+TASK 4 — Calculator logic file
+Create artifacts/bpolytix/lib/calculatorLogic.ts
+
+This file must export a pure function for each service tab:
+- calculateBookkeeping(inputs, currency): returns { inHouseMonthly, bpolytixFee, savingMonthly, savingPercent, savingAnnual, breakdown }
+- calculateCFO(inputs, currency): same return shape
+- calculateAutomation(inputs, currency): same return shape
+- calculateWebApp(inputs, currency): returns { inHouseTotal, bpolytixFee, savingTotal, savingPercent }
+- calculateAndroidApp(inputs, currency): same return shape
+
+GBP conversion: divide all ZAR outputs by 22.5
+
+Include a combineResults(services[]) function that:
+- Accepts an array of individual service results
+- Returns combined totals and an array of per-service rows for the results screen
+
+TASK 5 — Add calculator to main nav
+In the existing nav component, add a ghost pill button: "Calculator"
+Links to /calculator
+Desktop: shown in nav bar between Services and Contact
+Mobile: shown in hamburger menu
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WHEN PHASE 1 IS COMPLETE:
+- List every file created or modified
+- Confirm recharts is in pnpm-lock.yaml
+- Confirm /calculator route is accessible
+- Confirm currency toggle switches all values
+- Confirm all 5 tabs render correct inputs
+- Confirm true in-house cost breakdown updates live
+- Confirm saving tiles animate on value change
+- Do NOT proceed to Phase 2 — wait for instruction
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
