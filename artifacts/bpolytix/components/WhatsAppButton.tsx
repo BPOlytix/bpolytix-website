@@ -11,11 +11,12 @@ export function WhatsAppButton() {
 
   return (
     <div
+      className="bpx-whatsapp-fab"
       style={{
         position: "fixed",
-        bottom: "24px",
+        bottom: "96px",
         right: "24px",
-        zIndex: 50,
+        zIndex: 99999,
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-end",
@@ -35,7 +36,7 @@ export function WhatsAppButton() {
           fontSize: "12px",
           fontWeight: 500,
           padding: "6px 10px",
-          borderRadius: "6px",
+          borderRadius: "9999px",
           border: "1px solid rgba(255,255,255,0.08)",
           whiteSpace: "nowrap",
           boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
@@ -67,6 +68,13 @@ export function WhatsAppButton() {
       >
         <MessageCircle size={24} color="#FFFFFF" strokeWidth={2} />
       </a>
+      <style jsx>{`
+        @media (max-width: 767px) {
+          .bpx-whatsapp-fab {
+            display: none !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

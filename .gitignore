@@ -47,3 +47,7 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Next.js build output and cache (never commit — may contain secrets)
+.next/
+
