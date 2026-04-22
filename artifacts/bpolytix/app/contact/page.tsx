@@ -37,19 +37,32 @@ export default function ContactPage() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setState("submitting");
 
-    // Build mailto string as fallback while Supabase integration is pending
-    const subject = encodeURIComponent(`BPOLytix enquiry — ${form.service || "General"}`);
-    const body = encodeURIComponent(
-      `Name: ${form.name}\nCompany: ${form.company}\nEmail: ${form.email}\nService: ${form.service}\n\nMessage:\n${form.message}`
-    );
-    window.location.href = `mailto:info@bpolytix.com?subject=${subject}&body=${body}`;
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          company: form.company,
+          email: form.email,
+          service: form.service,
+          message: form.message,
+        }),
+      });
 
-    // Show success after a short delay
-    setTimeout(() => setState("success"), 600);
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data?.success) {
+        setState("success");
+      } else {
+        setState("error");
+      }
+    } catch {
+      setState("error");
+    }
   };
 
   const inputBase: React.CSSProperties = {
