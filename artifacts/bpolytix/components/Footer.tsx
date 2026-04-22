@@ -59,6 +59,18 @@ export function Footer() {
           <p style={{ fontFamily: "var(--font-dm-sans)", fontSize: "13px", color: "#8892A4" }}>
             © 2026 BPOLytix. All rights reserved.
           </p>
+          <p
+            className="mt-4 text-center"
+            style={{ fontFamily: "var(--font-dm-sans)", fontSize: "13px", color: "#8892A4" }}
+          >
+            <Link
+              href="/website-in-3-days"
+              className="no-underline transition-colors duration-150 ease-out hover:text-[#F5F7FA] hover:underline"
+              style={{ color: "inherit" }}
+            >
+              Website by BPOLytix
+            </Link>
+          </p>
         </div>
       </div>
 
