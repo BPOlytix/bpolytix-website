@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Check, ArrowRight } from "lucide-react";
+import { useRef, useState } from "react";
+import { Check, ArrowRight, Upload, X } from "lucide-react";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { GrainOverlay } from "@/components/GrainOverlay";
@@ -33,6 +33,84 @@ export default function WebsiteIn3DaysPage() {
     requirements: "",
   });
   const [state, setState] = useState<FormState>("idle");
+  const [attachment, setAttachment] = useState<{ name: string; type: string; size: number; content: string } | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const MAX_FILE_BYTES = 4 * 1024 * 1024;
+  const ACCEPTED_TYPES = ["application/pdf"];
+
+  const isAcceptedFile = (file: File) => {
+    if (file.type.startsWith("image/")) return true;
+    if (ACCEPTED_TYPES.includes(file.type)) return true;
+    return false;
+  };
+
+  const formatSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  };
+
+  const clearFileInput = () => {
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const processFile = (file: File) => {
+    if (!isAcceptedFile(file)) {
+      setAttachment(null);
+      clearFileInput();
+      setFileError("This file type is not supported. Please upload an image or PDF.");
+      return;
+    }
+    if (file.size > MAX_FILE_BYTES) {
+      setAttachment(null);
+      clearFileInput();
+      setFileError(
+        "This file is too large. Maximum size is 4MB. Please compress it or share a link in the field above instead."
+      );
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result !== "string") {
+        setAttachment(null);
+        clearFileInput();
+        setFileError("Could not read this file. Please try again.");
+        return;
+      }
+      const base64 = result.includes(",") ? result.split(",")[1] : result;
+      setAttachment({ name: file.name, type: file.type, size: file.size, content: base64 });
+      setFileError(null);
+    };
+    reader.onerror = () => {
+      setAttachment(null);
+      clearFileInput();
+      setFileError("Could not read this file. Please try again.");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    processFile(file);
+  };
+
+  const handleRemoveFile = () => {
+    setAttachment(null);
+    setFileError(null);
+    clearFileInput();
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) processFile(file);
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -44,10 +122,18 @@ export default function WebsiteIn3DaysPage() {
     e.preventDefault();
     setState("submitting");
     try {
+      const payload: Record<string, unknown> = { ...form };
+      if (attachment) {
+        payload.attachment = {
+          name: attachment.name,
+          type: attachment.type,
+          content: attachment.content,
+        };
+      }
       const res = await fetch("/api/website-brief", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data?.success) {
@@ -458,6 +544,160 @@ export default function WebsiteIn3DaysPage() {
                   onChange={handleChange}
                   style={inputBase}
                 />
+              </div>
+
+              <div className="mb-5">
+                <label htmlFor="fileUpload" style={labelBase}>
+                  Upload your logo or any existing designs (optional)
+                </label>
+                <p
+                  style={{
+                    fontFamily: "var(--font-dm-sans)",
+                    fontSize: "12px",
+                    color: "#8892A4",
+                    marginTop: "-4px",
+                    marginBottom: "10px",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  Accepted: images and PDFs. Maximum file size: 4MB.
+                </p>
+
+                <input
+                  ref={fileInputRef}
+                  id="fileUpload"
+                  name="fileUpload"
+                  type="file"
+                  accept="image/*,application/pdf"
+                  onChange={handleFileSelect}
+                  style={{ display: "none" }}
+                />
+
+                {attachment ? (
+                  <div
+                    className="flex items-center justify-between gap-3"
+                    style={{
+                      backgroundColor: "rgba(255,255,255,0.03)",
+                      border: "1.5px dashed rgba(27,119,242,0.4)",
+                      borderRadius: "10px",
+                      padding: "16px 18px",
+                    }}
+                  >
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <p
+                        style={{
+                          fontFamily: "var(--font-dm-sans)",
+                          fontSize: "14px",
+                          color: "#F5F7FA",
+                          lineHeight: 1.4,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {attachment.name}
+                      </p>
+                      <p
+                        style={{
+                          fontFamily: "var(--font-dm-sans)",
+                          fontSize: "12px",
+                          color: "#8892A4",
+                          marginTop: "2px",
+                        }}
+                      >
+                        {formatSize(attachment.size)}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleRemoveFile}
+                      aria-label="Remove file"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "28px",
+                        height: "28px",
+                        borderRadius: "9999px",
+                        backgroundColor: "rgba(255,255,255,0.06)",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                        color: "#8892A4",
+                        cursor: "pointer",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => fileInputRef.current?.click()}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        fileInputRef.current?.click();
+                      }
+                    }}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      setIsDragging(true);
+                    }}
+                    onDragLeave={(e) => {
+                      e.preventDefault();
+                      setIsDragging(false);
+                    }}
+                    onDrop={handleDrop}
+                    className="bpx-dropzone"
+                    style={{
+                      backgroundColor: "rgba(255,255,255,0.03)",
+                      border: `1.5px dashed ${isDragging ? "rgba(27,119,242,0.4)" : "rgba(255,255,255,0.15)"}`,
+                      borderRadius: "10px",
+                      padding: "24px",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "10px",
+                      cursor: "pointer",
+                      transition: "border-color 150ms ease",
+                      textAlign: "center",
+                    }}
+                  >
+                    <Upload size={24} color="#8892A4" />
+                    <p
+                      style={{
+                        fontFamily: "var(--font-dm-sans)",
+                        fontSize: "14px",
+                        color: "#8892A4",
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      Drag and drop your file here, or click to browse
+                    </p>
+                  </div>
+                )}
+
+                {fileError && (
+                  <p
+                    className="mt-2"
+                    style={{
+                      fontFamily: "var(--font-dm-sans)",
+                      fontSize: "13px",
+                      color: "#FF4444",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {fileError}
+                  </p>
+                )}
+
+                <style jsx>{`
+                  .bpx-dropzone:hover {
+                    border-color: rgba(27, 119, 242, 0.4) !important;
+                  }
+                `}</style>
               </div>
 
               <div className="mb-8">
