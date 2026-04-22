@@ -33,7 +33,7 @@ export default function WebsiteIn3DaysPage() {
     requirements: "",
   });
   const [state, setState] = useState<FormState>("idle");
-  const [attachment, setAttachment] = useState<{ name: string; type: string; size: number; content: string } | null>(null);
+  const [attachment, setAttachment] = useState<{ file: File; name: string; type: string; size: number } | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -72,26 +72,25 @@ export default function WebsiteIn3DaysPage() {
       );
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result;
-      if (typeof result !== "string") {
-        setAttachment(null);
-        clearFileInput();
-        setFileError("Could not read this file. Please try again.");
-        return;
-      }
-      const base64 = result.includes(",") ? result.split(",")[1] : result;
-      setAttachment({ name: file.name, type: file.type, size: file.size, content: base64 });
-      setFileError(null);
-    };
-    reader.onerror = () => {
-      setAttachment(null);
-      clearFileInput();
-      setFileError("Could not read this file. Please try again.");
-    };
-    reader.readAsDataURL(file);
+    setAttachment({ file, name: file.name, type: file.type, size: file.size });
+    setFileError(null);
   };
+
+  const readFileAsBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result;
+        if (typeof result !== "string") {
+          reject(new Error("Unexpected file reader result"));
+          return;
+        }
+        const base64 = result.includes(",") ? result.split(",")[1] : result;
+        resolve(base64);
+      };
+      reader.onerror = () => reject(reader.error ?? new Error("File read failed"));
+      reader.readAsDataURL(file);
+    });
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -123,13 +122,16 @@ export default function WebsiteIn3DaysPage() {
     setState("submitting");
     try {
       const payload: Record<string, unknown> = { ...form };
+
       if (attachment) {
+        const content = await readFileAsBase64(attachment.file);
         payload.attachment = {
           name: attachment.name,
           type: attachment.type,
-          content: attachment.content,
+          content,
         };
       }
+
       const res = await fetch("/api/website-brief", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
