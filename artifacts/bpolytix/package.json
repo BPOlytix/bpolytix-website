@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "framer-motion": "catalog:",
     "lucide-react": "catalog:",
     "next": "16.2.4",

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   Bot, Globe2, Smartphone, Calculator,
-  LineChart, Briefcase, FileText, Database,
+  LineChart, Briefcase, FileText, Database, Globe,
   Check, ArrowRight,
 } from "lucide-react";
 import { Nav } from "@/components/Nav";
@@ -137,6 +137,36 @@ const SERVICES = [
     accent: "#00D4AA",
   },
   {
+    icon: Globe,
+    practice: "Web Design",
+    title: "Website in 3 Days",
+    tagline: "Your business online in 72 hours.",
+    desc: "We design and deploy a production-ready website in 3 days. No invoice until you've seen it and approved it.",
+    includes: [
+      "See it first — pay only when you're satisfied. No upfront fees.",
+      "Unlimited pages to market your brand",
+      "Live chat included at no extra cost",
+      "Option to add a client portal (available as an upgrade)",
+      "Works perfectly on mobile and all devices",
+      "No hidden costs — everything is included",
+      "Free changes for 12 months after we deliver",
+      "We connect your domain or help you get one",
+      "Contact form — enquiries go straight to your inbox",
+      "WhatsApp chat button so visitors can reach you instantly",
+      "Set up so Google can find your business",
+      "Fast loading and secure by default (HTTPS included)",
+    ],
+    forYou: "You need a professional website live this week — without spending months and thousands up front.",
+    accent: "#1B77F2",
+    pricing: {
+      setup: "R850 / £40 once-off setup fee",
+      monthly: "R299 / £15 per month",
+      after: "After 12 months — the website is yours. Only your domain renewal to pay.",
+    },
+    cta: { text: "Start my 3-day build", href: "/website-in-3-days" },
+    qualifier: "No contract. No hidden fees. Cancel anytime in the first 30 days if you're not satisfied.",
+  },
+  {
     icon: Database,
     practice: "Finance",
     title: "Xero Implementation",
@@ -159,6 +189,7 @@ const PRACTICE_COLOURS: Record<string, string> = {
   Technology: "#1B77F2",
   Finance: "#00D4AA",
   Strategy: "#9B8FFF",
+  "Web Design": "#1B77F2",
 };
 
 export default function ServicesPage() {
@@ -316,21 +347,52 @@ export default function ServicesPage() {
                       ))}
                     </ul>
 
+                    {svc.pricing && (
+                      <div
+                        className="mt-8 pt-6"
+                        style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
+                      >
+                        <p
+                          className="mb-3 text-[11px] uppercase tracking-widest"
+                          style={{ color: "#8892A4", fontFamily: "var(--font-dm-sans)" }}
+                        >
+                          Pricing
+                        </p>
+                        <p style={{ fontFamily: "var(--font-dm-sans)", fontSize: "15px", color: "#F5F7FA", lineHeight: 1.6 }}>
+                          {svc.pricing.setup}
+                        </p>
+                        <p style={{ fontFamily: "var(--font-dm-sans)", fontSize: "15px", color: "#F5F7FA", lineHeight: 1.6 }}>
+                          {svc.pricing.monthly}
+                        </p>
+                        <p className="mt-2" style={{ fontFamily: "var(--font-dm-sans)", fontSize: "14px", color: "#00D4AA", lineHeight: 1.6 }}>
+                          {svc.pricing.after}
+                        </p>
+                      </div>
+                    )}
+
                     <div
-                      className="mt-8 pt-6"
-                      style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
+                      className={svc.pricing ? "mt-6" : "mt-8 pt-6"}
+                      style={!svc.pricing ? { borderTop: "1px solid rgba(255,255,255,0.06)" } : undefined}
                     >
                       <Link
-                        href="/contact"
+                        href={svc.cta?.href ?? "/contact"}
                         className="inline-flex w-full items-center justify-center gap-2 rounded-full py-3 text-[14px] font-medium text-white transition-transform hover:-translate-y-px"
                         style={{
                           backgroundColor: "#1B77F2",
                           boxShadow: "0 4px 16px rgba(27,119,242,0.25)",
                         }}
                       >
-                        Enquire about this service
+                        {svc.cta?.text ?? "Enquire about this service"}
                         <ArrowRight size={15} />
                       </Link>
+                      {svc.qualifier && (
+                        <p
+                          className="mt-3 text-center"
+                          style={{ fontFamily: "var(--font-dm-sans)", fontSize: "12px", color: "#8892A4", lineHeight: 1.5 }}
+                        >
+                          {svc.qualifier}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>

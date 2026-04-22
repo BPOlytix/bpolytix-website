@@ -4,11 +4,20 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Bot, Globe2, Smartphone, Calculator,
-  LineChart, Briefcase, FileText, Database, ArrowRight,
+  LineChart, Briefcase, FileText, Database, Globe, ArrowRight,
 } from "lucide-react";
 import { GrainOverlay } from "./GrainOverlay";
 
-const SERVICES = [
+type ServiceItem = {
+  icon: typeof Bot;
+  title: string;
+  desc: string;
+  area: string;
+  href?: string;
+  badge?: string;
+};
+
+const SERVICES: ServiceItem[] = [
   { icon: Bot,        title: "AI Business Automation",   desc: "Custom workflows that replace repetitive manual processes.",        area: "ai"      },
   { icon: Globe2,     title: "Custom Web Applications",  desc: "SaaS tools built to your spec. You own them after Year 1.",        area: "web"     },
   { icon: Smartphone, title: "Android App Development",  desc: "Native Android apps scoped, built, and handed over.",              area: "android" },
@@ -17,6 +26,7 @@ const SERVICES = [
   { icon: Briefcase,  title: "Business Development",     desc: "Pipeline building, proposal writing, and market entry support.",   area: "biz"     },
   { icon: FileText,   title: "Business Plans & Funding", desc: "Investor-ready plans and funding applications that get read.",     area: "plans"   },
   { icon: Database,   title: "Xero Implementation",      desc: "Xero setup, custom reports, and bespoke Xero integrations.",      area: "xero"    },
+  { icon: Globe,      title: "Website in 3 Days",        desc: "Brief us on Monday. Review your site on Thursday. Pay only when you're satisfied.", area: "site", href: "/website-in-3-days", badge: "New" },
 ];
 
 const BASE_CARD = {
@@ -53,16 +63,30 @@ export function ServicesBento() {
         <div className="bento-desktop">
           {SERVICES.map((s, i) => {
             const Icon = s.icon;
-            return (
-              <motion.div
-                key={s.area}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.1 }}
-                transition={{ duration: 0.5, delay: (i % 4) * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="bento-card flex flex-col justify-between"
-                style={{ ...BASE_CARD, gridArea: s.area, padding: "32px" }}
-              >
+            const inner = (
+              <>
+                {s.badge && (
+                  <span
+                    className="bento-badge"
+                    style={{
+                      position: "absolute",
+                      top: "16px",
+                      right: "16px",
+                      backgroundColor: "rgba(0,212,170,0.15)",
+                      color: "#00D4AA",
+                      border: "1px solid rgba(0,212,170,0.35)",
+                      borderRadius: "9999px",
+                      padding: "3px 10px",
+                      fontFamily: "var(--font-dm-sans)",
+                      fontSize: "11px",
+                      fontWeight: 600,
+                      letterSpacing: "0.04em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {s.badge}
+                  </span>
+                )}
                 <div>
                   <Icon size={24} color="#1B77F2" strokeWidth={1.75} />
                   <h3 className="mt-6" style={{ fontFamily: "var(--font-syne)", fontSize: "20px", color: "#F5F7FA", lineHeight: 1.2, letterSpacing: "-0.022em", fontWeight: 600 }}>
@@ -72,6 +96,31 @@ export function ServicesBento() {
                 <p className="mt-4" style={{ fontFamily: "var(--font-dm-sans)", fontSize: "15px", color: "#8892A4", lineHeight: 1.6, letterSpacing: "-0.011em" }}>
                   {s.desc}
                 </p>
+              </>
+            );
+            const cardStyle: React.CSSProperties = {
+              ...BASE_CARD,
+              gridArea: s.area,
+              padding: "32px",
+              position: "relative",
+            };
+            return (
+              <motion.div
+                key={s.area}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ duration: 0.5, delay: (i % 4) * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="bento-card"
+                style={cardStyle}
+              >
+                {s.href ? (
+                  <Link href={s.href} className="flex h-full flex-col justify-between" style={{ color: "inherit", textDecoration: "none" }}>
+                    {inner}
+                  </Link>
+                ) : (
+                  <div className="flex h-full flex-col justify-between">{inner}</div>
+                )}
               </motion.div>
             );
           })}
@@ -79,8 +128,44 @@ export function ServicesBento() {
 
         {/* Mobile: stacked cards */}
         <div className="bento-mobile flex flex-col gap-3">
-          {SERVICES.map((s, i) => {
+          {SERVICES.map((s) => {
             const Icon = s.icon;
+            const inner = (
+              <>
+                <div className="flex-none pt-0.5">
+                  <Icon size={20} color="#1B77F2" strokeWidth={1.75} />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 style={{ fontFamily: "var(--font-syne)", fontSize: "17px", color: "#F5F7FA", lineHeight: 1.2, letterSpacing: "-0.022em", fontWeight: 600 }}>
+                      {s.title}
+                    </h3>
+                    {s.badge && (
+                      <span
+                        style={{
+                          backgroundColor: "rgba(0,212,170,0.15)",
+                          color: "#00D4AA",
+                          border: "1px solid rgba(0,212,170,0.35)",
+                          borderRadius: "9999px",
+                          padding: "2px 8px",
+                          fontFamily: "var(--font-dm-sans)",
+                          fontSize: "10px",
+                          fontWeight: 600,
+                          letterSpacing: "0.04em",
+                          textTransform: "uppercase",
+                          flexShrink: 0,
+                        }}
+                      >
+                        {s.badge}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-1.5" style={{ fontFamily: "var(--font-dm-sans)", fontSize: "14px", color: "#8892A4", lineHeight: 1.6, letterSpacing: "-0.011em" }}>
+                    {s.desc}
+                  </p>
+                </div>
+              </>
+            );
             return (
               <motion.div
                 key={`m-${s.area}`}
@@ -88,20 +173,16 @@ export function ServicesBento() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.4, delay: 0, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="bento-card flex items-start gap-4"
+                className="bento-card"
                 style={{ ...BASE_CARD, padding: "20px" }}
               >
-                <div className="flex-none pt-0.5">
-                  <Icon size={20} color="#1B77F2" strokeWidth={1.75} />
-                </div>
-                <div>
-                  <h3 style={{ fontFamily: "var(--font-syne)", fontSize: "17px", color: "#F5F7FA", lineHeight: 1.2, letterSpacing: "-0.022em", fontWeight: 600 }}>
-                    {s.title}
-                  </h3>
-                  <p className="mt-1.5" style={{ fontFamily: "var(--font-dm-sans)", fontSize: "14px", color: "#8892A4", lineHeight: 1.6, letterSpacing: "-0.011em" }}>
-                    {s.desc}
-                  </p>
-                </div>
+                {s.href ? (
+                  <Link href={s.href} className="flex items-start gap-4" style={{ color: "inherit", textDecoration: "none" }}>
+                    {inner}
+                  </Link>
+                ) : (
+                  <div className="flex items-start gap-4">{inner}</div>
+                )}
               </motion.div>
             );
           })}
@@ -139,11 +220,12 @@ export function ServicesBento() {
             display: grid;
             gap: 14px;
             grid-template-columns: repeat(12, 1fr);
-            grid-template-rows: 280px 240px 260px;
+            grid-template-rows: 280px 240px 260px 220px;
             grid-template-areas:
               "ai    ai    ai    ai    ai    web   web   web   web   android android android"
               "books books books books cfo   cfo   cfo   biz   biz   biz     biz     biz"
-              "plans plans plans plans plans plans xero  xero  xero  xero    xero    xero";
+              "plans plans plans plans plans plans xero  xero  xero  xero    xero    xero"
+              "site  site  site  site  site  site  site  site  site  site    site    site";
           }
           .bento-mobile { display: none; }
         }
