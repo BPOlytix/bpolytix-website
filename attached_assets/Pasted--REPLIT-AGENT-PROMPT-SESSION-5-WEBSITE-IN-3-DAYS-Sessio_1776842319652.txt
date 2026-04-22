@@ -1,0 +1,184 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+REPLIT AGENT PROMPT — SESSION 5: WEBSITE IN 3 DAYS
+Session: 5 | Phase: 1 | Date: 2026-04-22
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You are building bpolytix.com — a professional SaaS/BPO marketing website.
+
+BEFORE DOING ANYTHING ELSE, read and internalise these rules:
+
+TECH STACK (do not deviate):
+- Framework: Next.js 15 with App Router
+- Styling: Tailwind CSS
+- Animations: Framer Motion
+- Icons: Lucide React ONLY — no other icon libraries
+- Fonts: Syne (headings) + DM Sans (body) via next/font/google
+- No other packages without asking first
+
+COLOURS (exact hex — use only these, no others):
+- Background:  #0A0F1A
+- Surface:     #0F1622
+- Accent:      #1B77F2  (ONE CTA button + key icons only)
+- Highlight:   #00D4AA  (stats and hover states only)
+- Text:        #F5F7FA
+- Muted:       #8892A4
+- Border:      rgba(255,255,255,0.08)
+
+PROJECT ROOT: All files are inside artifacts/bpolytix/ — this is the Next.js project root.
+All file paths below are relative to artifacts/bpolytix/.
+
+COPY RULES:
+- Every headline = a specific, concrete claim
+- BANNED: "empowering", "cutting-edge", "innovative", "seamless", "Why Choose Us", "Get Started Today"
+- Plain English throughout — this page targets non-technical people
+
+OUTPUT RULES:
+- Build ONLY what is in TODAY'S TASK — four tasks, in order
+- Do not modify any existing pages, layouts, or components outside stated scope
+- After completing each task, confirm what was built and what files changed
+- If you hit an error you cannot fix in 2 attempts, stop and describe it clearly
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TODAY'S TASK — Four tasks in order. Complete and verify each before starting the next.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TASK 1 — Add Website in 3 Days card to Homepage bento grid
+─────────────────────────────────────
+File to edit: artifacts/bpolytix/components/ServicesBento.tsx
+
+Add a new service card to the existing bento grid with:
+- Title: "Website in 3 Days"
+- Tagline: "Brief us on Monday. Review your site on Thursday. Pay only when you're satisfied."
+- Badge/label: "New"  — styled in #00D4AA, small, top-right of card
+- CTA link: /website-in-3-days
+- Icon: Lucide React Globe, #1B77F2
+- Card style: match the existing bento grid card styles exactly
+- Hover: translateY(-4px), 200ms ease
+
+DO NOT change any other cards, layout, or grid structure.
+
+─────────────────────────────────────
+TASK 2 — Add Website in 3 Days card to Services page
+─────────────────────────────────────
+File to edit: artifacts/bpolytix/app/services/page.tsx
+
+Add a new service section for "Website in 3 Days" following the exact same pattern as the existing 8 service sections:
+- Practice badge: "Web Design"
+- Headline: "Your business online in 72 hours."
+- Subheadline: "We design and deploy a production-ready website in 3 days. No invoice until you've seen it and approved it."
+- Included items (use checkmark list style matching existing services):
+  * See it first — pay only when you're satisfied. No upfront fees.
+  * Unlimited pages to market your brand
+  * Live chat included at no extra cost
+  * Option to add a client portal (available as an upgrade)
+  * Works perfectly on mobile and all devices
+  * No hidden costs — everything is included
+  * Free changes for 12 months after we deliver
+  * We connect your domain or help you get one
+  * Contact form — enquiries go straight to your inbox
+  * WhatsApp chat button so visitors can reach you instantly
+  * Set up so Google can find your business
+  * Fast loading and secure by default (HTTPS included)
+- Pricing block:
+  * R850 / £40 once-off setup fee
+  * R299 / £15 per month
+  * After 12 months — the website is yours. Only your domain renewal to pay.
+- CTA button: "Start my 3-day build →" linking to /website-in-3-days
+- Qualifier line: "No contract. No hidden fees. Cancel anytime in the first 30 days if you're not satisfied."
+
+DO NOT change any other service sections.
+
+─────────────────────────────────────
+TASK 3 — Build /website-in-3-days landing page
+─────────────────────────────────────
+File to create: artifacts/bpolytix/app/website-in-3-days/page.tsx
+
+Build the full page in this order:
+
+SECTION 1 — Hero
+- Headline (Syne, 72px+, weight 700, #F5F7FA): "Your business online in 72 hours."
+- Subheadline (DM Sans, 18px, #8892A4): "We design and deploy a production-ready website in 3 days. No invoice until you've seen it and approved it."
+- Trust line: "No payment. No commitment. Just a website you can actually review."
+- CTA button: "Start my 3-day build →" — scrolls to the form below
+- Background: #0A0F1A with GrainOverlay component
+- Nav and Footer: import and render existing Nav and Footer components
+
+SECTION 2 — Features + Pricing (two-column on desktop, stacked on mobile)
+Left column — feature list:
+- Section label (13px, #8892A4): "What's included"
+- List all 12 features using Lucide Check icon (#00D4AA) per item
+- DM Sans, 16px, #F5F7FA
+
+Right column — pricing card:
+- Surface background #0F1622, border rgba(255,255,255,0.08), border-radius 16px
+- Label (13px, #8892A4): "Simple pricing"
+- R850 / £40 — large, Syne, #F5F7FA — label: "Once-off setup"
+- R299 / £15 per month — Syne, #1B77F2 — label: "Monthly"
+- Divider line
+- "After 12 months — the website is yours." — #00D4AA, DM Sans
+- "Only your domain renewal to pay." — #8892A4, 14px
+- CTA button: "Start my 3-day build →" — #1B77F2, pill shape — scrolls to form
+
+SECTION 3 — Intake form
+- Section label (13px, #8892A4): "Your brief"
+- Form card: background #0F1622, border rgba(255,255,255,0.08), border-radius 16px, padding 40px
+- Form heading (Syne, 22px): "Tell us about your business."
+- Form subtext (DM Sans, 14px, #8892A4): "No brief is too short. Fill in what you know — we'll do the research."
+
+Form fields (in this order):
+1. Label: "What's your business called?" | name="businessName" | required
+2. Label: "Your name" | name="name" | required
+3. Label: "Your email address" | name="email" | type="email" | required
+4. Label: "Tell us what your business does" | name="description" | textarea, 4 rows | required | placeholder: "Plain language is perfect — no jargon needed."
+5. Label: "Do you have a logo, photos or any existing designs? If yes, pop them in a Google Drive or Dropbox folder and paste the link here." | name="assetLink" | type="url" | not required | placeholder: "https://drive.google.com/..."
+6. Label: "Anything specific you'd like on your website?" | name="requirements" | textarea, 3 rows | not required | placeholder: "e.g. a booking form, gallery, specific colours — or leave blank and we'll suggest what works."
+
+Submit button:
+- Text: "Send my brief →"
+- Style: #1B77F2, pill shape, full width
+- Disabled + shows "Sending…" while in flight
+- On success: show confirmation message — "We've got your brief. Expect a site to review within 3 business days. We'll be in touch if we need anything else."
+- On error: show — "Something went wrong. Please email us directly at mitesh@bpolytix.com"
+
+Form state machine: idle | submitting | success | error
+On submit: POST JSON to /api/website-brief
+
+Field styles: match contact page exactly — #0F1622 background, rgba(255,255,255,0.10) border, 10px border-radius, DM Sans, #F5F7FA text, #8892A4 labels at 13px.
+
+DO NOT add Supabase. DO NOT modify layout.tsx.
+
+─────────────────────────────────────
+TASK 4 — Create Resend API route for website brief form
+─────────────────────────────────────
+File to create: artifacts/bpolytix/app/api/website-brief/route.ts
+
+The route must:
+- Accept POST requests with fields: businessName, name, email, description, assetLink, requirements
+- Use the existing Resend SDK (already installed)
+- Use RESEND_API_KEY from environment variables (already set)
+- Send FROM: BPOLytix <no-reply@bpolytix.com>
+- Send TO: mitesh@bpolytix.com
+- Reply-To: the email field from the submitted form
+- Subject: "New website brief from [businessName] — [name]"
+- Body: plain text listing all submitted fields clearly, each on its own line
+- Return { success: true } on success
+- Return { error: "message" } with status 500 on failure
+
+DO NOT modify the existing /api/contact/route.ts.
+
+─────────────────────────────────────
+TASK 5 — Add Vercel Analytics
+─────────────────────────────────────
+File to edit: artifacts/bpolytix/app/layout.tsx
+
+- Install @vercel/analytics
+- Import Analytics from @vercel/analytics/next
+- Render <Analytics /> just before the closing </body> tag
+- Do not change anything else in layout.tsx
+
+─────────────────────────────────────
+After all tasks are complete:
+- Confirm exact files created or modified
+- Commit and push to GitHub with message: "Session 5: Website in 3 Days page, service cards, Resend brief route, Vercel Analytics"
+- Confirm commit hash
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
