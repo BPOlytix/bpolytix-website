@@ -6,6 +6,7 @@ import { Mail, MessageSquare, MapPin, Clock, ArrowRight, Check } from "lucide-re
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { GrainOverlay } from "@/components/GrainOverlay";
+import { Reveal } from "@/components/Reveal";
 
 const SERVICES = [
   "AI Business Automation",
@@ -93,7 +94,7 @@ export default function ContactPage() {
       {/* Page hero */}
       <section className="contact-hero relative overflow-hidden" style={{ backgroundColor: "#0A0F1A" }}>
         <GrainOverlay />
-        <div className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8">
+        <Reveal className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8">
           <p className="mb-4 text-[13px]" style={{ color: "#8892A4", fontFamily: "var(--font-dm-sans)" }}>
             Contact
           </p>
@@ -120,7 +121,7 @@ export default function ContactPage() {
           >
             Tell us what you need. We&apos;ll come back within one business day with a clear scope and indicative cost — no commitment required.
           </p>
-        </div>
+        </Reveal>
         <style jsx>{`
           .contact-hero { padding-top: 64px; padding-bottom: 56px; }
           .contact-h1 { font-size: 36px; }
@@ -142,7 +143,7 @@ export default function ContactPage() {
       {/* Main content */}
       <section className="contact-body relative overflow-hidden" style={{ backgroundColor: "#0A0F1A" }}>
         <GrainOverlay />
-        <div className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8">
+        <Reveal className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8">
           <div className="contact-layout">
 
             {/* Form */}
@@ -173,7 +174,7 @@ export default function ContactPage() {
                   </p>
                   <Link
                     href="/"
-                    className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-[14px] font-medium text-white"
+                    className="cta-glow inline-flex items-center gap-2 rounded-full px-6 py-3 text-[14px] font-medium text-white"
                     style={{ backgroundColor: "#1B77F2" }}
                   >
                     Back to home
@@ -270,7 +271,7 @@ export default function ContactPage() {
                   <button
                     type="submit"
                     disabled={state === "submitting"}
-                    className="flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-[15px] font-medium text-white transition-transform hover:-translate-y-px disabled:opacity-60"
+                    className="cta-glow flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-[15px] font-medium text-white hover:-translate-y-px disabled:opacity-60"
                     style={{
                       backgroundColor: "#1B77F2",
                       boxShadow: "0 4px 16px rgba(27,119,242,0.3)",
@@ -395,7 +396,7 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
-        </div>
+        </Reveal>
 
         <style jsx>{`
           .contact-body { padding-top: 56px; padding-bottom: 80px; }

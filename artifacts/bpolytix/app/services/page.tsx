@@ -10,6 +10,7 @@ import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { GrainOverlay } from "@/components/GrainOverlay";
 import { CTABanner } from "@/components/CTABanner";
+import { Reveal } from "@/components/Reveal";
 
 export const metadata: Metadata = {
   title: "Services — BPOLytix",
@@ -216,7 +217,7 @@ export default function ServicesPage() {
             style={{ backgroundColor: isEven ? "#0A0F1A" : "#0F1622" }}
           >
             <GrainOverlay />
-            <div className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8">
+            <Reveal className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8">
               {/* Responsive layout: stack on mobile, 2-col on desktop */}
               <div
                 className="flex flex-col gap-8 lg:items-start lg:gap-16"
@@ -376,7 +377,7 @@ export default function ServicesPage() {
                     >
                       <Link
                         href={svc.cta?.href ?? "/contact"}
-                        className="inline-flex w-full items-center justify-center gap-2 rounded-full py-3 text-[14px] font-medium text-white transition-transform hover:-translate-y-px"
+                        className="cta-glow inline-flex w-full items-center justify-center gap-2 rounded-full py-3 text-[14px] font-medium text-white hover:-translate-y-px"
                         style={{
                           backgroundColor: "#1B77F2",
                           boxShadow: "0 4px 16px rgba(27,119,242,0.25)",
@@ -397,7 +398,7 @@ export default function ServicesPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Reveal>
           </section>
         );
       })}

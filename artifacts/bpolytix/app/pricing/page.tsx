@@ -5,6 +5,7 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { GrainOverlay } from "@/components/GrainOverlay";
+import { Reveal } from "@/components/Reveal";
 
 export const metadata: Metadata = {
   title: "Pricing — BPOLytix",
@@ -116,7 +117,7 @@ type Plan = { name: string; from: string; period: string; desc: string; features
 function PlanCard({ plan }: { plan: Plan }) {
   return (
     <div
-      className="flex flex-col rounded-2xl"
+      className="card-hover flex flex-col rounded-2xl"
       style={{
         backgroundColor: plan.highlight ? "#132040" : "#0F1622",
         border: plan.highlight ? "1px solid rgba(27,119,242,0.35)" : "1px solid rgba(255,255,255,0.08)",
@@ -180,7 +181,7 @@ function PlanCard({ plan }: { plan: Plan }) {
       <div className="p-7 pt-0">
         <Link
           href="/contact"
-          className="flex items-center justify-center gap-2 rounded-full py-3 text-[14px] font-medium text-white transition-transform hover:-translate-y-px"
+          className={`${plan.highlight ? "cta-glow " : ""}flex items-center justify-center gap-2 rounded-full py-3 text-[14px] font-medium text-white hover:-translate-y-px`}
           style={{
             backgroundColor: plan.highlight ? "#1B77F2" : "rgba(255,255,255,0.07)",
             boxShadow: plan.highlight ? "0 4px 16px rgba(27,119,242,0.3)" : "none",
@@ -213,8 +214,10 @@ function PracticeSection({ label, title, plans }: { label: string; title: string
           {title}
         </h2>
         <div className={`grid gap-4 ${colClass}`}>
-          {plans.map((p) => (
-            <PlanCard key={p.name} plan={p} />
+          {plans.map((p, i) => (
+            <Reveal key={p.name} delay={i * 0.1} amount={0.15}>
+              <PlanCard plan={p} />
+            </Reveal>
           ))}
         </div>
       </div>
@@ -248,7 +251,7 @@ export default function PricingPage() {
       {/* Website in 3 Days */}
       <section className="relative overflow-hidden py-16 lg:py-20" style={{ backgroundColor: "#0A0F1A" }}>
         <GrainOverlay />
-        <div className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8">
+        <Reveal className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8">
           <p className="mb-3 text-[12px] uppercase tracking-widest" style={{ color: "#8892A4", fontFamily: "var(--font-dm-sans)" }}>
             Web Design
           </p>
@@ -333,7 +336,7 @@ export default function PricingPage() {
               <div className="p-7 pt-0">
                 <Link
                   href="/website-in-3-days"
-                  className="flex items-center justify-center gap-2 rounded-full py-3 text-[14px] font-medium text-white transition-transform hover:-translate-y-px"
+                  className="cta-glow flex items-center justify-center gap-2 rounded-full py-3 text-[14px] font-medium text-white hover:-translate-y-px"
                   style={{
                     backgroundColor: "#1B77F2",
                     boxShadow: "0 4px 16px rgba(27,119,242,0.3)",
@@ -351,7 +354,7 @@ export default function PricingPage() {
               </div>
             </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       <div style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.08)" }} />
@@ -371,7 +374,7 @@ export default function PricingPage() {
       {/* FAQ */}
       <section className="relative overflow-hidden py-16 lg:py-20" style={{ backgroundColor: "#0F1622" }}>
         <GrainOverlay />
-        <div className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8">
+        <Reveal className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8">
           <p className="mb-3 text-[12px] uppercase tracking-widest" style={{ color: "#8892A4", fontFamily: "var(--font-dm-sans)" }}>
             FAQs
           </p>
@@ -382,10 +385,10 @@ export default function PricingPage() {
             Questions we always get asked.
           </h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
-            {FAQS.map((faq) => (
-              <div
-                key={faq.q}
-                className="rounded-xl p-6"
+            {FAQS.map((faq, i) => (
+              <Reveal key={faq.q} delay={i * 0.05} amount={0.15}>
+                <div
+                className="card-hover rounded-xl p-6"
                 style={{ backgroundColor: "#0A0F1A", border: "1px solid rgba(255,255,255,0.08)" }}
               >
                 <h3
@@ -398,9 +401,10 @@ export default function PricingPage() {
                   {faq.a}
                 </p>
               </div>
+              </Reveal>
             ))}
           </div>
-        </div>
+        </Reveal>
       </section>
 
       <div style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.08)" }} />
@@ -408,7 +412,7 @@ export default function PricingPage() {
       {/* Bottom CTA */}
       <section className="relative overflow-hidden py-16 lg:py-24" style={{ backgroundColor: "#0A0F1A" }}>
         <GrainOverlay />
-        <div className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8 flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
+        <Reveal className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8 flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-[540px]">
             <h2
               style={{ fontFamily: "var(--font-syne)", fontSize: "clamp(26px, 3.5vw, 36px)", color: "#F5F7FA", letterSpacing: "-0.022em", lineHeight: 1.05, fontWeight: 700 }}
@@ -422,7 +426,7 @@ export default function PricingPage() {
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-[15px] font-medium text-white transition-transform hover:-translate-y-px"
+              className="cta-glow inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-[15px] font-medium text-white hover:-translate-y-px"
               style={{ backgroundColor: "#1B77F2", boxShadow: "0 4px 16px rgba(27,119,242,0.25)", whiteSpace: "nowrap" }}
             >
               Book a scoping call
@@ -438,7 +442,7 @@ export default function PricingPage() {
               WhatsApp us
             </a>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       <Footer />

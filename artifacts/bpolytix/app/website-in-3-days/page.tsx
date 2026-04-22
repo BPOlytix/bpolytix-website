@@ -5,6 +5,7 @@ import { Check, ArrowRight, Upload, X } from "lucide-react";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { GrainOverlay } from "@/components/GrainOverlay";
+import { Reveal } from "@/components/Reveal";
 
 const FEATURES = [
   "See it first — pay only when you're satisfied. No upfront fees.",
@@ -226,7 +227,7 @@ export default function WebsiteIn3DaysPage() {
             <button
               type="button"
               onClick={scrollToForm}
-              className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-medium text-white transition-transform hover:-translate-y-px"
+              className="cta-glow inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-medium text-white hover:-translate-y-px"
               style={{
                 backgroundColor: "#1B77F2",
                 boxShadow: "0 4px 16px rgba(27,119,242,0.3)",
@@ -256,7 +257,7 @@ export default function WebsiteIn3DaysPage() {
       {/* SECTION 2 — Features + Pricing */}
       <section className="relative overflow-hidden py-16 lg:py-24" style={{ backgroundColor: "#0F1622" }}>
         <GrainOverlay />
-        <div className="relative z-10 mx-auto max-w-[1200px] px-6 sm:px-8">
+        <Reveal className="relative z-10 mx-auto max-w-[1200px] px-6 sm:px-8">
           <div className="w3d-grid">
             {/* Left — feature list */}
             <div>
@@ -384,7 +385,7 @@ export default function WebsiteIn3DaysPage() {
               <button
                 type="button"
                 onClick={scrollToForm}
-                className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-[15px] font-medium text-white transition-transform hover:-translate-y-px"
+                className="cta-glow mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-[15px] font-medium text-white hover:-translate-y-px"
                 style={{
                   backgroundColor: "#1B77F2",
                   boxShadow: "0 4px 16px rgba(27,119,242,0.25)",
@@ -395,7 +396,7 @@ export default function WebsiteIn3DaysPage() {
               </button>
             </div>
           </div>
-        </div>
+        </Reveal>
 
         <style jsx>{`
           .w3d-grid {
@@ -422,7 +423,7 @@ export default function WebsiteIn3DaysPage() {
         style={{ backgroundColor: "#0A0F1A" }}
       >
         <GrainOverlay />
-        <div className="relative z-10 mx-auto max-w-[760px] px-6 sm:px-8">
+        <Reveal className="relative z-10 mx-auto max-w-[760px] px-6 sm:px-8">
           <p className="mb-4 text-[13px]" style={{ color: "#8892A4", fontFamily: "var(--font-dm-sans)" }}>
             Your brief
           </p>
@@ -720,7 +721,7 @@ export default function WebsiteIn3DaysPage() {
               <button
                 type="submit"
                 disabled={state === "submitting"}
-                className="flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-[15px] font-medium text-white transition-transform hover:-translate-y-px disabled:opacity-60"
+                className="cta-glow flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-[15px] font-medium text-white hover:-translate-y-px disabled:opacity-60"
                 style={{
                   backgroundColor: "#1B77F2",
                   boxShadow: "0 4px 16px rgba(27,119,242,0.3)",
@@ -744,7 +745,7 @@ export default function WebsiteIn3DaysPage() {
               )}
             </form>
           )}
-        </div>
+        </Reveal>
       </section>
 
       <Footer />
