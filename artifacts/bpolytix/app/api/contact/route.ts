@@ -36,7 +36,7 @@ export async function POST(req: Request) {
       from: "onboarding@resend.dev",
       to: "info@bpolytix.com",
       replyTo: email,
-      subject: `New enquiry from ${name} — ${company || "no company"}`,
+      subject: `New enquiry from ${name} — ${company}`,
       text,
     });
 
