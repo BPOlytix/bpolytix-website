@@ -1,0 +1,219 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+REPLIT AGENT PROMPT — ABOUT PAGE BUILD
+Session: 6 | Phase: 2 | Date: 2026-04-22
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You are building bpolytix.com — a professional SaaS/BPO marketing website.
+
+BEFORE DOING ANYTHING ELSE, read and internalise these rules:
+
+TECH STACK (do not deviate):
+- Framework: Next.js 15 with App Router
+- Styling: Tailwind CSS
+- Animations: Framer Motion
+- Icons: Lucide React ONLY — no other icon libraries
+- Fonts: Syne (headings) + DM Sans (body) via next/font/google
+- No other packages without asking first
+
+COLOURS (exact hex — use only these, no others):
+- Background:  #0D1B2A
+- Surface:     #111F2E
+- Accent:      #1B77F2  (ONE CTA button + key icons only)
+- Highlight:   #00D4AA  (stats, highlights, and hover states only)
+- Text:        #F5F7FA
+- Muted:       #8892A4
+- Border:      #1E2D3D
+
+TYPOGRAPHY:
+- Headings: Syne, weight 700
+- Body: DM Sans, 16–18px, line-height 1.7
+- Section anchor labels: 13px, #8892A4, DM Sans, uppercase, letter-spacing 0.08em
+- Hero headline: min 64px, line-height 1.05
+- NEVER use Inter, Roboto, Arial, or system-ui
+
+LAYOUT RULES:
+- Dark throughout — #0D1B2A on ALL sections
+- No alternating white/grey sections
+- Asymmetric layouts — not always centred
+- Section padding: 100px top, 120px bottom
+- Max-width: 1440px centered, 32px horizontal inset
+- NO: stock photos, blob illustrations, gradient backgrounds, glassmorphism, backdrop-filter blur
+- NO: 3-equal-column grids
+- YES: SVG inline illustrations, animated counters, terminal/code-style callouts, bento-style stat blocks
+
+ANIMATION RULES (Framer Motion):
+- Use the existing Reveal component at artifacts/bpolytix/components/Reveal.tsx for all scroll reveals
+- Scroll-triggered ONLY — nothing animates on page load
+- Cards: add class "card-hover" and "glow-border" from globals.css
+- CTA buttons: add class "glow-border-blue" from globals.css
+- All transitions: duration 0.7s, ease [0.25, 0.1, 0.25, 1]
+
+COPY RULES:
+- Use ONLY the copy provided below — do not rewrite, summarise, or add to it
+- Do not use banned words: "empowering", "cutting-edge", "innovative", "seamless", "Why Choose Us", "Our Mission"
+
+OUTPUT RULES:
+- Build ONLY what is in TODAY'S TASK
+- Do not modify any existing pages, components, or layout.tsx
+- After completing, list every file created or changed
+- If you hit an error you cannot fix in 2 attempts, stop and describe it clearly
+
+---
+
+TODAY'S TASK: Build the About page at route /about.
+
+FILE TO CREATE: artifacts/bpolytix/app/about/page.tsx
+
+Also create if needed: artifacts/bpolytix/components/about/ (sub-components only if page.tsx exceeds ~300 lines)
+
+---
+
+PAGE STRUCTURE (build in this order):
+
+--- SECTION 1: PAGE HERO ---
+
+Layout: Full-width, centred text, dark background #0D1B2A
+Anchor label (above headline): "Our story" — 13px, #8892A4, uppercase
+Headline: "Built by business owners. For business owners."
+Subheadline: "We've worked in the trenches — across industries, across continents. We know what breaks a growing business, and we built BPOLytix to fix it."
+Subheadline style: 20px, #8892A4, DM Sans, max-width 640px, centred
+
+Visual element — ANIMATED SVG BACKGROUND (inline SVG, no external files):
+- A subtle animated circuit/node network pattern behind the headline
+- Dark lines (#1E2D3D) connecting small dots (#1B77F2 at 30% opacity)
+- Nodes pulse slowly — scale 1→1.4→1, opacity 0.3→0.7→0.3, duration 3s, staggered, infinite
+- This represents the "network" and "automation" theme
+- Position: absolute, full section width, z-index 0, pointer-events none
+- Keep it subtle — it should not overpower the text
+- Text sits above it at z-index 1
+
+Wrap headline and subheadline in <Reveal> component.
+
+--- SECTION 2: WHY BPOLYTIX EXISTS ---
+
+Layout: Two-column asymmetric — left column 55% (text), right column 45% (visual)
+Anchor label: "Our story"
+Headline: "The promise of AI was real. The price tag wasn't."
+Body copy (use exactly as written):
+"Every week, a new platform promises to automate your business for a monthly fee. Every week, another startup burns cash on AI credits, no-code tools, and consultants — and ends up with half-built workflows and no one who actually knows how to run them.
+
+We watched this happen from the inside. As a CFO and FP&A specialist, our founder saw early that AI was reshaping business the way the Industrial Revolution reshaped industry. The corporations moved fast. Startups and SMEs got left behind — priced out by dev costs, overwhelmed by choice, and underserved by platforms that oversell what the technology can actually do today.
+
+BPOLytix was founded to close that gap."
+
+Right column visual — ANIMATED SVG DIAGRAM:
+- A vertical timeline showing the "old world" vs "new world"
+- Left side label: "Enterprise" — nodes connected, flowing downward in #1B77F2
+- Right side label: "Startups" — broken/disconnected nodes in #8892A4
+- A bridge forming between them, animating on scroll (stroke-dashoffset animation, draws itself when in view)
+- Label at bridge: "BPOLytix" in #00D4AA, 13px
+- Keep it simple — 3 nodes per side, one bridge line
+- This is an inline SVG component — no external image files
+
+Wrap entire section in <Reveal delay={0.1}>.
+
+--- SECTION 3: WHAT MAKES US DIFFERENT ---
+
+Layout: Full width, with a dark surface card (#111F2E) containing the text — creates visual depth
+Anchor label: "Our approach"
+Headline: "We've tested the platforms so you don't have to."
+Body copy (use exactly as written):
+"We've trialled, stress-tested, and built on most of the major automation and AI platforms available today. We know which ones deliver, which ones overpromise, and which ones will cost you more to migrate away from than they ever saved you.
+
+We don't sell you a platform. We build what your business actually needs — custom, operational, and handed over to you after 12 months. No ongoing licence fees. No lock-in. Just working software that your team can run."
+
+Visual element — PLATFORM LOGOS STRIP (text-only, no images):
+- A horizontal scrolling ticker of platform names in #8892A4, 13px, DM Sans
+- Names: Zapier · Make · n8n · Airtable · Monday · HubSpot · Notion · Xero · Supabase · Vercel · OpenAI · Anthropic · Replit · Bubble · Webflow
+- Infinite horizontal scroll animation (CSS keyframes, left to right, 30s loop)
+- Label above: "Platforms we've worked with" — 11px, #8892A4
+- This replaces any logo grid — text only, no external assets
+
+Wrap section content in <Reveal delay={0.1}>.
+
+--- SECTION 4: WHO WE SERVE ---
+
+Layout: Asymmetric — text right 50%, visual left 50%
+Anchor label: "Who we work with"
+Headline: "South African startups. UK SMEs. Businesses that can't afford to wait."
+Body copy (use exactly as written):
+"Founders don't have time to raise capital just to pay for a developer, a marketer, and a bookkeeper. They need a trusted partner who understands business — not just technology.
+
+We've worked across industries, managed complex financial operations, and served clients who needed results, not roadmaps. That experience is what we bring to every engagement. We understand workflows, we know where the bottlenecks are, and we know how to fix them without burning your runway."
+
+Left column visual — TWO LOCATION CALLOUT CARDS (stacked):
+Card 1:
+- Flag emoji: 🇿🇦
+- Label: "South Africa"
+- Subtext: "Cape Town · Johannesburg · Remote"
+- Border: glow-border class
+
+Card 2:
+- Flag emoji: 🇬🇧
+- Label: "United Kingdom"
+- Subtext: "London · Manchester · Remote"
+- Border: glow-border class
+
+Card style: background #111F2E, border via glow-border class, padding 24px, border-radius 12px, stacked vertically with 16px gap
+
+Wrap section in <Reveal delay={0.1}>.
+
+--- SECTION 5: STATS BAR ---
+
+Layout: 4-column grid of stat blocks, full width, background #111F2E, padding 64px vertical
+Use animated count-up (same pattern as homepage StatsBar — reuse or replicate the logic)
+
+Stats:
+- "12+" | label: "Years combined business experience"
+- "8" | label: "Services under one roof"  
+- "R0" | label: "To get started" — do not count-up this one, just reveal it
+- "12" | label: "Months to full ownership"
+
+Stat number style: Syne, 56px, #F5F7FA, weight 700
+Label style: DM Sans, 14px, #8892A4
+Highlight colour on numbers: #00D4AA
+
+Wrap each stat in <Reveal> with staggered delay (i * 0.1).
+
+--- SECTION 6: THE PERSONAL EDGE ---
+
+Layout: Centred, max-width 720px
+Anchor label: "Our promise"
+Headline: "No invoice until you're satisfied. No lock-in after year one."
+Body copy (use exactly as written):
+"We put our work in front of you before we ask for a cent. If it doesn't meet the brief, we fix it. If it does, you pay — and after 12 months, you own it outright.
+
+That's not a marketing line. It's how we operate, because we've been on the other side of that table. We know what it feels like to pay for something that doesn't deliver."
+
+Wrap in <Reveal delay={0.1}>.
+
+--- SECTION 7: CTA BANNER ---
+
+Layout: Full width, centred
+Headline: "Ready to talk?"
+Subtext: "No commitment. No invoice. Just a conversation."
+Button: "Get in touch →" — links to /contact
+Button style: bg #1B77F2, pill shape (border-radius 9999px), class "glow-border-blue"
+
+Wrap in <Reveal delay={0.1}>.
+
+---
+
+NAVIGATION: Add "About" link to the existing nav component if it exists, pointing to /about. If nav is in layout.tsx, add it there. Do not break existing nav links.
+
+---
+
+QUALITY CHECK before committing:
+- [ ] Background is #0D1B2A throughout — no white or light sections
+- [ ] Fonts are Syne (headings) + DM Sans (body)
+- [ ] All scroll reveals use the existing Reveal component
+- [ ] SVG animations are subtle — do not overpower text
+- [ ] Platform ticker scrolls infinitely without jumping
+- [ ] Location cards show glow-border on hover
+- [ ] Stat counters animate on scroll
+- [ ] CTA button has glow-border-blue on hover
+- [ ] No new packages installed
+- [ ] "About" appears in site navigation
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Copy everything between the lines and paste into Replit Agent.
