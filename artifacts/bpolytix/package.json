@@ -11,7 +11,7 @@
   "dependencies": {
     "framer-motion": "catalog:",
     "lucide-react": "catalog:",
-    "next": "15.1.6",
+    "next": "16.2.4",
     "react": "catalog:",
     "react-dom": "catalog:",
     "resend": "^6.12.2"
