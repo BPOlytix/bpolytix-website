@@ -11,12 +11,14 @@ import {
   Plus,
   X,
 } from "lucide-react";
-import Image from "next/image";
 import { Stepper } from "@/components/calculator/Stepper";
 import { ToggleSwitch } from "@/components/calculator/ToggleSwitch";
 import { PillSelect } from "@/components/calculator/PillSelect";
 import { MetricTile } from "@/components/calculator/MetricTile";
 import { CostBreakdown } from "@/components/calculator/CostBreakdown";
+import { DotGrid } from "@/components/calculator/DotGrid";
+import { ResultsCharts } from "@/components/calculator/ResultsCharts";
+import { ScreenshotCard } from "@/components/calculator/ScreenshotCard";
 import {
   calculateBookkeeping,
   calculateCFO,
@@ -339,20 +341,20 @@ export default function CalculatorPage() {
             />
           )}
 
-          <div
-            id="results-charts"
-            className="mt-8 rounded-2xl p-10 text-center"
-            style={{
-              backgroundColor: "#111F2E",
-              border: "1px dashed #1E2D3D",
-            }}
-          >
-            <span
-              style={{ fontFamily: DM, fontSize: 14, color: "#8892A4" }}
-            >
-              Visual breakdown loading in next update.
-            </span>
-          </div>
+          {savedServices.length > 0 && combined && (
+            <div id="results-charts" className="mt-8 flex flex-col gap-6">
+              <ResultsCharts
+                results={savedServices.map((s) => s.result)}
+                combined={combined}
+                currency={currency}
+              />
+              <ScreenshotCard
+                results={savedServices.map((s) => s.result)}
+                combined={combined}
+                currency={currency}
+              />
+            </div>
+          )}
 
           <p
             className="mx-auto mt-10 max-w-[760px] text-center"
@@ -375,26 +377,21 @@ export default function CalculatorPage() {
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden px-6 pt-20 pb-12 sm:px-8 sm:pt-28 sm:pb-16">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.18]"
-        style={{ mixBlendMode: "overlay" }}
-      >
-        <Image
-          src="/grain.png"
-          alt=""
-          fill
-          sizes="100vw"
-          aria-hidden
-          priority={false}
-        />
-      </div>
+    <section
+      className="relative overflow-hidden px-6 pt-20 pb-12 sm:px-8 sm:pt-28 sm:pb-16"
+      style={{
+        background: "#0D1B2A",
+        minHeight: undefined,
+      }}
+    >
+      <DotGrid />
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
         className="relative mx-auto max-w-[840px] text-center"
+        style={{ zIndex: 1 }}
       >
         <p
           style={{

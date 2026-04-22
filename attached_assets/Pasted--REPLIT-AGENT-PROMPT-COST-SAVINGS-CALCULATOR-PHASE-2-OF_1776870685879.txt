@@ -1,0 +1,270 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+REPLIT AGENT PROMPT — COST SAVINGS CALCULATOR (PHASE 2 OF 3)
+Session: 7 | Phase: 2 | Date: 2026-04-22
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You are building bpolytix.com — a professional SaaS/BPO marketing website.
+The Next.js project lives at: artifacts/bpolytix/
+All files must be created or modified inside this directory.
+
+CONTEXT:
+Phase 1 is complete. The calculator page exists at app/calculator/page.tsx.
+All logic is in lib/calculatorLogic.ts. Recharts is already installed.
+Phase 2 adds: dot grid hero background, Recharts visuals, screenshot card.
+Do NOT touch calculatorLogic.ts. Do NOT reinstall recharts.
+Do NOT modify any input components or calculator logic.
+
+COLOURS (exact — use only these):
+- Background:  #0D1B2A
+- Surface:     #111F2E
+- Card:        #1C2A3A
+- Accent:      #1B77F2
+- Highlight:   #00D4AA
+- Text:        #F5F7FA
+- Muted:       #8892A4
+- Border:      #1E2D3D
+
+OUTPUT RULES:
+- Build ONLY what is listed under EXECUTE NOW
+- Do not modify any Phase 1 files except page.tsx (to inject new components)
+- After completing, list every file created or modified
+- If you hit an error you cannot fix in 2 attempts, stop and describe it clearly
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EXECUTE NOW — PHASE 2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TASK 1 — DOT GRID HERO BACKGROUND
+
+Create artifacts/bpolytix/components/calculator/DotGrid.tsx
+
+This is a "use client" React component that renders an SVG dot grid
+behind the hero headline. Spec:
+
+- The component renders a full-width, fixed-height (420px desktop,
+  280px mobile) div with position: relative
+- Inside it, an SVG fills 100% width and height absolutely positioned
+- The SVG renders a pattern of dots:
+  - Dot radius: 1.5px
+  - Dot fill: #1B77F2
+  - Dot opacity: 0.05
+  - Grid spacing: 24px (dot every 24px horizontally and vertically)
+  - Use SVG <defs><pattern> to tile the dots efficiently
+  - Pattern id: "dot-grid"
+- Over the SVG, apply a CSS mask using a linear gradient:
+  - Top: fully visible
+  - Bottom: fades to transparent over the last 30% of height
+  - Use: maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)'
+  - Apply to the SVG element directly
+- Framer Motion: the entire SVG fades in on page load
+  - initial: opacity 0
+  - animate: opacity 1
+  - transition: duration 1.2s, ease "easeOut"
+  - This is intentional — page load animation for hero only
+- The hero headline and subheadline sit on top of this component
+  using position: relative, z-index: 1
+- Background of the component div: #0D1B2A
+
+Replace the existing hero section in app/calculator/page.tsx with
+this structure:
+
+<section style={{ position: 'relative', background: '#0D1B2A' }}>
+  <DotGrid /> {/* absolute, fills section */}
+  <div style={{ position: 'relative', zIndex: 1 }}>
+    {/* existing hero headline, subheadline, currency toggle */}
+  </div>
+</section>
+
+The DotGrid div must be position: absolute, inset: 0 so it fills
+the section without pushing content down.
+
+━━━
+
+TASK 2 — RECHARTS VISUALS COMPONENT
+
+Create artifacts/bpolytix/components/calculator/ResultsCharts.tsx
+
+This is a "use client" component. It receives these props:
+- results: array of per-service result objects from calculatorLogic.ts
+- combined: combined result object from combineResults()
+- currency: 'ZAR' | 'GBP'
+
+It renders three visual panels in this order:
+
+━━━
+PANEL 1 — SAVING GAUGE (Radial arc gauge)
+
+Use Recharts RadialBarChart to build a gauge showing overall saving %.
+
+Spec:
+- Single RadialBar
+- Value: combined.savingPercent (0–100)
+- startAngle: 180, endAngle: 0 (half-circle, opens downward)
+- innerRadius: "60%", outerRadius: "90%"
+- RadialBar fill: #00D4AA
+- Background RadialBar fill: #1E2D3D
+- Chart dimensions: 280px × 160px, centered
+- In the center of the arc, display:
+  - The saving % in Syne font, 48px, #00D4AA, bold
+  - "overall saving" label in DM Sans, 13px, #8892A4, below the number
+- No legend, no tooltip, no axes
+- Container card: background #111F2E, border #1E2D3D,
+  border-radius 16px, padding 24px
+- Heading above chart (Syne, 14px, #8892A4, uppercase,
+  letter-spacing 0.08em): "SAVING OVERVIEW"
+- Framer Motion: card fades in (y 20→0, opacity 0→1, 0.5s)
+  when scrolled into view using useInView, once: true
+
+━━━
+PANEL 2 — COST COMPARISON BAR CHART
+
+Use Recharts BarChart (horizontal) to show in-house vs BPOLytix
+cost per service.
+
+Spec:
+- Layout: "vertical" (horizontal bars)
+- One row per selected service
+- Two bars per row: In-house cost | BPOLytix fee
+- Bar colours:
+  - In-house: #8892A4
+  - BPOLytix: #1B77F2
+- Bar radius: [4, 4, 4, 4]
+- Y-axis: service names (DM Sans, 13px, #8892A4)
+- X-axis: currency values, formatted with R or £ prefix,
+  no decimal places, DM Sans 12px #8892A4
+- Grid: CartesianGrid strokeDasharray="3 3" stroke="#1E2D3D"
+- Tooltip:
+  - Background: #1C2A3A
+  - Border: #1E2D3D
+  - Text: #F5F7FA, DM Sans 13px
+  - Shows: service name, in-house value, BPOLytix value, saving
+- Legend: bottom, DM Sans 13px, #8892A4
+  Labels: "In-house true cost" | "BPOLytix fee"
+- Chart height: 80px per service row (minimum 160px)
+- Container card: same style as Panel 1
+- Heading: "COST COMPARISON"
+- Framer Motion: same scroll-triggered fade-in, 0.1s delay after Panel 1
+
+━━━
+PANEL 3 — SAVING BREAKDOWN DONUT
+
+Use Recharts PieChart with innerRadius to create a donut chart
+showing where the saving comes from.
+
+Data slices (use these labels and derive values from breakdown object):
+- "Salary burden" — uif + sdl + recruitment + management overhead
+- "Seat & infrastructure" — seat + software + device
+- "Core rate differential" — remaining saving
+
+Slice colours:
+- Salary burden: #1B77F2
+- Seat & infrastructure: #00D4AA
+- Core rate differential: #8892A4
+
+Spec:
+- PieChart: 260px × 260px
+- innerRadius: 70, outerRadius: 110
+- No labels on slices — use custom legend below
+- Custom legend: three rows, each with a colour dot +
+  label + value in currency
+  - Dot: 8px circle, matching slice colour
+  - Label: DM Sans 13px #8892A4
+  - Value: DM Sans 13px #F5F7FA, right-aligned
+- Center of donut: display total annual saving
+  - Value: Syne 22px #00D4AA
+  - Label: DM Sans 12px #8892A4 "annual saving"
+- Tooltip: same style as Panel 2
+- Container card: same style as Panel 1
+- Heading: "WHERE THE SAVING COMES FROM"
+- Framer Motion: same scroll-triggered fade-in, 0.2s delay
+
+━━━
+LAYOUT OF THREE PANELS:
+
+Desktop: Panel 1 (gauge) left | Panel 2 (bar) center | Panel 3 (donut) right
+  — CSS grid: grid-template-columns: 1fr 2fr 1fr, gap 20px
+
+Mobile: stack vertically, full width, gap 16px
+
+━━━
+
+TASK 3 — INJECT CHARTS INTO PAGE
+
+In artifacts/bpolytix/app/calculator/page.tsx:
+
+1. Import ResultsCharts component
+2. Find the div with id="results-charts" (the Phase 1 placeholder)
+3. Replace the placeholder card entirely with:
+
+{results && results.length > 0 && (
+  <ResultsCharts
+    results={results}
+    combined={combined}
+    currency={currency}
+  />
+)}
+
+Where results and combined come from the existing calculator state.
+Only render the charts when at least one service has been calculated
+(i.e. results array is not empty).
+
+━━━
+
+TASK 4 — SCREENSHOT CARD
+
+Create artifacts/bpolytix/components/calculator/ScreenshotCard.tsx
+
+This component renders below the three chart panels.
+It is designed to look good when screenshotted and shared.
+
+Spec:
+- Card: background #111F2E, border #1E2D3D, border-radius 16px,
+  padding 32px desktop / 20px mobile
+- Top row: BPOLytix logo text (Syne, 18px, #F5F7FA, weight 700)
+  + "Cost Analysis" label (DM Sans, 13px, #8892A4) — left aligned
+  + today's date — right aligned, DM Sans 13px #8892A4
+- Divider: 1px #1E2D3D
+- Per-service rows (one per selected service):
+  - Service name: DM Sans 15px #F5F7FA
+  - In-house cost: DM Sans 14px #8892A4
+  - BPOLytix fee: DM Sans 14px #1B77F2
+  - Saving: DM Sans 14px #00D4AA bold
+- Divider
+- Combined total row:
+  - "Total annual saving" label: Syne 16px #F5F7FA
+  - Value: Syne 32px #00D4AA — this is the headline number
+- "What this saving buys you" line:
+  - DM Sans 14px #8892A4 italic
+  - Use the reinvestment copy from calculatorLogic.ts
+- Bottom row:
+  - Left: "bpolytix.com/calculator" DM Sans 12px #8892A4
+  - Right: "Get your tailored quote →" — pill button,
+    #1B77F2 background, Syne 13px, links to /contact
+- Heading above card (outside card):
+  Syne 16px #8892A4 uppercase letter-spacing 0.08em:
+  "YOUR RESULTS SUMMARY"
+- Framer Motion: card slides up (y 30→0, opacity 0→1, 0.6s)
+  on scroll into view, once: true
+
+Inject ScreenshotCard into page.tsx directly below ResultsCharts,
+inside the same results conditional block.
+
+━━━
+
+TASK 5 — REMOVE PHASE 1 PLACEHOLDER TEXT
+
+In app/calculator/page.tsx, find and remove this line entirely:
+"Visual breakdown loading in next update."
+and its parent placeholder card div.
+It is replaced by ResultsCharts and ScreenshotCard.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WHEN PHASE 2 IS COMPLETE:
+- List every file created or modified
+- Confirm dot grid renders in hero section
+- Confirm all three Recharts panels render when a service is calculated
+- Confirm screenshot card renders below the charts
+- Confirm placeholder text is removed
+- Confirm mobile layout stacks correctly
+- Do NOT proceed to Phase 3 — wait for instruction
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
