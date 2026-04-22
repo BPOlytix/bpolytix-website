@@ -49,15 +49,6 @@ export function Footer() {
             >
               info@bpolytix.com
             </a>
-            <a
-              href="https://wa.me/27781790363?text=Hi%2C+I%27d+like+to+find+out+more+about+BPOLytix"
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full px-4 py-2 text-[13px] font-medium transition-colors hover:bg-white/10"
-              style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "#F5F7FA" }}
-            >
-              WhatsApp us
-            </a>
           </div>
         </div>
 

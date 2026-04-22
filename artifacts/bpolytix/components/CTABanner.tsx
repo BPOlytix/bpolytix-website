@@ -49,15 +49,6 @@ export function CTABanner() {
           >
             Get in touch
           </Link>
-          <a
-            href="https://wa.me/27781790363?text=Hi%2C+I%27d+like+to+find+out+more+about+BPOLytix"
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-full px-7 py-3.5 text-center text-[15px] font-medium transition-colors hover:bg-white/10"
-            style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "#F5F7FA" }}
-          >
-            WhatsApp us
-          </a>
         </div>
       </div>
 
