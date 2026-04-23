@@ -21,7 +21,7 @@ type DrillDownPanelProps = {
 
 type Item = { label: string; value: number; tooltip?: string };
 
-function tooltipFor(label: string, service: ServiceKind): string | undefined {
+function tooltipFor(label: string, service: ServiceKind): string {
   if (label === "Base salary") {
     switch (service) {
       case "bookkeeping":
@@ -50,7 +50,17 @@ function tooltipFor(label: string, service: ServiceKind): string | undefined {
     return "SARA benchmark — 8% of annual salary (admin/finance)";
   if (label === "Management overhead")
     return "Industry standard — 10% of monthly salary cost";
-  return undefined;
+  if (label === "Manual hours")
+    return "Productive hours × loaded VA rate (R105/hr)";
+  if (label === "Rework / error hours")
+    return "Hours lost to rework or error correction, billed at the same loaded rate";
+  if (label === "Loaded developer cost / month")
+    return "Salary + employer UIF/SDL + workspace + software + device + recruitment + management, multiplied by 1.25 for team overhead";
+  if (label === "Build duration (months)")
+    return "Estimated months to deliver the build at the selected scope";
+  if (label === "True in-house total")
+    return "Loaded monthly cost × build duration — the full in-house cost of building this internally";
+  return "Loaded cost component";
 }
 
 const STAFF_LABELS = new Set([
@@ -89,6 +99,12 @@ function categorize(
   return { staff, infra, hidden };
 }
 
+const EMPTY_HINT: Record<"staff" | "infra" | "hidden", string> = {
+  staff: "Not applicable for this service.",
+  infra: "Bundled into the BPOLytix fee — nothing for you to provision.",
+  hidden: "No recruitment or management overhead with BPOLytix.",
+};
+
 function Tooltip({ text }: { text: string }) {
   const [open, setOpen] = useState(false);
   return (
@@ -96,8 +112,6 @@ function Tooltip({ text }: { text: string }) {
       className="relative ml-1 inline-flex"
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
-      onFocus={() => setOpen(true)}
-      onBlur={() => setOpen(false)}
     >
       <Info size={12} color="#8892A4" aria-hidden />
       <AnimatePresence>
@@ -173,6 +187,23 @@ function Subtotal({
       <span style={{ fontVariantNumeric: "tabular-nums" }}>
         {fmtMoney(total, currency)}
       </span>
+    </div>
+  );
+}
+
+function EmptyHint({ text }: { text: string }) {
+  return (
+    <div
+      style={{
+        fontFamily: DM,
+        fontSize: 12,
+        color: "#8892A4",
+        fontStyle: "italic",
+        padding: "4px 0",
+        lineHeight: 1.5,
+      }}
+    >
+      {text}
     </div>
   );
 }
@@ -275,30 +306,42 @@ export function DrillDownPanel({
       </div>
 
       <div className="flex flex-col gap-2">
-        {staff.length > 0 && (
-          <Accordion title="Staff cost">
-            {staff.map((it) => (
-              <LineRow key={it.label} item={it} currency={currency} />
-            ))}
-            <Subtotal items={staff} currency={currency} />
-          </Accordion>
-        )}
-        {infra.length > 0 && (
-          <Accordion title="Infrastructure">
-            {infra.map((it) => (
-              <LineRow key={it.label} item={it} currency={currency} />
-            ))}
-            <Subtotal items={infra} currency={currency} />
-          </Accordion>
-        )}
-        {hidden.length > 0 && (
-          <Accordion title="Hidden costs">
-            {hidden.map((it) => (
-              <LineRow key={it.label} item={it} currency={currency} />
-            ))}
-            <Subtotal items={hidden} currency={currency} />
-          </Accordion>
-        )}
+        <Accordion title="Staff cost">
+          {staff.length > 0 ? (
+            <>
+              {staff.map((it) => (
+                <LineRow key={it.label} item={it} currency={currency} />
+              ))}
+              <Subtotal items={staff} currency={currency} />
+            </>
+          ) : (
+            <EmptyHint text={EMPTY_HINT.staff} />
+          )}
+        </Accordion>
+        <Accordion title="Infrastructure">
+          {infra.length > 0 ? (
+            <>
+              {infra.map((it) => (
+                <LineRow key={it.label} item={it} currency={currency} />
+              ))}
+              <Subtotal items={infra} currency={currency} />
+            </>
+          ) : (
+            <EmptyHint text={EMPTY_HINT.infra} />
+          )}
+        </Accordion>
+        <Accordion title="Hidden costs">
+          {hidden.length > 0 ? (
+            <>
+              {hidden.map((it) => (
+                <LineRow key={it.label} item={it} currency={currency} />
+              ))}
+              <Subtotal items={hidden} currency={currency} />
+            </>
+          ) : (
+            <EmptyHint text={EMPTY_HINT.hidden} />
+          )}
+        </Accordion>
       </div>
 
       <div

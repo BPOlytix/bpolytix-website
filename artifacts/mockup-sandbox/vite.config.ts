@@ -46,9 +46,16 @@ export default defineConfig({
       : []),
   ],
   resolve: {
-    alias: {
-      "@": path.resolve(import.meta.dirname, "src"),
-    },
+    alias: [
+      {
+        find: /^@\/lib\/calculatorLogic$/,
+        replacement: path.resolve(
+          import.meta.dirname,
+          "../bpolytix/lib/calculatorLogic.ts",
+        ),
+      },
+      { find: "@", replacement: path.resolve(import.meta.dirname, "src") },
+    ],
   },
   root: path.resolve(import.meta.dirname),
   build: {
