@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Info } from "lucide-react";
 import {
@@ -56,11 +56,26 @@ function tooltipFor(label: string, service: ServiceKind): string {
     return "Hours lost to rework or error correction, billed at the same loaded rate";
   if (label === "Loaded developer cost / month")
     return "Salary + employer UIF/SDL + workspace + software + device + recruitment + management, multiplied by 1.25 for team overhead";
+  if (label === "Loaded mobile dev cost / month")
+    return "Indeed SA mobile dev R43,946/mo + employer UIF/SDL + workspace + software + device + recruitment + management, multiplied by 1.25 for team overhead";
   if (label === "Build duration (months)")
     return "Estimated months to deliver the build at the selected scope";
   if (label === "True in-house total")
     return "Loaded monthly cost × build duration — the full in-house cost of building this internally";
   return "Loaded cost component";
+}
+
+function useHoverCapable(): boolean {
+  const [hoverCapable, setHoverCapable] = useState(true);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const sync = () => setHoverCapable(mq.matches);
+    sync();
+    mq.addEventListener?.("change", sync);
+    return () => mq.removeEventListener?.("change", sync);
+  }, []);
+  return hoverCapable;
 }
 
 const STAFF_LABELS = new Set([
@@ -107,6 +122,8 @@ const EMPTY_HINT: Record<"staff" | "infra" | "hidden", string> = {
 
 function Tooltip({ text }: { text: string }) {
   const [open, setOpen] = useState(false);
+  const hoverCapable = useHoverCapable();
+  if (!hoverCapable) return null;
   return (
     <span
       className="relative ml-1 inline-flex"
