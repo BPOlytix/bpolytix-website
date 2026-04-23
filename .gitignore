@@ -51,3 +51,4 @@ Thumbs.db
 # Next.js build output and cache (never commit — may contain secrets)
 .next/
 
+attached_assets/
