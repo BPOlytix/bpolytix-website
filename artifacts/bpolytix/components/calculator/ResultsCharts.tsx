@@ -110,9 +110,9 @@ function GaugePanel({
     <CardShell heading="SAVING OVERVIEW">
       <div
         className="relative mx-auto"
-        style={{ width: "100%", maxWidth: 280, height: 140 }}
+        style={{ width: "100%", maxWidth: 280, height: 160 }}
       >
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" style={{ overflow: "visible" }}>
           <RadialBarChart
             cx="50%"
             cy="95%"
@@ -122,6 +122,7 @@ function GaugePanel({
             endAngle={0}
             data={data}
             barSize={22}
+            margin={{ top: 0, right: 16, bottom: 0, left: 16 }}
           >
             <PolarAngleAxis
               type="number"
@@ -140,7 +141,7 @@ function GaugePanel({
         <div
           className="pointer-events-none absolute"
           style={{
-            top: "60%",
+            top: "68%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             textAlign: "center",
@@ -237,7 +238,7 @@ function AnimatedBarsPanel({
     <CardShell heading="COST COMPARISON" delay={0.1}>
       <div ref={ref} className="flex flex-col" style={{ gap: 16 }}>
         {rows.map((row) => (
-          <div key={row.name} className="flex flex-col">
+          <div key={row.name} className="flex flex-col" style={{ width: "100%" }}>
             <div
               style={{
                 fontFamily: DM,
@@ -248,7 +249,7 @@ function AnimatedBarsPanel({
             >
               {row.name}
             </div>
-            <div className="flex items-center" style={{ marginBottom: 6 }}>
+            <div className="flex items-center" style={{ marginBottom: 6, width: "100%", gap: 8 }}>
               <div
                 style={{
                   fontFamily: DM,
@@ -266,6 +267,7 @@ function AnimatedBarsPanel({
                   height: 10,
                   backgroundColor: "#1E2D3D",
                   borderRadius: 5,
+                  minWidth: 0,
                 }}
               >
                 <motion.div
@@ -294,7 +296,7 @@ function AnimatedBarsPanel({
                 {row.suffix}
               </div>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center" style={{ width: "100%", gap: 8 }}>
               <div
                 style={{
                   fontFamily: DM,
@@ -312,12 +314,13 @@ function AnimatedBarsPanel({
                   height: 10,
                   backgroundColor: "#1E2D3D",
                   borderRadius: 5,
+                  minWidth: 0,
                 }}
               >
                 <motion.div
                   initial={{ width: "0%" }}
                   animate={
-                    inView ? { width: `${row.pct}%` } : { width: "0%" }
+                    inView ? { width: `${Math.round(row.pct)}%` } : { width: "0%" }
                   }
                   transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
                   style={{
