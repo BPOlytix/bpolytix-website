@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Info } from "lucide-react";
 import {
@@ -122,39 +123,76 @@ const EMPTY_HINT: Record<"staff" | "infra" | "hidden", string> = {
 
 function Tooltip({ text }: { text: string }) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
+  const triggerRef = useRef<HTMLSpanElement>(null);
   const hoverCapable = useHoverCapable();
+
+  useEffect(() => setMounted(true), []);
+
+  // Recompute position on open and on scroll/resize while open so the
+  // portal-rendered tooltip stays anchored above the icon.
+  useEffect(() => {
+    if (!open) return;
+    const update = () => {
+      const el = triggerRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      setPos({ left: r.left + r.width / 2, top: r.top });
+    };
+    update();
+    window.addEventListener("scroll", update, true);
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update, true);
+      window.removeEventListener("resize", update);
+    };
+  }, [open]);
+
   if (!hoverCapable) return null;
+
   return (
     <span
+      ref={triggerRef}
       className="relative ml-1 inline-flex"
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
       <Info size={12} color="#8892A4" aria-hidden />
-      <AnimatePresence>
-        {open && (
-          <motion.span
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 4 }}
-            transition={{ duration: 0.15 }}
-            role="tooltip"
-            className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1.5 -translate-x-1/2 whitespace-normal rounded-lg px-2.5 py-2"
-            style={{
-              backgroundColor: "#1C2A3A",
-              border: "1px solid #1E2D3D",
-              fontFamily: DM,
-              fontSize: 11,
-              color: "#8892A4",
-              maxWidth: 200,
-              minWidth: 140,
-              lineHeight: 1.4,
-            }}
-          >
-            {text}
-          </motion.span>
+      {mounted && pos &&
+        createPortal(
+          <AnimatePresence>
+            {open && (
+              <motion.span
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 4 }}
+                transition={{ duration: 0.15 }}
+                role="tooltip"
+                className="pointer-events-none whitespace-normal rounded-lg px-2.5 py-2"
+                style={{
+                  position: "fixed",
+                  left: pos.left,
+                  top: pos.top - 6,
+                  transform: "translate(-50%, -100%)",
+                  zIndex: 9999,
+                  backgroundColor: "#1C2A3A",
+                  border: "1px solid #1E2D3D",
+                  fontFamily: DM,
+                  fontSize: 11,
+                  color: "#8892A4",
+                  maxWidth: 200,
+                  minWidth: 140,
+                  lineHeight: 1.4,
+                  boxShadow: "0 6px 18px rgba(0,0,0,0.35)",
+                }}
+              >
+                {text}
+              </motion.span>
+            )}
+          </AnimatePresence>,
+          document.body,
         )}
-      </AnimatePresence>
     </span>
   );
 }
