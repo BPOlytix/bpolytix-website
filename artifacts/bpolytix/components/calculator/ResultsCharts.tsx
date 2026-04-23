@@ -34,6 +34,17 @@ type Props = {
   coreSalaryDiff: number;
 };
 
+// Shared heading style — "as const" on textTransform preserves the literal type
+// needed by React.CSSProperties.
+const SECTION_HEADING = {
+  fontFamily: DM,
+  fontSize: 12,
+  color: "#8892A4",
+  textTransform: "uppercase" as const,
+  letterSpacing: "0.08em",
+  marginBottom: 12,
+};
+
 function tooltipStyle() {
   return {
     contentStyle: {
@@ -290,6 +301,8 @@ function DonutPanel({
         alignItems: "center",
       }}
     >
+      {/* FIX 3: innerRadius 62 / outerRadius 92 gives a 124 px inner circle.
+          fontSize 14 with lineHeight 1.1 fits "R511 200" comfortably. */}
       <div className="relative" style={{ width: 200, height: 200 }}>
         <PieChart width={200} height={200}>
           <Pie
@@ -298,8 +311,8 @@ function DonutPanel({
             nameKey="name"
             cx="50%"
             cy="50%"
-            innerRadius={55}
-            outerRadius={90}
+            innerRadius={62}
+            outerRadius={92}
             stroke="none"
             paddingAngle={slices.length > 1 ? 1 : 0}
             isAnimationActive
@@ -320,17 +333,20 @@ function DonutPanel({
           <div
             style={{
               fontFamily: SYNE,
-              fontSize: 22,
+              fontSize: 14,
               fontWeight: 700,
               color: "#00D4AA",
               fontVariantNumeric: "tabular-nums",
+              lineHeight: 1.1,
+              textAlign: "center",
+              maxWidth: "90%",
             }}
           >
             {fmtMoney(totalAnnual, currency)}
           </div>
           <div
             className="mt-1"
-            style={{ fontFamily: DM, fontSize: 12, color: "#8892A4" }}
+            style={{ fontFamily: DM, fontSize: 11, color: "#8892A4" }}
           >
             annual saving
           </div>
@@ -391,6 +407,23 @@ export function ResultsCharts({
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.2 });
 
+  const totalAnnual = combined.totalSavingAnnual + combined.totalProjectSaving;
+
+  const statRows = [
+    {
+      label: "Monthly saving",
+      value: fmtMoney(combined.totalSavingMonthly, currency),
+    },
+    {
+      label: "Annual saving",
+      value: fmtMoney(totalAnnual, currency),
+    },
+    {
+      label: "Saving",
+      value: `${combined.totalSavingPercent.toFixed(1)}%`,
+    },
+  ];
+
   return (
     <motion.div
       ref={ref}
@@ -405,49 +438,74 @@ export function ResultsCharts({
         width: "100%",
       }}
     >
+      {/* FIX 1: Remove alignItems:"center" so grid uses default stretch —
+          both columns grow to the same height as the tallest column. */}
       <div
         className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-6"
-        style={{ alignItems: "center", width: "100%" }}
+        style={{ width: "100%" }}
       >
-        {/* Left column — cost comparison bars */}
-        <div>
+        {/* Left column — bars + saving summary */}
+        {/* FIX 1+2: flex column filling full grid-row height; summary pushed
+            to the bottom via marginTop:"auto". */}
+        <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+          <div style={SECTION_HEADING}>COST COMPARISON</div>
+          <AnimatedBarsPanel results={results} currency={currency} />
+
+          {/* FIX 2: Saving summary at the bottom of the left column. */}
           <div
             style={{
-              fontFamily: DM,
-              fontSize: 12,
-              color: "#8892A4",
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-              marginBottom: 12,
+              marginTop: "auto",
+              paddingTop: 16,
+              borderTop: "1px solid #1E2D3D",
             }}
           >
-            COST COMPARISON
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {statRows.map(({ label, value }) => (
+                <div
+                  key={label}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "baseline",
+                  }}
+                >
+                  <span
+                    style={{ fontFamily: DM, fontSize: 12, color: "#8892A4" }}
+                  >
+                    {label}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: DM,
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: "#00D4AA",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {value}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
-          <AnimatedBarsPanel results={results} currency={currency} />
         </div>
 
         {/* Right column — donut */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
+        {/* FIX 1: flex column filling full grid-row height; donut centred
+            vertically in the remaining space below the heading. */}
+        <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+          <div style={SECTION_HEADING}>WHERE SAVING COMES FROM</div>
           <div
             style={{
-              fontFamily: DM,
-              fontSize: 12,
-              color: "#8892A4",
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-              marginBottom: 12,
-              alignSelf: "flex-start",
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            WHERE SAVING COMES FROM
+            <DonutPanel results={results} combined={combined} currency={currency} />
           </div>
-          <DonutPanel results={results} combined={combined} currency={currency} />
         </div>
       </div>
     </motion.div>
