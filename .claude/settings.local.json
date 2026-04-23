@@ -3,7 +3,9 @@
     "allow": [
       "Bash(pnpm build *)",
       "Bash(pnpm tsc *)",
-      "Bash(pnpm install *)"
+      "Bash(pnpm install *)",
+      "Bash(pnpm rebuild *)",
+      "Bash(xargs grep *)"
     ]
   }
 }

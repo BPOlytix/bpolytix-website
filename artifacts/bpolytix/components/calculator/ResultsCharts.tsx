@@ -3,10 +3,6 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import {
-  RadialBarChart,
-  RadialBar,
-  PolarAngleAxis,
-  ResponsiveContainer,
   PieChart,
   Pie,
   Cell,
@@ -38,48 +34,6 @@ type Props = {
   coreSalaryDiff: number;
 };
 
-function CardShell({
-  heading,
-  children,
-  delay = 0,
-}: {
-  heading: string;
-  children: React.ReactNode;
-  delay?: number;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.2 });
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay, ease: [0.25, 0.1, 0.25, 1] }}
-      className="rounded-2xl"
-      style={{
-        backgroundColor: "#111F2E",
-        border: "1px solid #1E2D3D",
-        padding: "16px 20px",
-      }}
-    >
-      <div
-        className="mb-4"
-        style={{
-          fontFamily: SYNE,
-          fontSize: 14,
-          color: "#8892A4",
-          textTransform: "uppercase",
-          letterSpacing: "0.08em",
-          fontWeight: 600,
-        }}
-      >
-        {heading}
-      </div>
-      {children}
-    </motion.div>
-  );
-}
-
 function tooltipStyle() {
   return {
     contentStyle: {
@@ -96,115 +50,6 @@ function tooltipStyle() {
   } as const;
 }
 
-// Panel 1: Gauge with centred % and info row beneath the arc.
-function GaugePanel({
-  combined,
-  coreSalaryDiff,
-}: {
-  combined: CombinedResults;
-  coreSalaryDiff: number;
-}) {
-  const pct = Math.max(0, Math.min(100, combined.totalSavingPercent));
-  const data = [{ name: "saving", value: pct, fill: "#00D4AA" }];
-  return (
-    <CardShell heading="SAVING OVERVIEW">
-      <div
-        className="relative mx-auto"
-        style={{ width: "100%", maxWidth: 280, height: 160 }}
-      >
-        <ResponsiveContainer width="100%" height="100%" style={{ overflow: "visible" }}>
-          <RadialBarChart
-            cx="50%"
-            cy="95%"
-            innerRadius="140%"
-            outerRadius="180%"
-            startAngle={180}
-            endAngle={0}
-            data={data}
-            barSize={22}
-            margin={{ top: 0, right: 16, bottom: 0, left: 16 }}
-          >
-            <PolarAngleAxis
-              type="number"
-              domain={[0, 100]}
-              angleAxisId={0}
-              tick={false}
-            />
-            <RadialBar
-              background={{ fill: "#1E2D3D" }}
-              dataKey="value"
-              cornerRadius={12}
-              fill="#00D4AA"
-            />
-          </RadialBarChart>
-        </ResponsiveContainer>
-        <div
-          className="pointer-events-none absolute"
-          style={{
-            top: "68%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            textAlign: "center",
-          }}
-        >
-          <div
-            style={{
-              fontFamily: SYNE,
-              fontSize: 38,
-              fontWeight: 700,
-              color: "#00D4AA",
-              lineHeight: 1,
-            }}
-          >
-            {pct.toFixed(0)}%
-          </div>
-          <div
-            style={{
-              fontFamily: DM,
-              fontSize: 11,
-              color: "#8892A4",
-              marginTop: 2,
-            }}
-          >
-            overall saving
-          </div>
-        </div>
-      </div>
-      <div
-        style={{
-          height: 1,
-          backgroundColor: "#1E2D3D",
-          marginTop: 12,
-        }}
-      />
-      <div
-        style={{
-          fontFamily: DM,
-          fontSize: 12,
-          color: "#8892A4",
-          fontStyle: "italic",
-          textAlign: "center",
-          marginTop: 10,
-        }}
-      >
-        Full loaded cost basis
-      </div>
-      <div
-        style={{
-          fontFamily: DM,
-          fontSize: 11,
-          color: "#8892A4",
-          textAlign: "center",
-          marginTop: 4,
-        }}
-      >
-        Core salary differential: {coreSalaryDiff}%
-      </div>
-    </CardShell>
-  );
-}
-
-// Panel 2: Custom animated horizontal bars (replaces Recharts BarChart).
 function AnimatedBarsPanel({
   results,
   currency,
@@ -235,160 +80,150 @@ function AnimatedBarsPanel({
   });
 
   return (
-    <CardShell heading="COST COMPARISON" delay={0.1}>
-      <div ref={ref} className="flex flex-col" style={{ gap: 16 }}>
-        {rows.map((row) => (
-          <div key={row.name} className="flex flex-col" style={{ width: "100%" }}>
+    <div ref={ref} className="flex flex-col" style={{ gap: 16 }}>
+      {rows.map((row) => (
+        <div key={row.name} className="flex flex-col" style={{ width: "100%" }}>
+          <div
+            style={{
+              fontFamily: DM,
+              fontSize: 12,
+              color: "#8892A4",
+              marginBottom: 8,
+            }}
+          >
+            {row.name}
+          </div>
+          <div className="flex items-center" style={{ marginBottom: 6, width: "100%", gap: 8 }}>
             <div
               style={{
                 fontFamily: DM,
-                fontSize: 12,
+                fontSize: 11,
                 color: "#8892A4",
-                marginBottom: 8,
+                width: 70,
+                flexShrink: 0,
               }}
             >
-              {row.name}
+              In-house
             </div>
-            <div className="flex items-center" style={{ marginBottom: 6, width: "100%", gap: 8 }}>
-              <div
+            <div
+              className="flex-1 overflow-hidden"
+              style={{
+                height: 10,
+                backgroundColor: "#1E2D3D",
+                borderRadius: 5,
+                minWidth: 0,
+              }}
+            >
+              <motion.div
+                initial={{ width: "0%" }}
+                animate={inView ? { width: "100%" } : { width: "0%" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
                 style={{
-                  fontFamily: DM,
-                  fontSize: 11,
-                  color: "#8892A4",
-                  width: 70,
-                  flexShrink: 0,
-                }}
-              >
-                In-house
-              </div>
-              <div
-                className="flex-1 overflow-hidden"
-                style={{
-                  height: 10,
-                  backgroundColor: "#1E2D3D",
+                  height: "100%",
+                  backgroundColor: "#8892A4",
                   borderRadius: 5,
-                  minWidth: 0,
                 }}
-              >
-                <motion.div
-                  initial={{ width: "0%" }}
-                  animate={inView ? { width: "100%" } : { width: "0%" }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                  style={{
-                    height: "100%",
-                    backgroundColor: "#8892A4",
-                    borderRadius: 5,
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  fontFamily: DM,
-                  fontSize: 11,
-                  color: "#F5F7FA",
-                  marginLeft: 8,
-                  whiteSpace: "nowrap",
-                  fontVariantNumeric: "tabular-nums",
-                }}
-              >
-                {sym}
-                {Math.round(row.inHouseCost).toLocaleString("en-ZA")}
-                {row.suffix}
-              </div>
+              />
             </div>
-            <div className="flex items-center" style={{ width: "100%", gap: 8 }}>
-              <div
-                style={{
-                  fontFamily: DM,
-                  fontSize: 11,
-                  color: "#1B77F2",
-                  width: 70,
-                  flexShrink: 0,
-                }}
-              >
-                BPOLytix
-              </div>
-              <div
-                className="flex-1 overflow-hidden"
-                style={{
-                  height: 10,
-                  backgroundColor: "#1E2D3D",
-                  borderRadius: 5,
-                  minWidth: 0,
-                }}
-              >
-                <motion.div
-                  initial={{ width: "0%" }}
-                  animate={
-                    inView ? { width: `${Math.round(row.pct)}%` } : { width: "0%" }
-                  }
-                  transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-                  style={{
-                    height: "100%",
-                    background:
-                      "linear-gradient(90deg, #1B77F2, #00D4AA)",
-                    borderRadius: 5,
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  fontFamily: DM,
-                  fontSize: 11,
-                  color: "#1B77F2",
-                  marginLeft: 8,
-                  whiteSpace: "nowrap",
-                  fontVariantNumeric: "tabular-nums",
-                }}
-              >
-                {sym}
-                {Math.round(row.bpolytixFee).toLocaleString("en-ZA")}
-                {row.suffix}
-              </div>
+            <div
+              style={{
+                fontFamily: DM,
+                fontSize: 11,
+                color: "#F5F7FA",
+                marginLeft: 8,
+                whiteSpace: "nowrap",
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              {sym}
+              {Math.round(row.inHouseCost).toLocaleString("en-ZA")}
+              {row.suffix}
             </div>
           </div>
-        ))}
-
-        <div
-          className="flex items-center justify-center"
-          style={{
-            gap: 16,
-            marginTop: 4,
-            paddingTop: 12,
-            borderTop: "1px solid #1E2D3D",
-          }}
-        >
-          <div className="flex items-center gap-2">
-            <span
-              className="inline-block h-2 w-2 rounded-full"
-              style={{ backgroundColor: "#8892A4" }}
-            />
-            <span
-              style={{ fontFamily: DM, fontSize: 11, color: "#8892A4" }}
+          <div className="flex items-center" style={{ width: "100%", gap: 8 }}>
+            <div
+              style={{
+                fontFamily: DM,
+                fontSize: 11,
+                color: "#1B77F2",
+                width: 70,
+                flexShrink: 0,
+              }}
             >
-              In-house true cost
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span
-              className="inline-block h-2 w-2 rounded-full"
-              style={{ backgroundColor: "#1B77F2" }}
-            />
-            <span
-              style={{ fontFamily: DM, fontSize: 11, color: "#8892A4" }}
+              BPOLytix
+            </div>
+            <div
+              className="flex-1 overflow-hidden"
+              style={{
+                height: 10,
+                backgroundColor: "#1E2D3D",
+                borderRadius: 5,
+                minWidth: 0,
+              }}
             >
-              BPOLytix fee
-            </span>
+              <motion.div
+                initial={{ width: "0%" }}
+                animate={
+                  inView ? { width: `${Math.round(row.pct)}%` } : { width: "0%" }
+                }
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+                style={{
+                  height: "100%",
+                  background: "linear-gradient(90deg, #1B77F2, #00D4AA)",
+                  borderRadius: 5,
+                }}
+              />
+            </div>
+            <div
+              style={{
+                fontFamily: DM,
+                fontSize: 11,
+                color: "#1B77F2",
+                marginLeft: 8,
+                whiteSpace: "nowrap",
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              {sym}
+              {Math.round(row.bpolytixFee).toLocaleString("en-ZA")}
+              {row.suffix}
+            </div>
           </div>
         </div>
+      ))}
+
+      <div
+        className="flex items-center justify-center"
+        style={{
+          gap: 16,
+          marginTop: 4,
+          paddingTop: 12,
+          borderTop: "1px solid #1E2D3D",
+        }}
+      >
+        <div className="flex items-center gap-2">
+          <span
+            className="inline-block h-2 w-2 rounded-full"
+            style={{ backgroundColor: "#8892A4" }}
+          />
+          <span style={{ fontFamily: DM, fontSize: 11, color: "#8892A4" }}>
+            In-house true cost
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span
+            className="inline-block h-2 w-2 rounded-full"
+            style={{ backgroundColor: "#1B77F2" }}
+          />
+          <span style={{ fontFamily: DM, fontSize: 11, color: "#8892A4" }}>
+            BPOLytix fee
+          </span>
+        </div>
       </div>
-    </CardShell>
+    </div>
   );
 }
 
-// Panel 3: Donut. Collapses to a single "Total project saving" slice when
-// salary burden and seat/infrastructure breakdowns are absent (project
-// services like Web App / Android App).
 function getBreakdownValue(r: AnyResult, labels: string[]): number {
   let total = 0;
   for (const item of r.breakdown) {
@@ -448,93 +283,103 @@ function DonutPanel({
       ].filter((s) => s.value > 0);
 
   return (
-    <CardShell heading="WHERE THE SAVING COMES FROM" delay={0.2}>
-      <div className="flex flex-col items-center">
-        <div className="relative" style={{ width: 260, height: 260 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={slices}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                innerRadius={70}
-                outerRadius={110}
-                stroke="none"
-                paddingAngle={slices.length > 1 ? 1 : 0}
-                isAnimationActive
-              >
-                {slices.map((s) => (
-                  <Cell key={s.name} fill={s.color} />
-                ))}
-              </Pie>
-              <Tooltip
-                {...tooltipStyle()}
-                formatter={(value: number, name: string) => [
-                  fmtMoney(value, currency),
-                  name,
-                ]}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-          <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-            <div
-              style={{
-                fontFamily: SYNE,
-                fontSize: 22,
-                fontWeight: 700,
-                color: "#00D4AA",
-                fontVariantNumeric: "tabular-nums",
-              }}
-            >
-              {fmtMoney(totalAnnual, currency)}
-            </div>
-            <div
-              className="mt-1"
-              style={{ fontFamily: DM, fontSize: 12, color: "#8892A4" }}
-            >
-              annual saving
-            </div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <div className="relative" style={{ width: 200, height: 200 }}>
+        <PieChart width={200} height={200}>
+          <Pie
+            data={slices}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            innerRadius={55}
+            outerRadius={90}
+            stroke="none"
+            paddingAngle={slices.length > 1 ? 1 : 0}
+            isAnimationActive
+          >
+            {slices.map((s) => (
+              <Cell key={s.name} fill={s.color} />
+            ))}
+          </Pie>
+          <Tooltip
+            {...tooltipStyle()}
+            formatter={(value: number, name: string) => [
+              fmtMoney(value, currency),
+              name,
+            ]}
+          />
+        </PieChart>
+        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+          <div
+            style={{
+              fontFamily: SYNE,
+              fontSize: 22,
+              fontWeight: 700,
+              color: "#00D4AA",
+              fontVariantNumeric: "tabular-nums",
+            }}
+          >
+            {fmtMoney(totalAnnual, currency)}
+          </div>
+          <div
+            className="mt-1"
+            style={{ fontFamily: DM, fontSize: 12, color: "#8892A4" }}
+          >
+            annual saving
           </div>
         </div>
+      </div>
 
-        <div className="mt-4 flex w-full max-w-[260px] flex-col gap-2">
-          {slices.map((s) => (
-            <div
-              key={s.name}
-              className="flex items-center justify-between gap-3"
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  className="inline-block h-2 w-2 rounded-full"
-                  style={{ backgroundColor: s.color }}
-                />
-                <span
-                  style={{
-                    fontFamily: DM,
-                    fontSize: 13,
-                    color: "#8892A4",
-                  }}
-                >
-                  {s.name}
-                </span>
-              </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 8,
+          marginTop: 8,
+          width: 200,
+        }}
+      >
+        {slices.map((s) => (
+          <div
+            key={s.name}
+            className="flex items-center justify-between gap-3"
+          >
+            <div className="flex items-center gap-2">
+              <span
+                className="inline-block h-2 w-2 rounded-full"
+                style={{ backgroundColor: s.color }}
+              />
               <span
                 style={{
                   fontFamily: DM,
                   fontSize: 13,
-                  color: "#F5F7FA",
-                  fontVariantNumeric: "tabular-nums",
+                  color: "#8892A4",
                 }}
               >
-                {fmtMoney(s.value, currency)}
+                {s.name}
               </span>
             </div>
-          ))}
-        </div>
+            <span
+              style={{
+                fontFamily: DM,
+                fontSize: 13,
+                color: "#F5F7FA",
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              {fmtMoney(s.value, currency)}
+            </span>
+          </div>
+        ))}
       </div>
-    </CardShell>
+    </div>
   );
 }
 
@@ -542,22 +387,69 @@ export function ResultsCharts({
   results,
   combined,
   currency,
-  coreSalaryDiff,
 }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.2 });
+
   return (
-    <div
-      className="grid gap-4 lg:gap-5"
-      style={{ gridTemplateColumns: "1fr" }}
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+      style={{
+        backgroundColor: "#111F2E",
+        border: "1px solid #1E2D3D",
+        borderRadius: 16,
+        padding: 24,
+        width: "100%",
+      }}
     >
-      <div className="grid gap-4 lg:grid-cols-[1fr_2fr_1fr] lg:gap-5">
-        <GaugePanel combined={combined} coreSalaryDiff={coreSalaryDiff} />
-        <AnimatedBarsPanel results={results} currency={currency} />
-        <DonutPanel
-          results={results}
-          combined={combined}
-          currency={currency}
-        />
+      <div
+        className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-6"
+        style={{ alignItems: "center", width: "100%" }}
+      >
+        {/* Left column — cost comparison bars */}
+        <div>
+          <div
+            style={{
+              fontFamily: DM,
+              fontSize: 12,
+              color: "#8892A4",
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              marginBottom: 12,
+            }}
+          >
+            COST COMPARISON
+          </div>
+          <AnimatedBarsPanel results={results} currency={currency} />
+        </div>
+
+        {/* Right column — donut */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: DM,
+              fontSize: 12,
+              color: "#8892A4",
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              marginBottom: 12,
+              alignSelf: "flex-start",
+            }}
+          >
+            WHERE SAVING COMES FROM
+          </div>
+          <DonutPanel results={results} combined={combined} currency={currency} />
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
