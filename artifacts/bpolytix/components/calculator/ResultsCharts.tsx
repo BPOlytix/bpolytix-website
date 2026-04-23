@@ -7,16 +7,10 @@ import {
   RadialBar,
   PolarAngleAxis,
   ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
   PieChart,
   Pie,
   Cell,
+  Tooltip,
 } from "recharts";
 import {
   fmtMoney,
@@ -41,6 +35,7 @@ type Props = {
   results: AnyResult[];
   combined: CombinedResults;
   currency: Currency;
+  coreSalaryDiff: number;
 };
 
 function CardShell({
@@ -60,10 +55,11 @@ function CardShell({
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay, ease: [0.25, 0.1, 0.25, 1] }}
-      className="rounded-2xl p-6"
+      className="rounded-2xl"
       style={{
         backgroundColor: "#111F2E",
         border: "1px solid #1E2D3D",
+        padding: "16px 20px",
       }}
     >
       <div
@@ -100,23 +96,32 @@ function tooltipStyle() {
   } as const;
 }
 
-/* ---------- Panel 1: Gauge ---------- */
-function GaugePanel({ combined }: { combined: CombinedResults }) {
+// Panel 1: Gauge with centred % and info row beneath the arc.
+function GaugePanel({
+  combined,
+  coreSalaryDiff,
+}: {
+  combined: CombinedResults;
+  coreSalaryDiff: number;
+}) {
   const pct = Math.max(0, Math.min(100, combined.totalSavingPercent));
   const data = [{ name: "saving", value: pct, fill: "#00D4AA" }];
   return (
     <CardShell heading="SAVING OVERVIEW">
-      <div className="relative mx-auto" style={{ width: 280, height: 180 }}>
+      <div
+        className="relative mx-auto"
+        style={{ width: "100%", maxWidth: 280, height: 140 }}
+      >
         <ResponsiveContainer width="100%" height="100%">
           <RadialBarChart
             cx="50%"
-            cy="90%"
-            innerRadius="130%"
-            outerRadius="170%"
+            cy="95%"
+            innerRadius="140%"
+            outerRadius="180%"
             startAngle={180}
             endAngle={0}
             data={data}
-            barSize={26}
+            barSize={22}
           >
             <PolarAngleAxis
               type="number"
@@ -127,7 +132,7 @@ function GaugePanel({ combined }: { combined: CombinedResults }) {
             <RadialBar
               background={{ fill: "#1E2D3D" }}
               dataKey="value"
-              cornerRadius={14}
+              cornerRadius={12}
               fill="#00D4AA"
             />
           </RadialBarChart>
@@ -135,7 +140,7 @@ function GaugePanel({ combined }: { combined: CombinedResults }) {
         <div
           className="pointer-events-none absolute"
           style={{
-            top: "55%",
+            top: "60%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             textAlign: "center",
@@ -144,7 +149,7 @@ function GaugePanel({ combined }: { combined: CombinedResults }) {
           <div
             style={{
               fontFamily: SYNE,
-              fontSize: 42,
+              fontSize: 38,
               fontWeight: 700,
               color: "#00D4AA",
               lineHeight: 1,
@@ -155,7 +160,7 @@ function GaugePanel({ combined }: { combined: CombinedResults }) {
           <div
             style={{
               fontFamily: DM,
-              fontSize: 12,
+              fontSize: 11,
               color: "#8892A4",
               marginTop: 2,
             }}
@@ -164,109 +169,224 @@ function GaugePanel({ combined }: { combined: CombinedResults }) {
           </div>
         </div>
       </div>
+      <div
+        style={{
+          height: 1,
+          backgroundColor: "#1E2D3D",
+          marginTop: 12,
+        }}
+      />
+      <div
+        style={{
+          fontFamily: DM,
+          fontSize: 12,
+          color: "#8892A4",
+          fontStyle: "italic",
+          textAlign: "center",
+          marginTop: 10,
+        }}
+      >
+        Full loaded cost basis
+      </div>
+      <div
+        style={{
+          fontFamily: DM,
+          fontSize: 11,
+          color: "#8892A4",
+          textAlign: "center",
+          marginTop: 4,
+        }}
+      >
+        Core salary differential: {coreSalaryDiff}%
+      </div>
     </CardShell>
   );
 }
 
-/* ---------- Panel 2: Bar Chart ---------- */
-function BarPanel({
+// Panel 2: Custom animated horizontal bars (replaces Recharts BarChart).
+function AnimatedBarsPanel({
   results,
   currency,
 }: {
   results: AnyResult[];
   currency: Currency;
 }) {
-  const data = results.map((r, idx) => {
-    const name = SERVICE_LABEL[r.service] ?? `Service ${idx + 1}`;
-    const inHouse =
-      r.kind === "monthly" ? r.inHouseMonthly * 12 : r.inHouseTotal;
-    const bp = r.kind === "monthly" ? r.bpolytixFee * 12 : r.bpolytixFee;
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.2 });
+  const sym = symbol(currency);
+
+  const rows = results.map((r) => {
+    const isMonthly = r.kind === "monthly";
+    const inHouseCost = isMonthly ? r.inHouseMonthly : r.inHouseTotal;
+    const bpolytixFee = r.bpolytixFee;
+    const pct =
+      inHouseCost > 0
+        ? Math.min(100, (bpolytixFee / inHouseCost) * 100)
+        : 0;
+    const suffix = isMonthly ? "/mo" : " once-off";
     return {
-      name,
-      InHouse: Math.round(inHouse),
-      BPOLytix: Math.round(bp),
-      Saving: Math.round(inHouse - bp),
+      name: SERVICE_LABEL[r.service] ?? r.service,
+      inHouseCost,
+      bpolytixFee,
+      pct,
+      suffix,
     };
   });
 
-  const sym = symbol(currency);
-  const height = Math.max(160, data.length * 80 + 60);
-
   return (
     <CardShell heading="COST COMPARISON" delay={0.1}>
-      <div style={{ width: "100%", height }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            data={data}
-            layout="vertical"
-            margin={{ top: 4, right: 16, left: 8, bottom: 4 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="#1E2D3D" />
-            <XAxis
-              type="number"
-              tickFormatter={(v: number) =>
-                `${sym}${Math.round(v).toLocaleString("en-ZA")}`
-              }
-              tick={{ fontFamily: DM, fontSize: 12, fill: "#8892A4" }}
-              stroke="#1E2D3D"
-            />
-            <YAxis
-              type="category"
-              dataKey="name"
-              tick={{ fontFamily: DM, fontSize: 13, fill: "#8892A4" }}
-              stroke="#1E2D3D"
-              width={130}
-            />
-            <Tooltip
-              {...tooltipStyle()}
-              formatter={(value: number, name: string) => [
-                `${sym}${Math.round(value).toLocaleString("en-ZA")}`,
-                name === "InHouse"
-                  ? "In-house true cost"
-                  : name === "BPOLytix"
-                  ? "BPOLytix fee"
-                  : "Saving",
-              ]}
-            />
-            <Legend
-              wrapperStyle={{
+      <div ref={ref} className="flex flex-col" style={{ gap: 16 }}>
+        {rows.map((row) => (
+          <div key={row.name} className="flex flex-col">
+            <div
+              style={{
                 fontFamily: DM,
-                fontSize: 13,
+                fontSize: 12,
                 color: "#8892A4",
-                paddingTop: 8,
+                marginBottom: 8,
               }}
-              formatter={(value: string) => (
-                <span style={{ color: "#8892A4" }}>
-                  {value === "InHouse"
-                    ? "In-house true cost"
-                    : "BPOLytix fee"}
-                </span>
-              )}
+            >
+              {row.name}
+            </div>
+            <div className="flex items-center" style={{ marginBottom: 6 }}>
+              <div
+                style={{
+                  fontFamily: DM,
+                  fontSize: 11,
+                  color: "#8892A4",
+                  width: 70,
+                  flexShrink: 0,
+                }}
+              >
+                In-house
+              </div>
+              <div
+                className="flex-1 overflow-hidden"
+                style={{
+                  height: 10,
+                  backgroundColor: "#1E2D3D",
+                  borderRadius: 5,
+                }}
+              >
+                <motion.div
+                  initial={{ width: "0%" }}
+                  animate={inView ? { width: "100%" } : { width: "0%" }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  style={{
+                    height: "100%",
+                    backgroundColor: "#8892A4",
+                    borderRadius: 5,
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  fontFamily: DM,
+                  fontSize: 11,
+                  color: "#F5F7FA",
+                  marginLeft: 8,
+                  whiteSpace: "nowrap",
+                  fontVariantNumeric: "tabular-nums",
+                }}
+              >
+                {sym}
+                {Math.round(row.inHouseCost).toLocaleString("en-ZA")}
+                {row.suffix}
+              </div>
+            </div>
+            <div className="flex items-center">
+              <div
+                style={{
+                  fontFamily: DM,
+                  fontSize: 11,
+                  color: "#1B77F2",
+                  width: 70,
+                  flexShrink: 0,
+                }}
+              >
+                BPOLytix
+              </div>
+              <div
+                className="flex-1 overflow-hidden"
+                style={{
+                  height: 10,
+                  backgroundColor: "#1E2D3D",
+                  borderRadius: 5,
+                }}
+              >
+                <motion.div
+                  initial={{ width: "0%" }}
+                  animate={
+                    inView ? { width: `${row.pct}%` } : { width: "0%" }
+                  }
+                  transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+                  style={{
+                    height: "100%",
+                    background:
+                      "linear-gradient(90deg, #1B77F2, #00D4AA)",
+                    borderRadius: 5,
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  fontFamily: DM,
+                  fontSize: 11,
+                  color: "#1B77F2",
+                  marginLeft: 8,
+                  whiteSpace: "nowrap",
+                  fontVariantNumeric: "tabular-nums",
+                }}
+              >
+                {sym}
+                {Math.round(row.bpolytixFee).toLocaleString("en-ZA")}
+                {row.suffix}
+              </div>
+            </div>
+          </div>
+        ))}
+
+        <div
+          className="flex items-center justify-center"
+          style={{
+            gap: 16,
+            marginTop: 4,
+            paddingTop: 12,
+            borderTop: "1px solid #1E2D3D",
+          }}
+        >
+          <div className="flex items-center gap-2">
+            <span
+              className="inline-block h-2 w-2 rounded-full"
+              style={{ backgroundColor: "#8892A4" }}
             />
-            <Bar
-              dataKey="InHouse"
-              fill="#8892A4"
-              radius={[4, 4, 4, 4]}
-              barSize={18}
+            <span
+              style={{ fontFamily: DM, fontSize: 11, color: "#8892A4" }}
+            >
+              In-house true cost
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span
+              className="inline-block h-2 w-2 rounded-full"
+              style={{ backgroundColor: "#1B77F2" }}
             />
-            <Bar
-              dataKey="BPOLytix"
-              fill="#1B77F2"
-              radius={[4, 4, 4, 4]}
-              barSize={18}
-            />
-          </BarChart>
-        </ResponsiveContainer>
+            <span
+              style={{ fontFamily: DM, fontSize: 11, color: "#8892A4" }}
+            >
+              BPOLytix fee
+            </span>
+          </div>
+        </div>
       </div>
     </CardShell>
   );
 }
 
-/* ---------- Panel 3: Donut ---------- */
-function getBreakdownValue(
-  r: AnyResult,
-  labels: string[],
-): number {
+// Panel 3: Donut. Collapses to a single "Total project saving" slice when
+// salary burden and seat/infrastructure breakdowns are absent (project
+// services like Web App / Android App).
+function getBreakdownValue(r: AnyResult, labels: string[]): number {
   let total = 0;
   for (const item of r.breakdown) {
     if (labels.some((l) => item.label.toLowerCase().includes(l))) {
@@ -299,17 +419,30 @@ function DonutPanel({
 
   const totalAnnual =
     combined.totalSavingAnnual + combined.totalProjectSaving;
-  const core = Math.max(0, totalAnnual - salary - seat);
 
-  const slices = [
-    { name: "Salary burden", value: Math.max(0, salary), color: "#1B77F2" },
-    {
-      name: "Seat & infrastructure",
-      value: Math.max(0, seat),
-      color: "#00D4AA",
-    },
-    { name: "Core rate differential", value: core, color: "#8892A4" },
-  ].filter((s) => s.value > 0);
+  const allProject = salary <= 0 && seat <= 0;
+
+  const slices = allProject
+    ? [
+        {
+          name: "Total project saving",
+          value: Math.max(0, totalAnnual),
+          color: "#00D4AA",
+        },
+      ]
+    : [
+        { name: "Salary burden", value: Math.max(0, salary), color: "#1B77F2" },
+        {
+          name: "Seat & infrastructure",
+          value: Math.max(0, seat),
+          color: "#00D4AA",
+        },
+        {
+          name: "Core rate differential",
+          value: Math.max(0, totalAnnual - salary - seat),
+          color: "#8892A4",
+        },
+      ].filter((s) => s.value > 0);
 
   return (
     <CardShell heading="WHERE THE SAVING COMES FROM" delay={0.2}>
@@ -326,7 +459,7 @@ function DonutPanel({
                 innerRadius={70}
                 outerRadius={110}
                 stroke="none"
-                paddingAngle={1}
+                paddingAngle={slices.length > 1 ? 1 : 0}
                 isAnimationActive
               >
                 {slices.map((s) => (
@@ -402,15 +535,20 @@ function DonutPanel({
   );
 }
 
-export function ResultsCharts({ results, combined, currency }: Props) {
+export function ResultsCharts({
+  results,
+  combined,
+  currency,
+  coreSalaryDiff,
+}: Props) {
   return (
     <div
       className="grid gap-4 lg:gap-5"
       style={{ gridTemplateColumns: "1fr" }}
     >
       <div className="grid gap-4 lg:grid-cols-[1fr_2fr_1fr] lg:gap-5">
-        <GaugePanel combined={combined} />
-        <BarPanel results={results} currency={currency} />
+        <GaugePanel combined={combined} coreSalaryDiff={coreSalaryDiff} />
+        <AnimatedBarsPanel results={results} currency={currency} />
         <DonutPanel
           results={results}
           combined={combined}

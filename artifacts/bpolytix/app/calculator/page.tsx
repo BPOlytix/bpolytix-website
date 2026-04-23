@@ -227,7 +227,12 @@ export default function CalculatorPage() {
     return calculateAndroidApp(android, currency);
   }, [activeService, bk, cfo, auto, web, android, currency]);
 
-  const liveHasSaving = savingOf(liveResult) > 0;
+  // Render gating: any service with positive in-house cost is "valid" — show
+  // its charts/metrics/prompt bar even when current BPOLytix fee exceeds it.
+  const isLiveValid =
+    (liveResult.kind === "monthly"
+      ? liveResult.inHouseMonthly
+      : liveResult.inHouseTotal) > 0;
 
   /* ---------- effective rows for the quote (completed merged with live) ---------- */
   const completedKeys: ServiceKind[] = useMemo(() => {
@@ -247,7 +252,7 @@ export default function CalculatorPage() {
         if (r) map.set(k, r);
       }
     }
-    if (liveHasSaving && !map.has(activeService)) {
+    if (isLiveValid && !map.has(activeService)) {
       map.set(activeService, liveResult);
     }
     return order
@@ -257,7 +262,7 @@ export default function CalculatorPage() {
         label: SERVICE_LABEL[k],
         result: map.get(k)!,
       }));
-  }, [completedInputs, currency, activeService, liveResult, liveHasSaving]);
+  }, [completedInputs, currency, activeService, liveResult, isLiveValid]);
 
   const combined = useMemo(() => {
     if (effectiveRows.length === 0) return null;
@@ -289,7 +294,7 @@ export default function CalculatorPage() {
   };
 
   const saveActiveResult = () => {
-    if (!liveHasSaving) return;
+    if (!isLiveValid) return;
     const snap = currentInputsForActive();
     if (!snap) return;
     setCompletedInputs((prev) => ({ ...prev, [activeService]: snap }));
@@ -299,7 +304,7 @@ export default function CalculatorPage() {
     saveActiveResult();
     const done = new Set<ServiceKind>([
       ...completedKeys,
-      ...(liveHasSaving ? [activeService] : []),
+      ...(isLiveValid ? [activeService] : []),
     ]);
     const next = SERVICES.find((s) => !done.has(s.key));
     if (next) setActiveService(next.key);
@@ -616,7 +621,7 @@ export default function CalculatorPage() {
 
                   {/* PROMPT BAR */}
                   <AnimatePresence initial={false}>
-                    {liveHasSaving && (
+                    {isLiveValid && (
                       <motion.div
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -644,11 +649,13 @@ export default function CalculatorPage() {
                           <button
                             type="button"
                             onClick={addAnotherService}
-                            className="inline-flex items-center justify-center gap-2 rounded-full transition-colors"
+                            className="inline-flex w-full items-center justify-center gap-2 rounded-full transition-colors sm:w-auto"
                             style={{
                               fontFamily: DM,
                               fontSize: 13,
                               padding: "8px 16px",
+                              minWidth: 160,
+                              whiteSpace: "nowrap",
                               border: "1px solid #1E2D3D",
                               color: "#8892A4",
                               backgroundColor: "transparent",
@@ -660,12 +667,14 @@ export default function CalculatorPage() {
                           <button
                             type="button"
                             onClick={buildMyQuote}
-                            className="inline-flex items-center justify-center gap-2 rounded-full transition-transform hover:-translate-y-px"
+                            className="inline-flex w-full items-center justify-center gap-2 rounded-full transition-transform hover:-translate-y-px sm:w-auto"
                             style={{
                               fontFamily: SYNE,
                               fontSize: 13,
                               fontWeight: 700,
                               padding: "9px 18px",
+                              minWidth: 160,
+                              whiteSpace: "nowrap",
                               backgroundColor: "#1B77F2",
                               color: "#F5F7FA",
                             }}
@@ -694,6 +703,23 @@ export default function CalculatorPage() {
                       results={effectiveRows.map((r) => r.result)}
                       combined={combined}
                       currency={currency}
+                      coreSalaryDiff={(() => {
+                        const baseItem = liveResult.breakdown.find(
+                          (b) => b.label === "Base salary",
+                        );
+                        const base = baseItem?.value || 0;
+                        const basis =
+                          base > 0
+                            ? base
+                            : liveResult.kind === "monthly"
+                              ? liveResult.inHouseMonthly
+                              : liveResult.inHouseTotal;
+                        return basis > 0
+                          ? Math.round(
+                              ((basis - liveResult.bpolytixFee) / basis) * 100,
+                            )
+                          : 0;
+                      })()}
                     />
                   )}
                 </div>
