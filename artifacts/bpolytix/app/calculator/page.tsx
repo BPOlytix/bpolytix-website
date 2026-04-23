@@ -202,7 +202,7 @@ export default function CalculatorPage() {
   const [industry, setIndustry] = useState<Industry>("Professional Services");
   const [completedInputs, setCompletedInputs] = useState<SavedInputs>({});
   const [quoteRef, setQuoteRef] = useState<string>("");
-  const [, setShowQuote] = useState(false);
+  const [showQuote, setShowQuote] = useState(false);
 
   const [bk, setBk] = useState<BookkeepingInputs>(DEFAULTS.bookkeeping);
   const [cfo, setCfo] = useState<CFOInputs>(DEFAULTS.cfo);
@@ -550,8 +550,7 @@ export default function CalculatorPage() {
 
                 {/* CENTRE COLUMN */}
                 <div className="flex flex-col gap-6">
-                  {/* QUOTE SUMMARY CARD (always once a service has a saving) */}
-                  {effectiveRows.length > 0 && (
+                  {showQuote && effectiveRows.length > 0 && (
                     <QuoteSummaryCard
                       ref={quoteCardRef}
                       rows={effectiveRows}
@@ -733,9 +732,7 @@ export default function CalculatorPage() {
   );
 }
 
-/* ============================================================
-   MINIMAL HERO
-   ============================================================ */
+// MINIMAL HERO
 function MinimalHero() {
   return (
     <section
@@ -786,9 +783,7 @@ function MinimalHero() {
   );
 }
 
-/* ============================================================
-   CURRENCY TOGGLE
-   ============================================================ */
+// CURRENCY TOGGLE
 function CurrencyToggle({
   value,
   onChange,
@@ -829,9 +824,7 @@ function CurrencyToggle({
   );
 }
 
-/* ============================================================
-   ACTIVE SERVICE PANEL — inputs + breakdown + fee
-   ============================================================ */
+// ACTIVE SERVICE PANEL — inputs + breakdown + fee
 function ActiveServicePanel({
   activeService,
   bk,
@@ -974,9 +967,7 @@ function ActiveServicePanel({
   );
 }
 
-/* ============================================================
-   METRIC TILES ROW
-   ============================================================ */
+// METRIC TILES ROW
 function MetricTilesRow({
   combined,
   liveResult,
@@ -1047,9 +1038,7 @@ function MetricTilesRow({
   );
 }
 
-/* ============================================================
-   QUOTE SUMMARY CARD
-   ============================================================ */
+// QUOTE SUMMARY CARD
 type QuoteSummaryProps = {
   rows: ServiceRow[];
   currency: Currency;
@@ -1359,9 +1348,7 @@ const QuoteSummaryCard = forwardRef<HTMLDivElement, QuoteSummaryProps>(
   },
 );
 
-/* ============================================================
-   EMAIL QUOTE FORM (inline)
-   ============================================================ */
+// EMAIL QUOTE FORM (inline)
 function EmailQuoteForm({
   state,
   error,
@@ -1558,9 +1545,7 @@ function FormField({
   );
 }
 
-/* ============================================================
-   PER-TAB INPUT PANELS
-   ============================================================ */
+// PER-TAB INPUT PANELS
 function BookkeepingInputsPanel({
   value,
   onChange,
