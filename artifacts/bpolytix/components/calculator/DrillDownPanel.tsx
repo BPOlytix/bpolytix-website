@@ -180,7 +180,7 @@ function Tooltip({ text }: { text: string }) {
                   border: "1px solid #1E2D3D",
                   fontFamily: DM,
                   fontSize: 11,
-                  color: "#8892A4",
+                  color: "#F5A524",
                   maxWidth: 200,
                   minWidth: 140,
                   lineHeight: 1.4,
