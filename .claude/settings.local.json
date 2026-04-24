@@ -5,7 +5,9 @@
       "Bash(pnpm tsc *)",
       "Bash(pnpm install *)",
       "Bash(pnpm rebuild *)",
-      "Bash(xargs grep *)"
+      "Bash(xargs grep *)",
+      "Bash(pnpm add *)",
+      "Bash(dir *)"
     ]
   }
 }
