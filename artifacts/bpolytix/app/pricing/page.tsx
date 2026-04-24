@@ -27,6 +27,7 @@ import { AnimatePresence, animate, motion, useInView, useMotionValue, useTransfo
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { GrainOverlay } from "@/components/GrainOverlay";
+import { ServiceFlowDiagram } from "@/components/pricing/ServiceFlowDiagram";
 
 type Country = "ZA" | "UK";
 type BusinessSize = "startup" | "sme" | "growth";
@@ -671,6 +672,8 @@ export default function PricingPage() {
         </RevealBlock>
       </section>
 
+      <ServiceFlowDiagram selectedServices={selectedServices} />
+
       <Footer />
 
       <style jsx global>{`
@@ -705,7 +708,7 @@ export default function PricingPage() {
 
         .services-section {
           padding-top: 0;
-          padding-bottom: 72px;
+          padding-bottom: 32px;
         }
 
         .section-label {
