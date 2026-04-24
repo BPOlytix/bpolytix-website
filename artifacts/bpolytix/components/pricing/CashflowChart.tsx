@@ -16,6 +16,7 @@ type CashflowChartProps = {
   country: "ZA" | "UK";
   monthlyBpolytix: number;
   monthlyInHouse: number;
+  hasSelection: boolean;
 };
 
 type ChartPoint = {
@@ -72,7 +73,7 @@ function ChartTooltip({
   );
 }
 
-export function CashflowChart({ country, monthlyBpolytix, monthlyInHouse }: CashflowChartProps) {
+export function CashflowChart({ country, monthlyBpolytix, monthlyInHouse, hasSelection }: CashflowChartProps) {
   const data = makeChartData(monthlyBpolytix, monthlyInHouse);
 
   return (
@@ -86,71 +87,77 @@ export function CashflowChart({ country, monthlyBpolytix, monthlyInHouse }: Cash
       </div>
       <p className="cashflow-subtitle">What you spend with us vs what you'd spend in-house over 24 months</p>
 
-      <div className="chart-shell">
-        <ResponsiveContainer width="100%" height={320}>
-          <AreaChart data={data} margin={{ top: 18, right: 18, left: 0, bottom: 6 }}>
-            <CartesianGrid stroke="#1E2D3D" vertical={false} />
-            <XAxis
-              dataKey="month"
-              stroke="#8892A4"
-              tickLine={false}
-              axisLine={{ stroke: "#1E2D3D" }}
-              tick={{ fill: "#8892A4", fontSize: 12 }}
-              tickFormatter={(month) => `M${month}`}
-            />
-            <YAxis
-              stroke="#8892A4"
-              tickLine={false}
-              axisLine={{ stroke: "#1E2D3D" }}
-              tick={{ fill: "#8892A4", fontSize: 12 }}
-              tickFormatter={(value) => formatCurrency(Number(value), country)}
-              width={72}
-            />
-            <Tooltip content={<ChartTooltip country={country} />} cursor={{ stroke: "#1E2D3D" }} />
-            <Area type="monotone" dataKey="bpolytix" stackId="cost" stroke="none" fill="#0D1B2A" fillOpacity={0} />
-            <Area type="monotone" dataKey="savings" stackId="cost" stroke="none" fill="#00D4AA" fillOpacity={0.15} />
-            <Line
-              type="monotone"
-              dataKey="inHouse"
-              name="In-house cost"
-              stroke="#F5F7FA"
-              strokeWidth={2}
-              dot={false}
-              isAnimationActive
-            />
-            <Line
-              type="monotone"
-              dataKey="bpolytix"
-              name="BPOLytix cost"
-              stroke="#00D4AA"
-              strokeWidth={2}
-              dot={false}
-              isAnimationActive
-            />
-            <ReferenceLine
-              x={13}
-              stroke="#1E2D3D"
-              strokeDasharray="5 5"
-              label={{ value: "You own it", fill: "#00D4AA", position: "insideTopRight", fontSize: 12 }}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
+      {hasSelection ? (
+        <>
+          <div className="chart-shell">
+            <ResponsiveContainer width="100%" height={320}>
+              <AreaChart data={data} margin={{ top: 18, right: 18, left: 0, bottom: 6 }}>
+                <CartesianGrid stroke="#1E2D3D" vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  stroke="#8892A4"
+                  tickLine={false}
+                  axisLine={{ stroke: "#1E2D3D" }}
+                  tick={{ fill: "#8892A4", fontSize: 12 }}
+                  tickFormatter={(month) => `M${month}`}
+                />
+                <YAxis
+                  stroke="#8892A4"
+                  tickLine={false}
+                  axisLine={{ stroke: "#1E2D3D" }}
+                  tick={{ fill: "#8892A4", fontSize: 12 }}
+                  tickFormatter={(value) => formatCurrency(Number(value), country)}
+                  width={72}
+                />
+                <Tooltip content={<ChartTooltip country={country} />} cursor={{ stroke: "#1E2D3D" }} />
+                <Area type="monotone" dataKey="bpolytix" stackId="cost" stroke="none" fill="#0D1B2A" fillOpacity={0} />
+                <Area type="monotone" dataKey="savings" stackId="cost" stroke="none" fill="#00D4AA" fillOpacity={0.15} />
+                <Line
+                  type="monotone"
+                  dataKey="inHouse"
+                  name="In-house cost"
+                  stroke="#F5F7FA"
+                  strokeWidth={2}
+                  dot={false}
+                  isAnimationActive
+                />
+                <Line
+                  type="monotone"
+                  dataKey="bpolytix"
+                  name="BPOLytix cost"
+                  stroke="#00D4AA"
+                  strokeWidth={2}
+                  dot={false}
+                  isAnimationActive
+                />
+                <ReferenceLine
+                  x={13}
+                  stroke="#1E2D3D"
+                  strokeDasharray="5 5"
+                  label={{ value: "You own it", fill: "#00D4AA", position: "insideTopRight", fontSize: 12 }}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
 
-      <div className="chart-legend">
-        <span>
-          <i className="legend-inhouse" />
-          In-house cost
-        </span>
-        <span>
-          <i className="legend-bpolytix" />
-          BPOLytix cost
-        </span>
-        <span>
-          <i className="legend-savings" />
-          Savings area
-        </span>
-      </div>
+          <div className="chart-legend">
+            <span>
+              <i className="legend-inhouse" />
+              In-house cost
+            </span>
+            <span>
+              <i className="legend-bpolytix" />
+              BPOLytix cost
+            </span>
+            <span>
+              <i className="legend-savings" />
+              Savings area
+            </span>
+          </div>
+        </>
+      ) : (
+        <div className="chart-empty">Pick a service to see your build</div>
+      )}
 
       <style jsx global>{`
         .cashflow-card {
@@ -213,6 +220,20 @@ export function CashflowChart({ country, monthlyBpolytix, monthlyInHouse }: Cash
 
         .chart-shell {
           height: 320px;
+        }
+
+        .chart-empty {
+          display: flex;
+          min-height: 320px;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #1E2D3D;
+          border-radius: 8px;
+          color: #8892A4;
+          font-family: var(--font-dm-sans);
+          font-size: 16px;
+          line-height: 1.7;
+          text-align: center;
         }
 
         .cashflow-tooltip {

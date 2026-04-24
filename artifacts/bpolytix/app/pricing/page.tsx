@@ -17,7 +17,6 @@ import {
   Shield,
   Smartphone,
   TrendingUp,
-  X,
   UserCheck,
   Users,
   Zap,
@@ -347,10 +346,6 @@ function formatCurrency(value: number, country: Country) {
   return `${symbol}${rounded.toLocaleString("en-GB")}`;
 }
 
-function selectedLabel(count: number) {
-  return count === 1 ? "1 selected" : `${count} selected`;
-}
-
 function CountedCurrency({ value, country, className }: { value: number; country: Country; className?: string }) {
   const motionValue = useMotionValue(value);
   const displayValue = useTransform(motionValue, (latest) => formatCurrency(latest, country));
@@ -367,7 +362,7 @@ function CountedCurrency({ value, country, className }: { value: number; country
 function SavingsPanel({
   country,
   businessSize,
-  selectedServices,
+  selectedService,
   monthlyBpolytix,
   monthlyInHouse,
   monthlySavings,
@@ -376,11 +371,10 @@ function SavingsPanel({
   hasOwnedService,
   mobileExpanded,
   onToggleMobile,
-  onRemove,
 }: {
   country: Country;
   businessSize: BusinessSize;
-  selectedServices: Service[];
+  selectedService: Service | null;
   monthlyBpolytix: number;
   monthlyInHouse: number;
   monthlySavings: number;
@@ -389,22 +383,21 @@ function SavingsPanel({
   hasOwnedService: boolean;
   mobileExpanded: boolean;
   onToggleMobile: () => void;
-  onRemove: (id: string) => void;
 }) {
-  const serviceParam = selectedServices.map((service) => service.id).join(",");
+  const serviceParam = selectedService?.id ?? "";
   const contactHref = `/contact?services=${encodeURIComponent(serviceParam)}&country=${country}&size=${businessSize}`;
 
   return (
-    <aside className="savings-panel" aria-label="Your build savings panel">
+    <aside className="savings-panel" aria-label="Selected service savings panel">
       <button type="button" className="panel-toggle" onClick={onToggleMobile} aria-expanded={mobileExpanded}>
-        <span>Your build</span>
-        <strong>{selectedLabel(selectedServices.length)}</strong>
+        <span>Selected service</span>
+        <strong>{selectedService?.name ?? "None selected"}</strong>
       </button>
 
       <div className={`panel-content ${mobileExpanded ? "panel-content-open" : ""}`}>
-        <div className="selected-list" aria-label="Selected services">
+        <div className="selected-list" aria-label="Selected service">
           <AnimatePresence initial={false}>
-            {selectedServices.length === 0 ? (
+            {selectedService === null ? (
               <motion.p
                 key="empty"
                 initial={{ opacity: 0, y: 8 }}
@@ -412,25 +405,20 @@ function SavingsPanel({
                 exit={{ opacity: 0, y: -8 }}
                 className="empty-state"
               >
-                Select services to see your live estimate.
+                Pick a service to see your build
               </motion.p>
             ) : (
-              selectedServices.map((service) => (
-                <motion.div
-                  key={service.id}
-                  layout
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.24, ease: EASE }}
-                  className="selected-item"
-                >
-                  <span>{service.name}</span>
-                  <button type="button" onClick={() => onRemove(service.id)} aria-label={`Remove ${service.name}`}>
-                    <X size={14} color="#8892A4" strokeWidth={2} />
-                  </button>
-                </motion.div>
-              ))
+              <motion.div
+                key={selectedService.id}
+                layout
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.24, ease: EASE }}
+                className="selected-item"
+              >
+                <span>{selectedService.name}</span>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
@@ -448,7 +436,7 @@ function SavingsPanel({
         <p className="estimate-note">Estimated in-house equivalent. Based on market salary and software averages.</p>
 
         <div className="saving-block">
-          <span>You save</span>
+          <span>Savings per month</span>
           <CountedCurrency value={monthlySavings} country={country} className="saving-number" />
         </div>
 
@@ -461,8 +449,8 @@ function SavingsPanel({
 
         {hasOwnedService && (
           <div className="ownership-pill">
-            <span>You own it from month 13</span>
-            <strong>{formatCurrency(handoverValue, country)} handover value</strong>
+            <span>Ownership value at month 13</span>
+            <strong>{formatCurrency(handoverValue, country)}</strong>
           </div>
         )}
 
@@ -520,40 +508,32 @@ function ServiceCard({
 export default function PricingPage() {
   const [country, setCountry] = useState<Country>("ZA");
   const [businessSize, setBusinessSize] = useState<BusinessSize>("startup");
-  const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>([]);
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
   const [mobilePanelExpanded, setMobilePanelExpanded] = useState(false);
   const [activePillar, setActivePillar] = useState<PillarFilter>("All");
 
+  const selectedService = useMemo(
+    () => SERVICES.find((service) => service.id === selectedServiceId) ?? null,
+    [selectedServiceId],
+  );
   const selectedServices = useMemo(
-    () => SERVICES.filter((service) => selectedServiceIds.includes(service.id)),
-    [selectedServiceIds],
+    () => (selectedService === null ? [] : [selectedService]),
+    [selectedService],
   );
   const filteredServices = useMemo(
     () => (activePillar === "All" ? SERVICES : SERVICES.filter((service) => service.pillar === activePillar)),
     [activePillar],
   );
 
-  const monthlyBpolytix = selectedServices.reduce(
-    (total, service) => total + amountFor(service, country, "bpolytix"),
-    0,
-  );
-  const monthlyInHouse = selectedServices.reduce(
-    (total, service) => total + amountFor(service, country, "inHouse"),
-    0,
-  );
+  const monthlyBpolytix = selectedService === null ? 0 : amountFor(selectedService, country, "bpolytix");
+  const monthlyInHouse = selectedService === null ? 0 : amountFor(selectedService, country, "inHouse");
   const monthlySavings = Math.max(0, monthlyInHouse - monthlyBpolytix);
   const twelveMonthSavings = monthlySavings * 12;
-  const handoverValue = selectedServices.reduce((total, service) => total + amountFor(service, country, "handover"), 0);
-  const hasOwnedService = selectedServices.some((service) => service.pillar === "AI & Automation" || service.pillar === "Build");
+  const handoverValue = selectedService === null ? 0 : amountFor(selectedService, country, "handover");
+  const hasOwnedService = handoverValue > 0;
 
   function toggleService(id: string) {
-    setSelectedServiceIds((current) =>
-      current.includes(id) ? current.filter((serviceId) => serviceId !== id) : [...current, id],
-    );
-  }
-
-  function removeService(id: string) {
-    setSelectedServiceIds((current) => current.filter((serviceId) => serviceId !== id));
+    setSelectedServiceId((current) => (current === id ? null : id));
   }
 
   return (
@@ -637,7 +617,7 @@ export default function PricingPage() {
                   <p className="section-label">Service picker</p>
                   <h2>Choose what you need now.</h2>
                 </div>
-                <p>{selectedLabel(selectedServiceIds.length)}</p>
+                <p>Pick a service to see your build</p>
               </div>
 
               <div className="pillar-strip" role="tablist" aria-label="Service pillars">
@@ -669,7 +649,7 @@ export default function PricingPage() {
                     key={service.id}
                     service={service}
                     country={country}
-                    selected={selectedServiceIds.includes(service.id)}
+                    selected={selectedServiceId === service.id}
                     onToggle={() => toggleService(service.id)}
                   />
                 ))}
@@ -680,7 +660,7 @@ export default function PricingPage() {
               <SavingsPanel
                 country={country}
                 businessSize={businessSize}
-                selectedServices={selectedServices}
+                selectedService={selectedService}
                 monthlyBpolytix={monthlyBpolytix}
                 monthlyInHouse={monthlyInHouse}
                 monthlySavings={monthlySavings}
@@ -689,7 +669,6 @@ export default function PricingPage() {
                 hasOwnedService={hasOwnedService}
                 mobileExpanded={mobilePanelExpanded}
                 onToggleMobile={() => setMobilePanelExpanded((open) => !open)}
-                onRemove={removeService}
               />
             </div>
           </div>
@@ -701,7 +680,12 @@ export default function PricingPage() {
       <section className="cashflow-section relative overflow-hidden">
         <GrainOverlay />
         <RevealBlock className="pricing-wrap relative z-10">
-          <CashflowChart country={country} monthlyBpolytix={monthlyBpolytix} monthlyInHouse={monthlyInHouse} />
+          <CashflowChart
+            country={country}
+            monthlyBpolytix={monthlyBpolytix}
+            monthlyInHouse={monthlyInHouse}
+            hasSelection={selectedService !== null}
+          />
         </RevealBlock>
       </section>
 
@@ -989,11 +973,13 @@ export default function PricingPage() {
         }
 
         .panel-toggle strong {
+          max-width: 150px;
           color: #00D4AA;
           font-family: var(--font-dm-sans);
           font-size: 13px;
           font-weight: 700;
           line-height: 1.2;
+          text-align: right;
         }
 
         .panel-content {
@@ -1020,7 +1006,7 @@ export default function PricingPage() {
         .selected-item {
           display: flex;
           align-items: center;
-          justify-content: space-between;
+          justify-content: flex-start;
           gap: 12px;
           padding: 8px 0;
           border-bottom: 1px solid #1E2D3D;
@@ -1031,19 +1017,6 @@ export default function PricingPage() {
           font-family: var(--font-dm-sans);
           font-size: 14px;
           line-height: 1.4;
-        }
-
-        .selected-item button {
-          display: flex;
-          width: 28px;
-          height: 28px;
-          flex: 0 0 auto;
-          align-items: center;
-          justify-content: center;
-          border: 1px solid #1E2D3D;
-          border-radius: 9999px;
-          background-color: #111F2E;
-          cursor: pointer;
         }
 
         .panel-divider {

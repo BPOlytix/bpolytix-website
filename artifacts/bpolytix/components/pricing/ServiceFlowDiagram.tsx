@@ -105,7 +105,7 @@ export function ServiceFlowDiagram({ selectedServices }: ServiceFlowDiagramProps
                 transition={{ duration: 0.24, ease: EASE }}
                 className="flow-empty"
               >
-                Pick services above to see your build
+                Pick a service to see your build
               </motion.div>
             ) : (
               <motion.div
@@ -120,7 +120,7 @@ export function ServiceFlowDiagram({ selectedServices }: ServiceFlowDiagramProps
 
                   <div className="flow-center">
                     <div className="flow-node bpolytix-node">BPOLytix</div>
-                    <div className="orbit-pills" aria-label="Selected services">
+                    <div className="orbit-pills" aria-label="Selected service">
                       <AnimatePresence initial={false}>
                         {selectedServices.map((service, index) => (
                           <motion.span
