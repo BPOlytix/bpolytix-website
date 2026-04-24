@@ -6,9 +6,15 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
   BadgeCheck,
+  BookCheck,
   Calculator,
+  CalendarCheck,
+  ChartNoAxesCombined,
   ClipboardList,
+  FileCheck2,
+  KeyRound,
   LineChart,
+  MapPin,
   type LucideIcon,
 } from "lucide-react";
 import { Footer } from "@/components/Footer";
@@ -26,6 +32,11 @@ type FinanceService = {
 
 type WorkStep = {
   title: string;
+  text: string;
+  icon: LucideIcon;
+};
+
+type ClaimItem = {
   text: string;
   icon: LucideIcon;
 };
@@ -110,6 +121,40 @@ const WORK_STEPS: WorkStep[] = [
     title: "Own",
     text: "You get clear numbers each month, with the records and reports kept in your hands.",
     icon: BadgeCheck,
+  },
+];
+
+const OFFICE_CLAIMS: ClaimItem[] = [
+  {
+    text: "Books closed by day 5.",
+    icon: BookCheck,
+  },
+  {
+    text: "Payroll filed on time, every month.",
+    icon: CalendarCheck,
+  },
+  {
+    text: "Compliance deadlines never missed.",
+    icon: FileCheck2,
+  },
+  {
+    text: "Live cashflow you can actually read.",
+    icon: ChartNoAxesCombined,
+  },
+];
+
+const PROOF_LINES: ClaimItem[] = [
+  {
+    text: "Dual-region UK + SA.",
+    icon: MapPin,
+  },
+  {
+    text: "AI dashboards included.",
+    icon: LineChart,
+  },
+  {
+    text: "You own the system after 12 months.",
+    icon: KeyRound,
   },
 ];
 
@@ -222,7 +267,53 @@ function FinancePulseVisual() {
         <LineChart size={18} color="#00D4AA" strokeWidth={1.8} />
         <span>Cash position live</span>
       </motion.div>
+
+      <div className="reconcile-panel">
+        {["Close day 5", "Payroll filed", "Cash readout"].map((item, index) => (
+          <motion.div
+            className="reconcile-row"
+            key={item}
+            animate={
+              canAnimate
+                ? { opacity: [0.55, 1, 0.7], x: [0, 6, 0] }
+                : { opacity: 0.76, x: 0 }
+            }
+            transition={{
+              duration: 3.6,
+              delay: index * 0.45,
+              repeat: canAnimate ? Infinity : 0,
+              ease: "easeInOut",
+            }}
+          >
+            <BadgeCheck size={16} color="#00D4AA" strokeWidth={1.8} />
+            <span>{item}</span>
+            <i />
+          </motion.div>
+        ))}
+      </div>
     </div>
+  );
+}
+
+function AnimatedClaimIcon({
+  icon: Icon,
+  index,
+}: {
+  icon: LucideIcon;
+  index: number;
+}) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.span
+      className="claim-icon"
+      initial={reduceMotion ? false : { opacity: 0, y: 10, scale: 0.96 }}
+      whileInView={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.5 }}
+      transition={{ duration: 0.55, delay: index * 0.08, ease: EASE }}
+    >
+      <Icon size={18} color="#00D4AA" strokeWidth={1.8} />
+    </motion.span>
   );
 }
 
@@ -250,6 +341,24 @@ export default function FinanceOfficePage() {
           </div>
 
           <FinancePulseVisual />
+        </div>
+      </RevealSection>
+
+      <RevealSection className="office-strip-section">
+        <GrainOverlay />
+        <div className="page-wrap office-strip">
+          <div className="strip-heading">
+            <p className="section-label">What a Finance Office actually does for you</p>
+          </div>
+
+          <div className="office-claims">
+            {OFFICE_CLAIMS.map((claim, index) => (
+              <div className="office-claim" key={claim.text}>
+                <AnimatedClaimIcon icon={claim.icon} index={index} />
+                <p>{claim.text}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </RevealSection>
 
@@ -312,6 +421,24 @@ export default function FinanceOfficePage() {
         </div>
       </RevealSection>
 
+      <RevealSection className="proof-strip-section">
+        <GrainOverlay />
+        <div className="page-wrap proof-strip">
+          <div className="strip-heading">
+            <p className="section-label">Why businesses move their finance office to us</p>
+          </div>
+
+          <div className="proof-lines">
+            {PROOF_LINES.map((proof, index) => (
+              <div className="proof-line" key={proof.text}>
+                <AnimatedClaimIcon icon={proof.icon} index={index} />
+                <p>{proof.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </RevealSection>
+
       <RevealSection className="final-cta-section">
         <GrainOverlay />
         <div className="page-wrap">
@@ -354,14 +481,14 @@ export default function FinanceOfficePage() {
 
         .finance-hero {
           padding-top: 128px;
-          padding-bottom: 128px;
+          padding-bottom: 72px;
         }
 
         .hero-grid {
           display: grid;
           grid-template-columns: minmax(0, 0.92fr) minmax(420px, 0.78fr);
           gap: 72px;
-          align-items: center;
+          align-items: stretch;
         }
 
         .hero-copy {
@@ -443,7 +570,7 @@ export default function FinanceOfficePage() {
 
         .finance-visual {
           position: relative;
-          min-height: 430px;
+          min-height: 560px;
           border: 1px solid #1E2D3D;
           border-radius: 8px;
           background-color: #111F2E;
@@ -497,7 +624,7 @@ export default function FinanceOfficePage() {
         .cashflow-line {
           position: absolute;
           right: -10px;
-          bottom: 34px;
+          bottom: 120px;
           width: 82%;
           height: auto;
         }
@@ -541,11 +668,107 @@ export default function FinanceOfficePage() {
           padding: 0 12px;
         }
 
+        .reconcile-panel {
+          position: absolute;
+          right: 28px;
+          bottom: 28px;
+          left: 28px;
+          display: grid;
+          gap: 10px;
+        }
+
+        .reconcile-row {
+          display: grid;
+          grid-template-columns: auto minmax(0, 1fr) 76px;
+          min-height: 42px;
+          align-items: center;
+          gap: 10px;
+          border: 1px solid #1E2D3D;
+          border-radius: 8px;
+          background-color: #1C2A3A;
+          color: #F5F7FA;
+          font-family: var(--font-dm-sans);
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0;
+          line-height: 1.25;
+          padding: 0 14px;
+        }
+
+        .reconcile-row i {
+          display: block;
+          height: 7px;
+          border-radius: 9999px;
+          background-color: #1E2D3D;
+        }
+
         .services-section,
+        .office-strip-section,
+        .proof-strip-section,
         .work-section,
         .final-cta-section {
-          padding-top: 96px;
-          padding-bottom: 128px;
+          padding-top: 64px;
+          padding-bottom: 76px;
+        }
+
+        .office-strip,
+        .proof-strip {
+          display: grid;
+          gap: 24px;
+        }
+
+        .strip-heading .section-label {
+          margin-bottom: 0;
+        }
+
+        .office-claims {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 18px;
+          border-top: 1px solid #1E2D3D;
+          border-bottom: 1px solid #1E2D3D;
+          padding: 22px 0;
+        }
+
+        .office-claim,
+        .proof-line {
+          display: flex;
+          min-width: 0;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .claim-icon {
+          display: inline-flex;
+          width: 34px;
+          height: 34px;
+          flex: 0 0 auto;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #1E2D3D;
+          border-radius: 9999px;
+          background-color: #111F2E;
+        }
+
+        .office-claim p,
+        .proof-line p {
+          margin: 0;
+          color: #F5F7FA;
+          font-family: var(--font-dm-sans);
+          font-size: 16px;
+          font-weight: 700;
+          letter-spacing: 0;
+          line-height: 1.35;
+        }
+
+        .proof-lines {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 18px;
+          border: 1px solid #1E2D3D;
+          border-radius: 8px;
+          background-color: #111F2E;
+          padding: 24px;
         }
 
         .section-heading {
@@ -678,14 +901,14 @@ export default function FinanceOfficePage() {
           margin-top: 0;
         }
 
-        @media (max-width: 1120px) {
+        @media (max-width: 1023px) {
           .hero-grid,
           .work-band {
             grid-template-columns: 1fr;
           }
 
           .finance-visual {
-            min-height: 360px;
+            min-height: 430px;
           }
 
           .work-steps {
@@ -695,11 +918,17 @@ export default function FinanceOfficePage() {
 
         @media (max-width: 860px) {
           .finance-hero,
+          .office-strip-section,
           .services-section,
+          .proof-strip-section,
           .work-section,
           .final-cta-section {
-            padding-top: 82px;
-            padding-bottom: 96px;
+            padding-top: 48px;
+            padding-bottom: 56px;
+          }
+
+          .finance-hero {
+            padding-top: 112px;
           }
 
           .page-wrap {
@@ -721,6 +950,14 @@ export default function FinanceOfficePage() {
             grid-template-columns: 1fr;
           }
 
+          .office-claims {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
+          .proof-lines {
+            grid-template-columns: 1fr;
+          }
+
           .finance-service-card.card-5 {
             max-width: none;
           }
@@ -739,6 +976,7 @@ export default function FinanceOfficePage() {
         @media (max-width: 560px) {
           .finance-hero {
             padding-top: 104px;
+            padding-bottom: 44px;
           }
 
           .hero-copy h1 {
@@ -750,7 +988,7 @@ export default function FinanceOfficePage() {
           }
 
           .finance-visual {
-            min-height: 300px;
+            min-height: 380px;
           }
 
           .ledger-panel {
@@ -762,13 +1000,33 @@ export default function FinanceOfficePage() {
 
           .cashflow-line {
             right: -50px;
-            bottom: 20px;
+            bottom: 92px;
             width: 112%;
           }
 
           .number-pulse {
             right: 16px;
             top: 18px;
+          }
+
+          .reconcile-panel {
+            right: 16px;
+            bottom: 16px;
+            left: 16px;
+          }
+
+          .reconcile-row {
+            grid-template-columns: auto minmax(0, 1fr) 42px;
+            padding: 0 12px;
+          }
+
+          .office-claims {
+            gap: 16px;
+          }
+
+          .office-claim,
+          .proof-line {
+            align-items: flex-start;
           }
 
           .primary-cta {
