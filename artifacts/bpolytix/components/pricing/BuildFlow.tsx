@@ -59,6 +59,7 @@ type FlowNode = {
   label: string;
   icon: LucideIcon;
   badge?: string;
+  motif?: "document" | "play-store";
   ownership?: boolean;
 };
 
@@ -266,7 +267,7 @@ const BUILD_PILLAR_FLOWS: Record<string, BuildPillarFlow> = {
       { label: "Scope", icon: ClipboardList },
       { label: "Design screens", icon: Smartphone },
       { label: "Build & test", icon: Wrench },
-      { label: "Play Store submission", icon: Send, badge: "Play Store" },
+      { label: "Play Store submission", icon: Send, badge: "Play Store", motif: "play-store" },
       { label: "Live on Play Store", icon: BadgeCheck },
       { label: "You own it", icon: Lock, ownership: true },
     ],
@@ -286,9 +287,9 @@ const BUILD_PILLAR_FLOWS: Record<string, BuildPillarFlow> = {
     kind: "document",
     nodes: [
       { label: "Discovery call", icon: PhoneCall },
-      { label: "Financial model built", icon: Calculator },
-      { label: "Plan drafted", icon: FileCheck },
-      { label: "Pitch-ready pack", icon: Presentation },
+      { label: "Financial model built", icon: Calculator, motif: "document" },
+      { label: "Plan drafted", icon: FileCheck, motif: "document" },
+      { label: "Pitch-ready pack", icon: Presentation, motif: "document" },
       { label: "Submitted", icon: Send },
     ],
   },
@@ -631,6 +632,7 @@ function BuildPillarServiceFlow({ flow }: { flow: BuildPillarFlow }) {
         {flow.nodes.map((node, index) => {
           const Icon = node.icon;
           const funnelWidth = `${100 - index * 9}%`;
+          const isCountdown = flow.kind === "countdown";
 
           return (
             <div className="finance-flow-segment" key={node.label}>
@@ -641,9 +643,37 @@ function BuildPillarServiceFlow({ flow }: { flow: BuildPillarFlow }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.32, delay: index * 0.1, ease: EASE }}
               >
+                {node.motif === "play-store" && (
+                  <span className="play-store-motif" aria-hidden="true">
+                    <span />
+                  </span>
+                )}
+                {node.motif === "document" && (
+                  <span className="document-node-motif" aria-hidden="true">
+                    <span />
+                    <span />
+                  </span>
+                )}
                 <Icon size={20} color={node.ownership ? "#00D4AA" : "#1B77F2"} strokeWidth={1.8} />
                 <span>{node.label}</span>
-                {node.badge && <strong className={flow.kind === "countdown" ? "day-badge" : "node-badge"}>{node.badge}</strong>}
+                {node.badge &&
+                  (isCountdown ? (
+                    <motion.strong
+                      className="day-badge"
+                      animate={{ scale: [1, 1.08, 1] }}
+                      transition={{
+                        duration: 1.6,
+                        delay: index * 0.18,
+                        repeat: Infinity,
+                        repeatDelay: 0.8,
+                        ease: EASE,
+                      }}
+                    >
+                      {node.badge}
+                    </motion.strong>
+                  ) : (
+                    <strong className="node-badge">{node.badge}</strong>
+                  ))}
                 {node.ownership && <strong className="ownership-badge">Yours after 12 months</strong>}
               </motion.div>
               {index < flow.nodes.length - 1 && <Connector index={index} />}
@@ -931,6 +961,10 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
           box-shadow: 0 0 0 1px #00D4AA, 0 0 24px #00D4AA;
         }
 
+        .build-pillar-node.ownership-node {
+          animation: build-ownership-glow 2.4s ease-in-out infinite;
+        }
+
         .ai-flow-node.ownership-node span,
         .build-pillar-node.ownership-node span {
           color: #00D4AA;
@@ -1090,10 +1124,76 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
         .countdown-flow .build-pillar-node {
           min-height: 128px;
           border-color: #1B77F2;
+          justify-content: space-between;
         }
 
-        .document-flow .build-pillar-node:nth-child(n) {
-          background-color: #111F2E;
+        .play-store-motif,
+        .document-node-motif {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #0D1B2A;
+        }
+
+        .play-store-motif {
+          width: 30px;
+          height: 30px;
+          border: 1px solid #1E2D3D;
+          border-radius: 8px;
+        }
+
+        .play-store-motif span {
+          width: 0;
+          height: 0;
+          border-top: 7px solid #1B77F2;
+          border-bottom: 7px solid #00D4AA;
+          border-left: 12px solid #F5F7FA;
+        }
+
+        .document-node-motif {
+          width: 34px;
+          height: 30px;
+        }
+
+        .document-node-motif span {
+          position: absolute;
+          width: 18px;
+          height: 22px;
+          border: 1px solid #1E2D3D;
+          border-radius: 3px;
+          background-color: #0D1B2A;
+        }
+
+        .document-node-motif span:first-child {
+          top: 1px;
+          left: 4px;
+        }
+
+        .document-node-motif span:last-child {
+          top: 6px;
+          left: 12px;
+          border-color: #00D4AA;
+        }
+
+        .document-node-motif span:last-child::before,
+        .document-node-motif span:last-child::after {
+          position: absolute;
+          right: 3px;
+          left: 3px;
+          height: 1px;
+          background-color: #00D4AA;
+          content: "";
+        }
+
+        .document-node-motif span:last-child::before {
+          top: 7px;
+        }
+
+        .document-node-motif span:last-child::after {
+          top: 12px;
         }
 
         .funnel-track .finance-flow-segment {
@@ -1288,6 +1388,17 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
 
           to {
             transform: rotate(360deg);
+          }
+        }
+
+        @keyframes build-ownership-glow {
+          0%,
+          100% {
+            box-shadow: 0 0 0 1px #00D4AA, 0 0 18px #00D4AA;
+          }
+
+          50% {
+            box-shadow: 0 0 0 1px #00D4AA, 0 0 30px #00D4AA;
           }
         }
 
