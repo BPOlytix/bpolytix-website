@@ -27,7 +27,7 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { GrainOverlay } from "@/components/GrainOverlay";
 import { CashflowChart } from "@/components/pricing/CashflowChart";
-import { ServiceFlowDiagram } from "@/components/pricing/ServiceFlowDiagram";
+import { BuildFlow } from "@/components/pricing/BuildFlow";
 
 type Country = "ZA" | "UK";
 type BusinessSize = "startup" | "sme" | "growth";
@@ -675,7 +675,7 @@ export default function PricingPage() {
         </RevealBlock>
       </section>
 
-      <ServiceFlowDiagram selectedServices={selectedServices} />
+      <BuildFlow selectedServiceId={selectedServiceId} selectedServiceName={selectedService?.name} />
 
       <section className="cashflow-section relative overflow-hidden">
         <GrainOverlay />
