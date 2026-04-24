@@ -27,6 +27,7 @@ import { AnimatePresence, animate, motion, useInView, useMotionValue, useTransfo
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { GrainOverlay } from "@/components/GrainOverlay";
+import { CashflowChart } from "@/components/pricing/CashflowChart";
 import { ServiceFlowDiagram } from "@/components/pricing/ServiceFlowDiagram";
 
 type Country = "ZA" | "UK";
@@ -674,6 +675,52 @@ export default function PricingPage() {
 
       <ServiceFlowDiagram selectedServices={selectedServices} />
 
+      <section className="cashflow-section relative overflow-hidden">
+        <GrainOverlay />
+        <RevealBlock className="pricing-wrap relative z-10">
+          <CashflowChart country={country} monthlyBpolytix={monthlyBpolytix} monthlyInHouse={monthlyInHouse} />
+        </RevealBlock>
+      </section>
+
+      <section className="anti-sub-section relative overflow-hidden">
+        <GrainOverlay />
+        <RevealBlock className="pricing-wrap relative z-10">
+          <div className="anti-sub-card">
+            <h2>You pay once. Then you own it.</h2>
+            <p>
+              Every other provider charges a monthly subscription forever.
+              Prices go up. You own nothing. BPOLytix builds and deploys your
+              solution, you pay a fixed monthly fee for 12 months, and then it's
+              yours. Fully built for your business. Future upgrades are add-ons —
+              not price hikes on a platform you'll never own.
+            </p>
+          </div>
+        </RevealBlock>
+      </section>
+
+      <section className="final-pricing-cta relative overflow-hidden">
+        <GrainOverlay />
+        <RevealBlock className="pricing-wrap relative z-10">
+          <div className="final-cta-card">
+            <div>
+              <h2>Need something bespoke?</h2>
+              <p>
+                Every business is different. We'll cost your exact stack and
+                send a written scope within one business day.
+              </p>
+            </div>
+            <div className="final-cta-actions">
+              <a href="/contact" className="primary-final-cta">
+                Scope my build
+              </a>
+              <a href="https://wa.me/27781790363" className="secondary-final-cta">
+                Talk to us on WhatsApp
+              </a>
+            </div>
+          </div>
+        </RevealBlock>
+      </section>
+
       <Footer />
 
       <style jsx global>{`
@@ -696,6 +743,12 @@ export default function PricingPage() {
           background-color: #0D1B2A;
         }
 
+        .cashflow-section,
+        .anti-sub-section,
+        .final-pricing-cta {
+          background-color: #0D1B2A;
+        }
+
         .pricing-hero {
           padding-top: 72px;
           padding-bottom: 28px;
@@ -709,6 +762,89 @@ export default function PricingPage() {
         .services-section {
           padding-top: 0;
           padding-bottom: 32px;
+        }
+
+        .cashflow-section {
+          padding-top: 0;
+          padding-bottom: 24px;
+        }
+
+        .anti-sub-section {
+          padding-top: 0;
+          padding-bottom: 16px;
+        }
+
+        .final-pricing-cta {
+          padding-top: 0;
+          padding-bottom: 72px;
+        }
+
+        .anti-sub-card,
+        .final-cta-card {
+          border: 1px solid #1E2D3D;
+          border-radius: 8px;
+          background-color: #111F2E;
+          padding: 32px;
+        }
+
+        .anti-sub-card h2,
+        .final-cta-card h2 {
+          margin: 0;
+          color: #F5F7FA;
+          font-family: var(--font-syne);
+          font-size: 32px;
+          font-weight: 700;
+          letter-spacing: -0.022em;
+          line-height: 1.05;
+        }
+
+        .anti-sub-card p,
+        .final-cta-card p {
+          max-width: 780px;
+          margin: 16px 0 0;
+          color: #8892A4;
+          font-family: var(--font-dm-sans);
+          font-size: 16px;
+          line-height: 1.7;
+        }
+
+        .final-cta-card {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 24px;
+          align-items: center;
+        }
+
+        .final-cta-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          justify-content: flex-end;
+        }
+
+        .primary-final-cta,
+        .secondary-final-cta {
+          display: inline-flex;
+          min-height: 46px;
+          align-items: center;
+          justify-content: center;
+          padding: 0 20px;
+          border-radius: 9999px;
+          font-family: var(--font-dm-sans);
+          font-size: 15px;
+          font-weight: 700;
+          line-height: 1;
+          text-decoration: none;
+        }
+
+        .primary-final-cta {
+          background-color: #1B77F2;
+          color: #F5F7FA;
+        }
+
+        .secondary-final-cta {
+          border: 1px solid #1E2D3D;
+          color: #F5F7FA;
         }
 
         .section-label {
@@ -1145,6 +1281,15 @@ export default function PricingPage() {
           .services-section {
             padding-bottom: 148px;
           }
+
+          .final-cta-card {
+            grid-template-columns: 1fr;
+            align-items: start;
+          }
+
+          .final-cta-actions {
+            justify-content: flex-start;
+          }
         }
 
         @media (max-width: 767px) {
@@ -1160,6 +1305,29 @@ export default function PricingPage() {
 
           .services-section {
             padding-bottom: 148px;
+          }
+
+          .cashflow-section,
+          .anti-sub-section {
+            padding-bottom: 16px;
+          }
+
+          .final-pricing-cta {
+            padding-bottom: 148px;
+          }
+
+          .anti-sub-card,
+          .final-cta-card {
+            padding: 20px;
+          }
+
+          .anti-sub-card h2,
+          .final-cta-card h2 {
+            font-size: 28px;
+          }
+
+          .final-cta-actions {
+            flex-direction: column;
           }
 
           h1 {

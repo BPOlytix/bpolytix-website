@@ -195,7 +195,7 @@ export function ServiceFlowDiagram({ selectedServices }: ServiceFlowDiagramProps
           position: relative;
           overflow: hidden;
           padding-top: 0;
-          padding-bottom: 72px;
+          padding-bottom: 24px;
           background-color: #0D1B2A;
         }
 
@@ -395,7 +395,7 @@ export function ServiceFlowDiagram({ selectedServices }: ServiceFlowDiagramProps
 
         @media (max-width: 1023px) {
           .service-flow-section {
-            padding-bottom: 148px;
+            padding-bottom: 24px;
           }
 
           .flow-desktop {
