@@ -7,6 +7,8 @@ import {
   Bell,
   Bot,
   Brain,
+  BriefcaseBusiness,
+  Building2,
   Calculator,
   CalendarDays,
   Clock3,
@@ -23,6 +25,7 @@ import {
   Megaphone,
   MessageSquareText,
   Network,
+  NotebookTabs,
   PhoneCall,
   PhoneIncoming,
   Plug,
@@ -33,9 +36,12 @@ import {
   SearchCheck,
   Send,
   Settings,
+  ShieldCheck,
   Sparkles,
   Split,
   Tags,
+  UserCheck,
+  UserRound,
   Wrench,
   Workflow,
   type LucideIcon,
@@ -68,6 +74,13 @@ type AiFlow = {
   badge?: string;
   loopLabel?: string;
   nodes: FlowNode[];
+};
+
+type PeopleFlow = {
+  serviceName: string;
+  kind: "corridor" | "hr-cycle" | "onboarding";
+  loopLabel?: string;
+  nodes?: FlowNode[];
 };
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
@@ -191,6 +204,36 @@ const AI_FLOWS: Record<string, AiFlow> = {
       { label: "Distribution automated", icon: Network },
       { label: "Analytics dashboard", icon: LayoutDashboard },
       { label: "Month 13: yours", icon: Lock, ownership: true },
+    ],
+  },
+};
+
+const PEOPLE_FLOWS: Record<string, PeopleFlow> = {
+  "employer-of-record": {
+    serviceName: "Employer of Record (SA-UK)",
+    kind: "corridor",
+  },
+  "outsourced-hr": {
+    serviceName: "Outsourced HR",
+    kind: "hr-cycle",
+    loopLabel: "Monthly HR cycle",
+    nodes: [
+      { label: "Employee queries in", icon: MessageSquareText },
+      { label: "Policy applied", icon: NotebookTabs },
+      { label: "Actions taken", icon: UserCheck },
+      { label: "Record updated", icon: FileCheck },
+      { label: "Management report", icon: BarChart3 },
+    ],
+  },
+  "onboarding-policy-automation": {
+    serviceName: "Onboarding & Policy Automation",
+    kind: "onboarding",
+    nodes: [
+      { label: "Offer accepted", icon: BadgeCheck },
+      { label: "Documents sent automatically", icon: Send },
+      { label: "Signed & returned", icon: FileCheck },
+      { label: "Policies acknowledged", icon: ShieldCheck },
+      { label: "Day one ready", icon: UserRound, badge: "Day 1" },
     ],
   },
 };
@@ -375,6 +418,134 @@ function AiServiceFlow({ flow }: { flow: AiFlow }) {
   );
 }
 
+function CorridorConnector({ side }: { side: "left" | "right" }) {
+  return (
+    <div className={`corridor-connector ${side}-corridor`} aria-hidden="true">
+      <span className="corridor-line" />
+      {["Contracts", "Pay", "Compliance"].map((label, index) => (
+        <motion.span
+          key={`${side}-${label}`}
+          className="corridor-particle"
+          initial={{ left: side === "left" ? "0%" : "100%", opacity: 0 }}
+          animate={{
+            left: side === "left" ? ["0%", "100%", "0%"] : ["100%", "0%", "100%"],
+            opacity: [0, 1, 1, 0],
+          }}
+          transition={{
+            duration: 3.8,
+            delay: index * 0.55,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        >
+          {label}
+        </motion.span>
+      ))}
+    </div>
+  );
+}
+
+function PeopleServiceFlow({ flow }: { flow: PeopleFlow }) {
+  if (flow.kind === "corridor") {
+    return (
+      <motion.div
+        key={flow.serviceName}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.24, ease: EASE }}
+        className="people-service-flow corridor-flow"
+      >
+        <div className="build-flow-meta">
+          <span>{flow.serviceName}</span>
+        </div>
+
+        <div className="corridor-layout">
+          <motion.div
+            className="corridor-node"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.32, ease: EASE }}
+          >
+            <span className="flag-motif">GB</span>
+            <BriefcaseBusiness size={22} color="#1B77F2" strokeWidth={1.8} />
+            <strong>UK company</strong>
+          </motion.div>
+
+          <CorridorConnector side="left" />
+
+          <motion.div
+            className="corridor-node corridor-hub"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.32, delay: 0.1, ease: EASE }}
+          >
+            <Building2 size={22} color="#00D4AA" strokeWidth={1.8} />
+            <strong>BPOLytix entity</strong>
+          </motion.div>
+
+          <CorridorConnector side="right" />
+
+          <motion.div
+            className="corridor-node"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.32, delay: 0.2, ease: EASE }}
+          >
+            <span className="flag-motif">ZA</span>
+            <UserRound size={22} color="#1B77F2" strokeWidth={1.8} />
+            <strong>SA employee</strong>
+          </motion.div>
+        </div>
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div
+      key={flow.serviceName}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.24, ease: EASE }}
+      className={`people-service-flow ${flow.kind}-flow`}
+    >
+      <div className="build-flow-meta">
+        <span>{flow.serviceName}</span>
+      </div>
+
+      <div className="people-flow-track">
+        {flow.nodes?.map((node, index) => {
+          const Icon = node.icon;
+
+          return (
+            <div className="finance-flow-segment" key={node.label}>
+              <motion.div
+                className="finance-flow-node people-flow-node"
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.32, delay: index * 0.1, ease: EASE }}
+              >
+                <Icon size={20} color="#1B77F2" strokeWidth={1.8} />
+                <span>{node.label}</span>
+                {node.badge && <strong className="node-badge">{node.badge}</strong>}
+              </motion.div>
+              {index < (flow.nodes?.length ?? 0) - 1 && <Connector index={index} />}
+            </div>
+          );
+        })}
+      </div>
+
+      {flow.loopLabel && (
+        <div className="loop-indicator" aria-label={flow.loopLabel}>
+          <RefreshCw size={16} color="#00D4AA" strokeWidth={1.8} />
+          <span>{flow.loopLabel}</span>
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
 function GenericServiceFlow({
   selectedServiceId,
   selectedServiceName,
@@ -423,6 +594,7 @@ function GenericServiceFlow({
 export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowProps) {
   const financeFlow = selectedServiceId === null ? null : FINANCE_FLOWS[selectedServiceId];
   const aiFlow = selectedServiceId === null ? null : AI_FLOWS[selectedServiceId];
+  const peopleFlow = selectedServiceId === null ? null : PEOPLE_FLOWS[selectedServiceId];
 
   return (
     <section className="service-flow-section" aria-label="Selected service flow">
@@ -449,6 +621,8 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
               <FinanceServiceFlow key={selectedServiceId} flow={financeFlow} />
             ) : aiFlow ? (
               <AiServiceFlow key={selectedServiceId} flow={aiFlow} />
+            ) : peopleFlow ? (
+              <PeopleServiceFlow key={selectedServiceId} flow={peopleFlow} />
             ) : (
               <GenericServiceFlow
                 key={selectedServiceId}
@@ -522,6 +696,7 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
 
         .finance-service-flow,
         .ai-service-flow,
+        .people-service-flow,
         .generic-service-flow {
           position: relative;
           min-height: 264px;
@@ -571,6 +746,7 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
         .finance-flow-track,
         .ai-flow-track,
         .ai-loop-track,
+        .people-flow-track,
         .generic-service-flow {
           display: flex;
           align-items: center;
@@ -578,7 +754,8 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
         }
 
         .ai-flow-track,
-        .ai-loop-track {
+        .ai-loop-track,
+        .people-flow-track {
           margin-top: 4px;
         }
 
@@ -765,6 +942,114 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
           background-color: #0D1B2A;
         }
 
+        .corridor-layout {
+          display: grid;
+          min-height: 208px;
+          grid-template-columns: minmax(170px, 0.85fr) minmax(92px, 0.42fr) minmax(190px, 1fr) minmax(92px, 0.42fr) minmax(170px, 0.85fr);
+          gap: 12px;
+          align-items: center;
+        }
+
+        .corridor-node {
+          position: relative;
+          display: flex;
+          min-height: 138px;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          border: 1px solid #1E2D3D;
+          border-radius: 8px;
+          background-color: #111F2E;
+          padding: 18px;
+          text-align: center;
+        }
+
+        .corridor-node strong {
+          color: #F5F7FA;
+          font-family: var(--font-dm-sans);
+          font-size: 15px;
+          font-weight: 700;
+          line-height: 1.35;
+        }
+
+        .corridor-hub {
+          border-color: #00D4AA;
+          box-shadow: 0 0 0 1px #00D4AA;
+        }
+
+        .flag-motif {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          display: inline-flex;
+          min-height: 24px;
+          align-items: center;
+          padding: 0 8px;
+          border: 1px solid #1E2D3D;
+          border-radius: 9999px;
+          color: #8892A4;
+          font-family: var(--font-dm-sans);
+          font-size: 11px;
+          font-weight: 700;
+          line-height: 1;
+        }
+
+        .corridor-connector {
+          position: relative;
+          min-height: 72px;
+          overflow: hidden;
+        }
+
+        .corridor-line {
+          position: absolute;
+          top: 50%;
+          right: 0;
+          left: 0;
+          height: 1px;
+          background-color: #1E2D3D;
+        }
+
+        .corridor-line::before,
+        .corridor-line::after {
+          position: absolute;
+          top: -4px;
+          width: 8px;
+          height: 8px;
+          border-top: 1px solid #1E2D3D;
+          border-right: 1px solid #1E2D3D;
+          content: "";
+        }
+
+        .corridor-line::before {
+          left: 1px;
+          transform: rotate(-135deg);
+        }
+
+        .corridor-line::after {
+          right: 1px;
+          transform: rotate(45deg);
+        }
+
+        .corridor-particle {
+          position: absolute;
+          top: calc(50% - 13px);
+          left: 0;
+          display: inline-flex;
+          min-height: 26px;
+          align-items: center;
+          padding: 0 8px;
+          border: 1px solid #00D4AA;
+          border-radius: 9999px;
+          background-color: #0D1B2A;
+          color: #00D4AA;
+          font-family: var(--font-dm-sans);
+          font-size: 11px;
+          font-weight: 700;
+          line-height: 1;
+          white-space: nowrap;
+        }
+
         .payroll-ribbon,
         .phase-ribbon {
           display: grid;
@@ -832,6 +1117,7 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
           .finance-flow-track,
           .ai-flow-track,
           .ai-loop-track,
+          .people-flow-track,
           .generic-service-flow {
             flex-direction: column;
             align-items: stretch;
@@ -887,6 +1173,21 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
           .call-outcomes,
           .ownership-timeline {
             grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
+          .corridor-layout {
+            grid-template-columns: 1fr;
+            gap: 10px;
+          }
+
+          .corridor-node {
+            min-height: 92px;
+          }
+
+          .corridor-connector {
+            min-height: 38px;
+            width: 48px;
+            justify-self: center;
           }
         }
 
