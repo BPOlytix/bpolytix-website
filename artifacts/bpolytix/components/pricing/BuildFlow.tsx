@@ -1,27 +1,43 @@
 "use client";
 
 import {
+  Activity,
   BadgeCheck,
   BarChart3,
   Bell,
+  Bot,
+  Brain,
   Calculator,
   CalendarDays,
   Clock3,
+  ClipboardList,
   Database,
   FileCheck,
+  GitBranch,
   GraduationCap,
   Landmark,
   LayoutDashboard,
   LifeBuoy,
   LineChart,
+  Lock,
+  Megaphone,
+  MessageSquareText,
+  Network,
   PhoneCall,
+  PhoneIncoming,
+  Plug,
   Presentation,
   ReceiptText,
   RefreshCw,
+  Rocket,
   SearchCheck,
   Send,
   Settings,
+  Sparkles,
+  Split,
   Tags,
+  Wrench,
+  Workflow,
   type LucideIcon,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -35,12 +51,21 @@ type FlowNode = {
   label: string;
   icon: LucideIcon;
   badge?: string;
+  ownership?: boolean;
 };
 
 type FinanceFlow = {
   serviceName: string;
   badge?: string;
   kind: "monthly" | "weekly" | "payroll" | "phase" | "calendar";
+  loopLabel?: string;
+  nodes: FlowNode[];
+};
+
+type AiFlow = {
+  serviceName: string;
+  kind: "build-own" | "agent" | "ops-loop" | "call" | "timeline";
+  badge?: string;
   loopLabel?: string;
   nodes: FlowNode[];
 };
@@ -105,6 +130,67 @@ const FINANCE_FLOWS: Record<string, FinanceFlow> = {
       { label: "Deadlines flagged", icon: Bell },
       { label: "Submitted on time", icon: Send },
       { label: "Status dashboard", icon: LayoutDashboard },
+    ],
+  },
+};
+
+const AI_FLOWS: Record<string, AiFlow> = {
+  "ai-workflow-automation": {
+    serviceName: "AI Workflow Automation",
+    kind: "build-own",
+    nodes: [
+      { label: "Map your workflows", icon: Workflow },
+      { label: "Build automations", icon: Wrench },
+      { label: "Connect your tools", icon: Plug },
+      { label: "Deploy live", icon: Rocket },
+      { label: "12 months support", icon: LifeBuoy },
+      { label: "You own it", icon: Lock, ownership: true },
+    ],
+  },
+  "ai-agent-build-deploy": {
+    serviceName: "AI Agent Build & Deploy",
+    kind: "agent",
+    nodes: [
+      { label: "Scope the agent", icon: ClipboardList },
+      { label: "Design prompts & tools", icon: Brain },
+      { label: "Train & test", icon: Bot, badge: "Custom-built" },
+      { label: "Deploy to production", icon: Rocket },
+      { label: "Monitor & tune", icon: Activity },
+      { label: "Handover", icon: Lock, ownership: true },
+    ],
+  },
+  "ai-operations-service": {
+    serviceName: "AI Operations Service",
+    kind: "ops-loop",
+    loopLabel: "Continuous monitoring",
+    nodes: [
+      { label: "Monitor", icon: Activity },
+      { label: "Detect drift", icon: SearchCheck },
+      { label: "Tune prompts", icon: Settings },
+      { label: "Fix integrations", icon: Wrench },
+      { label: "Monthly report", icon: BarChart3 },
+    ],
+  },
+  "ai-receptionist": {
+    serviceName: "AI Receptionist",
+    kind: "call",
+    nodes: [
+      { label: "Caller dials", icon: PhoneIncoming },
+      { label: "AI answers", icon: MessageSquareText },
+      { label: "Intent detected", icon: Split },
+      { label: "Action taken", icon: GitBranch },
+      { label: "Summary to you", icon: Lock, ownership: true },
+    ],
+  },
+  "ai-marketing-ops": {
+    serviceName: "AI Marketing Ops",
+    kind: "timeline",
+    nodes: [
+      { label: "Brand voice trained", icon: Sparkles },
+      { label: "Content pipeline live", icon: Megaphone },
+      { label: "Distribution automated", icon: Network },
+      { label: "Analytics dashboard", icon: LayoutDashboard },
+      { label: "Month 13: yours", icon: Lock, ownership: true },
     ],
   },
 };
@@ -216,6 +302,79 @@ function FinanceServiceFlow({ flow }: { flow: FinanceFlow }) {
   );
 }
 
+function AiServiceFlow({ flow }: { flow: AiFlow }) {
+  const isLoop = flow.kind === "ops-loop";
+
+  return (
+    <motion.div
+      key={flow.serviceName}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.24, ease: EASE }}
+      className={`ai-service-flow ${flow.kind}-flow`}
+    >
+      <div className="build-flow-meta">
+        <span>{flow.serviceName}</span>
+        {flow.badge && <strong>{flow.badge}</strong>}
+      </div>
+
+      {flow.kind === "call" && (
+        <div className="phone-motif" aria-hidden="true">
+          <PhoneCall size={18} color="#00D4AA" strokeWidth={1.8} />
+        </div>
+      )}
+
+      <div className={isLoop ? "ai-loop-track" : "ai-flow-track"}>
+        {flow.nodes.map((node, index) => {
+          const Icon = node.icon;
+
+          return (
+            <div className="finance-flow-segment" key={node.label}>
+              <motion.div
+                className={`finance-flow-node ai-flow-node ${node.ownership ? "ownership-node" : ""}`}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.32, delay: index * 0.1, ease: EASE }}
+              >
+                <Icon size={20} color={node.ownership ? "#00D4AA" : "#1B77F2"} strokeWidth={1.8} />
+                <span>{node.label}</span>
+                {node.badge && <strong className="node-badge">{node.badge}</strong>}
+                {node.ownership && <strong className="ownership-badge">Yours after 12 months</strong>}
+              </motion.div>
+              {index < flow.nodes.length - 1 && <Connector index={index} />}
+            </div>
+          );
+        })}
+      </div>
+
+      {flow.kind === "ops-loop" && (
+        <div className="ai-loop-return" aria-label={flow.loopLabel}>
+          <Connector index={flow.nodes.length} />
+          <RefreshCw size={16} color="#00D4AA" strokeWidth={1.8} />
+          <span>{flow.loopLabel}</span>
+        </div>
+      )}
+
+      {flow.kind === "call" && (
+        <div className="call-outcomes" aria-label="Possible call actions">
+          <span>Book</span>
+          <span>Qualify</span>
+          <span>Route</span>
+        </div>
+      )}
+
+      {flow.kind === "timeline" && (
+        <div className="ownership-timeline" aria-label="12 month ownership timeline">
+          {["Month 1", "Month 3", "Month 6", "Month 9", "Month 13"].map((marker) => (
+            <span key={marker}>{marker}</span>
+          ))}
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
 function GenericServiceFlow({
   selectedServiceId,
   selectedServiceName,
@@ -263,6 +422,7 @@ function GenericServiceFlow({
 
 export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowProps) {
   const financeFlow = selectedServiceId === null ? null : FINANCE_FLOWS[selectedServiceId];
+  const aiFlow = selectedServiceId === null ? null : AI_FLOWS[selectedServiceId];
 
   return (
     <section className="service-flow-section" aria-label="Selected service flow">
@@ -287,6 +447,8 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
               </motion.div>
             ) : financeFlow ? (
               <FinanceServiceFlow key={selectedServiceId} flow={financeFlow} />
+            ) : aiFlow ? (
+              <AiServiceFlow key={selectedServiceId} flow={aiFlow} />
             ) : (
               <GenericServiceFlow
                 key={selectedServiceId}
@@ -359,6 +521,7 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
         }
 
         .finance-service-flow,
+        .ai-service-flow,
         .generic-service-flow {
           position: relative;
           min-height: 264px;
@@ -406,10 +569,17 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
         }
 
         .finance-flow-track,
+        .ai-flow-track,
+        .ai-loop-track,
         .generic-service-flow {
           display: flex;
           align-items: center;
           width: 100%;
+        }
+
+        .ai-flow-track,
+        .ai-loop-track {
+          margin-top: 4px;
         }
 
         .finance-flow-segment {
@@ -447,10 +617,33 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
           line-height: 1.35;
         }
 
+        .ai-flow-node.ownership-node {
+          border-color: #00D4AA;
+          box-shadow: 0 0 0 1px #00D4AA, 0 0 24px #00D4AA;
+        }
+
+        .ai-flow-node.ownership-node span {
+          color: #00D4AA;
+        }
+
         .node-badge {
           min-height: 24px;
           padding: 0 9px;
           font-size: 12px;
+        }
+
+        .ownership-badge {
+          display: inline-flex;
+          min-height: 24px;
+          align-items: center;
+          padding: 0 9px;
+          border: 1px solid #00D4AA;
+          border-radius: 9999px;
+          color: #00D4AA;
+          font-family: var(--font-dm-sans);
+          font-size: 12px;
+          font-weight: 700;
+          line-height: 1;
         }
 
         .build-flow-connector {
@@ -494,6 +687,82 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
 
         .loop-indicator svg {
           animation: loop-spin 5s linear infinite;
+        }
+
+        .ai-loop-track {
+          padding-bottom: 54px;
+        }
+
+        .ai-loop-return {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 10px;
+          color: #00D4AA;
+          font-family: var(--font-dm-sans);
+          font-size: 13px;
+          font-weight: 700;
+          line-height: 1;
+        }
+
+        .ai-loop-return .build-flow-connector {
+          width: min(420px, 44%);
+          flex-basis: min(420px, 44%);
+        }
+
+        .ai-loop-return svg {
+          animation: loop-spin 5s linear infinite;
+        }
+
+        .call-outcomes,
+        .ownership-timeline {
+          display: grid;
+          gap: 8px;
+          margin-top: 22px;
+        }
+
+        .call-outcomes {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          max-width: 520px;
+          margin-left: auto;
+        }
+
+        .ownership-timeline {
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+
+        .call-outcomes span,
+        .ownership-timeline span {
+          display: flex;
+          min-height: 30px;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #1E2D3D;
+          border-radius: 9999px;
+          color: #8892A4;
+          font-family: var(--font-dm-sans);
+          font-size: 12px;
+          font-weight: 700;
+          line-height: 1;
+          text-align: center;
+        }
+
+        .phone-motif {
+          position: absolute;
+          top: 2px;
+          right: 0;
+          display: flex;
+          width: 36px;
+          height: 36px;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #1E2D3D;
+          border-radius: 8px;
+          background-color: #0D1B2A;
         }
 
         .payroll-ribbon,
@@ -561,6 +830,8 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
           }
 
           .finance-flow-track,
+          .ai-flow-track,
+          .ai-loop-track,
           .generic-service-flow {
             flex-direction: column;
             align-items: stretch;
@@ -598,6 +869,25 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
             position: static;
             margin-top: 18px;
           }
+
+          .ai-loop-track {
+            padding-bottom: 0;
+          }
+
+          .ai-loop-return {
+            position: static;
+            margin-top: 18px;
+          }
+
+          .ai-loop-return .build-flow-connector {
+            width: 48px;
+            flex-basis: 28px;
+          }
+
+          .call-outcomes,
+          .ownership-timeline {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
         }
 
         @media (max-width: 767px) {
@@ -621,7 +911,9 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
           }
 
           .payroll-ribbon,
-          .phase-ribbon {
+          .phase-ribbon,
+          .call-outcomes,
+          .ownership-timeline {
             grid-template-columns: 1fr;
           }
         }
