@@ -13,6 +13,7 @@ import {
   CalendarDays,
   Clock3,
   ClipboardList,
+  Code,
   Database,
   FileCheck,
   GitBranch,
@@ -37,6 +38,7 @@ import {
   Send,
   Settings,
   ShieldCheck,
+  Smartphone,
   Sparkles,
   Split,
   Tags,
@@ -81,6 +83,12 @@ type PeopleFlow = {
   kind: "corridor" | "hr-cycle" | "onboarding";
   loopLabel?: string;
   nodes?: FlowNode[];
+};
+
+type BuildPillarFlow = {
+  serviceName: string;
+  kind: "ownership" | "countdown" | "document" | "funnel";
+  nodes: FlowNode[];
 };
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
@@ -234,6 +242,65 @@ const PEOPLE_FLOWS: Record<string, PeopleFlow> = {
       { label: "Signed & returned", icon: FileCheck },
       { label: "Policies acknowledged", icon: ShieldCheck },
       { label: "Day one ready", icon: UserRound, badge: "Day 1" },
+    ],
+  },
+};
+
+const BUILD_PILLAR_FLOWS: Record<string, BuildPillarFlow> = {
+  "custom-web-app": {
+    serviceName: "Custom Web App",
+    kind: "ownership",
+    nodes: [
+      { label: "Scope & wireframes", icon: ClipboardList },
+      { label: "Design approved", icon: LayoutDashboard },
+      { label: "Build sprint", icon: Code },
+      { label: "Client review", icon: UserCheck },
+      { label: "Deploy", icon: Rocket },
+      { label: "You own it", icon: Lock, ownership: true },
+    ],
+  },
+  "android-app": {
+    serviceName: "Android App",
+    kind: "ownership",
+    nodes: [
+      { label: "Scope", icon: ClipboardList },
+      { label: "Design screens", icon: Smartphone },
+      { label: "Build & test", icon: Wrench },
+      { label: "Play Store submission", icon: Send, badge: "Play Store" },
+      { label: "Live on Play Store", icon: BadgeCheck },
+      { label: "You own it", icon: Lock, ownership: true },
+    ],
+  },
+  "website-in-3-days": {
+    serviceName: "Website in 3 Days",
+    kind: "countdown",
+    nodes: [
+      { label: "Day 0: brief in", icon: ClipboardList, badge: "Day 0" },
+      { label: "Day 1: build", icon: Code, badge: "Day 1" },
+      { label: "Day 2: review", icon: SearchCheck, badge: "Day 2" },
+      { label: "Day 3: live", icon: Rocket, badge: "Day 3" },
+    ],
+  },
+  "business-plans-funding": {
+    serviceName: "Business Plans & Funding",
+    kind: "document",
+    nodes: [
+      { label: "Discovery call", icon: PhoneCall },
+      { label: "Financial model built", icon: Calculator },
+      { label: "Plan drafted", icon: FileCheck },
+      { label: "Pitch-ready pack", icon: Presentation },
+      { label: "Submitted", icon: Send },
+    ],
+  },
+  "business-development": {
+    serviceName: "Business Development",
+    kind: "funnel",
+    nodes: [
+      { label: "Target list built", icon: SearchCheck },
+      { label: "Outreach live", icon: Send },
+      { label: "Meetings booked", icon: CalendarDays },
+      { label: "Proposals sent", icon: Presentation },
+      { label: "Deals closed", icon: BadgeCheck },
     ],
   },
 };
@@ -546,6 +613,64 @@ function PeopleServiceFlow({ flow }: { flow: PeopleFlow }) {
   );
 }
 
+function BuildPillarServiceFlow({ flow }: { flow: BuildPillarFlow }) {
+  return (
+    <motion.div
+      key={flow.serviceName}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.24, ease: EASE }}
+      className={`build-pillar-service-flow ${flow.kind}-flow`}
+    >
+      <div className="build-flow-meta">
+        <span>{flow.serviceName}</span>
+      </div>
+
+      <div className={`build-pillar-flow-track ${flow.kind === "funnel" ? "funnel-track" : ""}`}>
+        {flow.nodes.map((node, index) => {
+          const Icon = node.icon;
+          const funnelWidth = `${100 - index * 9}%`;
+
+          return (
+            <div className="finance-flow-segment" key={node.label}>
+              <motion.div
+                className={`finance-flow-node build-pillar-node ${node.ownership ? "ownership-node" : ""}`}
+                style={flow.kind === "funnel" ? { width: funnelWidth } : undefined}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.32, delay: index * 0.1, ease: EASE }}
+              >
+                <Icon size={20} color={node.ownership ? "#00D4AA" : "#1B77F2"} strokeWidth={1.8} />
+                <span>{node.label}</span>
+                {node.badge && <strong className={flow.kind === "countdown" ? "day-badge" : "node-badge"}>{node.badge}</strong>}
+                {node.ownership && <strong className="ownership-badge">Yours after 12 months</strong>}
+              </motion.div>
+              {index < flow.nodes.length - 1 && <Connector index={index} />}
+            </div>
+          );
+        })}
+      </div>
+
+      {flow.kind === "countdown" && (
+        <div className="countdown-ribbon" aria-label="Three day countdown">
+          {flow.nodes.map((node) => (
+            <span key={node.label}>{node.badge}</span>
+          ))}
+        </div>
+      )}
+
+      {flow.kind === "document" && (
+        <div className="document-ribbon" aria-label="Document build stages">
+          <span>Model</span>
+          <span>Plan</span>
+          <span>Pack</span>
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
 function GenericServiceFlow({
   selectedServiceId,
   selectedServiceName,
@@ -595,6 +720,7 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
   const financeFlow = selectedServiceId === null ? null : FINANCE_FLOWS[selectedServiceId];
   const aiFlow = selectedServiceId === null ? null : AI_FLOWS[selectedServiceId];
   const peopleFlow = selectedServiceId === null ? null : PEOPLE_FLOWS[selectedServiceId];
+  const buildPillarFlow = selectedServiceId === null ? null : BUILD_PILLAR_FLOWS[selectedServiceId];
 
   return (
     <section className="service-flow-section" aria-label="Selected service flow">
@@ -623,6 +749,8 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
               <AiServiceFlow key={selectedServiceId} flow={aiFlow} />
             ) : peopleFlow ? (
               <PeopleServiceFlow key={selectedServiceId} flow={peopleFlow} />
+            ) : buildPillarFlow ? (
+              <BuildPillarServiceFlow key={selectedServiceId} flow={buildPillarFlow} />
             ) : (
               <GenericServiceFlow
                 key={selectedServiceId}
@@ -697,6 +825,7 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
         .finance-service-flow,
         .ai-service-flow,
         .people-service-flow,
+        .build-pillar-service-flow,
         .generic-service-flow {
           position: relative;
           min-height: 264px;
@@ -747,6 +876,7 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
         .ai-flow-track,
         .ai-loop-track,
         .people-flow-track,
+        .build-pillar-flow-track,
         .generic-service-flow {
           display: flex;
           align-items: center;
@@ -755,7 +885,8 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
 
         .ai-flow-track,
         .ai-loop-track,
-        .people-flow-track {
+        .people-flow-track,
+        .build-pillar-flow-track {
           margin-top: 4px;
         }
 
@@ -794,19 +925,33 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
           line-height: 1.35;
         }
 
-        .ai-flow-node.ownership-node {
+        .ai-flow-node.ownership-node,
+        .build-pillar-node.ownership-node {
           border-color: #00D4AA;
           box-shadow: 0 0 0 1px #00D4AA, 0 0 24px #00D4AA;
         }
 
-        .ai-flow-node.ownership-node span {
+        .ai-flow-node.ownership-node span,
+        .build-pillar-node.ownership-node span {
           color: #00D4AA;
         }
 
-        .node-badge {
+        .node-badge,
+        .day-badge {
           min-height: 24px;
           padding: 0 9px;
           font-size: 12px;
+        }
+
+        .day-badge {
+          display: inline-flex;
+          align-items: center;
+          border: 1px solid #00D4AA;
+          border-radius: 9999px;
+          color: #00D4AA;
+          font-family: var(--font-dm-sans);
+          font-weight: 700;
+          line-height: 1;
         }
 
         .ownership-badge {
@@ -942,6 +1087,24 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
           background-color: #0D1B2A;
         }
 
+        .countdown-flow .build-pillar-node {
+          min-height: 128px;
+          border-color: #1B77F2;
+        }
+
+        .document-flow .build-pillar-node:nth-child(n) {
+          background-color: #111F2E;
+        }
+
+        .funnel-track .finance-flow-segment {
+          align-items: center;
+        }
+
+        .funnel-track .build-pillar-node {
+          align-items: center;
+          text-align: center;
+        }
+
         .corridor-layout {
           display: grid;
           min-height: 208px;
@@ -1051,7 +1214,9 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
         }
 
         .payroll-ribbon,
-        .phase-ribbon {
+        .phase-ribbon,
+        .countdown-ribbon,
+        .document-ribbon {
           display: grid;
           gap: 8px;
           margin-top: 22px;
@@ -1069,8 +1234,20 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
           grid-template-columns: repeat(5, minmax(0, 1fr));
         }
 
+        .countdown-ribbon {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .document-ribbon {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          max-width: 520px;
+          margin-left: auto;
+        }
+
         .payroll-ribbon span,
-        .phase-ribbon span {
+        .phase-ribbon span,
+        .countdown-ribbon span,
+        .document-ribbon span {
           display: flex;
           min-height: 30px;
           align-items: center;
@@ -1083,6 +1260,11 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
           font-weight: 700;
           line-height: 1;
           text-align: center;
+        }
+
+        .countdown-ribbon span {
+          border-color: #00D4AA;
+          color: #00D4AA;
         }
 
         .calendar-motif {
@@ -1118,6 +1300,7 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
           .ai-flow-track,
           .ai-loop-track,
           .people-flow-track,
+          .build-pillar-flow-track,
           .generic-service-flow {
             flex-direction: column;
             align-items: stretch;
@@ -1171,8 +1354,19 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
           }
 
           .call-outcomes,
-          .ownership-timeline {
+          .ownership-timeline,
+          .countdown-ribbon,
+          .document-ribbon {
             grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
+          .document-ribbon {
+            max-width: none;
+            margin-left: 0;
+          }
+
+          .funnel-track .build-pillar-node {
+            width: 100% !important;
           }
 
           .corridor-layout {
@@ -1214,7 +1408,9 @@ export function BuildFlow({ selectedServiceId, selectedServiceName }: BuildFlowP
           .payroll-ribbon,
           .phase-ribbon,
           .call-outcomes,
-          .ownership-timeline {
+          .ownership-timeline,
+          .countdown-ribbon,
+          .document-ribbon {
             grid-template-columns: 1fr;
           }
         }
