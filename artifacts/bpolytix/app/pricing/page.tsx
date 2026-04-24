@@ -268,17 +268,24 @@ function RevealBlock({
 
 function PriceTable({ prices }: { prices: PriceLine[] }) {
   return (
-    <div className="price-table" aria-label="Service prices">
-      <div className="price-row price-head">
-        <span>Item</span>
-        <span>ZAR</span>
-        <span>GBP</span>
-      </div>
+    <div aria-label="Service prices">
       {prices.map((price) => (
-        <div className="price-row" key={`${price.label}-${price.zar}-${price.gbp}`}>
-          <span className="price-label">{price.label}</span>
-          <span className={price.zar === NOT_QUOTED ? "price-muted" : "price-zar"}>{price.zar}</span>
-          <span className={price.gbp === NOT_QUOTED ? "price-muted" : "price-gbp"}>{price.gbp}</span>
+        <div
+          key={`${price.label}-${price.zar}-${price.gbp}`}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "16px",
+            padding: "8px 0",
+            borderBottom: "1px solid #1E2D3D",
+            fontFamily: "var(--font-dm-sans)",
+            fontSize: "14px",
+            lineHeight: 1.45,
+          }}
+        >
+          <span style={{ flex: "1 1 38%", minWidth: 0, color: "#8892A4" }}>{price.label}</span>
+          <span style={{ flex: "1 1 32%", minWidth: 0, color: "#F5F7FA", fontWeight: 500 }}>{price.zar}</span>
+          <span style={{ flex: "1 1 30%", minWidth: 0, color: "#8892A4", textAlign: "right" }}>{price.gbp}</span>
         </div>
       ))}
     </div>
@@ -287,10 +294,32 @@ function PriceTable({ prices }: { prices: PriceLine[] }) {
 
 function ServiceContent({ service }: { service: Service }) {
   return (
-    <div className="service-content">
-      <p className="service-description">{service.description}</p>
+    <div style={{ fontFamily: "var(--font-dm-sans)" }}>
+      <p
+        style={{
+          margin: "0 0 16px",
+          color: "#8892A4",
+          fontFamily: "var(--font-dm-sans)",
+          fontSize: "15px",
+          lineHeight: 1.7,
+        }}
+      >
+        {service.description}
+      </p>
       <PriceTable prices={service.prices} />
-      {service.ownedAfterTwelveMonths && <p className="ownership-line">Yours after 12 months</p>}
+      {service.ownedAfterTwelveMonths && (
+        <p
+          style={{
+            margin: "16px 0 0",
+            color: "#00D4AA",
+            fontFamily: "var(--font-dm-sans)",
+            fontSize: "14px",
+            lineHeight: 1.5,
+          }}
+        >
+          Yours after 12 months
+        </p>
+      )}
     </div>
   );
 }
