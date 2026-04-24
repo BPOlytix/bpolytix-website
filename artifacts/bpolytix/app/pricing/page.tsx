@@ -1,451 +1,723 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { Check, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { motion, useInView } from "framer-motion";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
-import { PageHero } from "@/components/PageHero";
 import { GrainOverlay } from "@/components/GrainOverlay";
-import { Reveal } from "@/components/Reveal";
+import { Accordion, TabSwitcher, type AccordionItem, type Tab } from "@/components/ui";
 
-export const metadata: Metadata = {
-  title: "Pricing — BPOLytix",
-  description: "Transparent pricing for tech builds, finance, and strategy. No upfront cost. No invoice until you're satisfied.",
+type PriceLine = {
+  label: string;
+  zar: string;
+  gbp: string;
 };
 
-const TECH_PLANS = [
+type Service = {
+  id: string;
+  name: string;
+  description: string;
+  prices: PriceLine[];
+  ownedAfterTwelveMonths?: boolean;
+};
+
+type Pillar = {
+  id: string;
+  label: string;
+  intro: string;
+  services: Service[];
+};
+
+const EASE = [0.25, 0.46, 0.45, 0.94] as const;
+const NOT_QUOTED = "Not quoted";
+
+const PILLARS: Pillar[] = [
   {
-    name: "AI Automation",
-    from: "£950",
-    period: "/month",
-    desc: "Workflow automation that runs without your team.",
-    features: ["Process scoping and mapping", "Custom automation build", "Testing and go-live", "Ongoing monitoring and fixes"],
-    highlight: false,
+    id: "finance",
+    label: "Finance",
+    intro: "Clear monthly finance help, from records to board-level planning.",
+    services: [
+      {
+        id: "bookkeeping",
+        name: "Bookkeeping",
+        description: "Monthly records kept clean, checked, and ready to use.",
+        prices: [
+          { label: "Starter", zar: "R1,500/month", gbp: "£105/month" },
+          { label: "Growth", zar: "R2,700/month", gbp: "£190/month" },
+          { label: "Full", zar: "R4,500/month", gbp: "£310/month" },
+        ],
+      },
+      {
+        id: "fractional-cfo",
+        name: "Fractional CFO",
+        description: "Senior finance help for planning, cash, and big calls.",
+        prices: [
+          { label: "Advisory", zar: "R3,900/month", gbp: "£275/month" },
+          { label: "Strategic", zar: "R7,500/month", gbp: "£520/month" },
+          { label: "Full", zar: "R13,200/month", gbp: "£930/month" },
+        ],
+      },
+      {
+        id: "payroll",
+        name: "Payroll",
+        description: "Payslips, payroll checks, and employee changes handled each month.",
+        prices: [
+          { label: "Per employee", zar: "R210 per employee/month", gbp: "£15 per employee/month" },
+          { label: "Minimum", zar: "R720 minimum", gbp: "£50 minimum" },
+          { label: "Setup", zar: "R510 setup once-off", gbp: "£40 setup once-off" },
+        ],
+      },
+      {
+        id: "xero",
+        name: "Xero",
+        description: "Setup, clean-up, reports, and support for your Xero accounts.",
+        prices: [
+          { label: "Basic", zar: "R2,100", gbp: "£150" },
+          { label: "Full", zar: "R4,500", gbp: "£330" },
+          { label: "Custom", zar: "R9,000+", gbp: "£660+" },
+          { label: "Retainer", zar: "R1,080/month", gbp: "£75/month" },
+        ],
+      },
+      {
+        id: "compliance-sa",
+        name: "Compliance SA",
+        description: "Company admin and required filings for South African businesses.",
+        prices: [
+          { label: "Retainer", zar: "R1,800/month retainer", gbp: NOT_QUOTED },
+          { label: "Company registration", zar: "R850 company registration", gbp: NOT_QUOTED },
+          { label: "CIPC annual return", zar: "R350 CIPC annual return", gbp: NOT_QUOTED },
+          { label: "POPIA setup", zar: "R3,500 POPIA setup", gbp: NOT_QUOTED },
+          { label: "Registered address", zar: "R350/month registered address", gbp: NOT_QUOTED },
+        ],
+      },
+      {
+        id: "compliance-uk",
+        name: "Compliance UK",
+        description: "Company admin and required filings for UK businesses.",
+        prices: [
+          { label: "Retainer", zar: NOT_QUOTED, gbp: "£175/month retainer" },
+          { label: "Incorporation", zar: NOT_QUOTED, gbp: "£150 incorporation" },
+          { label: "Registered office", zar: NOT_QUOTED, gbp: "£29/month registered office" },
+          { label: "GDPR setup", zar: NOT_QUOTED, gbp: "£650 GDPR setup" },
+        ],
+      },
+    ],
   },
   {
-    name: "Web Application",
-    from: "£1,800",
-    period: "/month",
-    desc: "Full-stack SaaS built to your spec. IP transfers after 12 months.",
-    features: ["Full-stack design and build", "Hosting and deployment", "Monthly iterations", "Codebase handover after Month 12"],
-    highlight: true,
+    id: "ai-automation",
+    label: "AI & Automation",
+    intro: "AI builds and monthly care for work your team repeats often.",
+    services: [
+      {
+        id: "ai-workflow-automation",
+        name: "AI Workflow Automation",
+        description: "Repeat work moved into a clear flow your team can use.",
+        ownedAfterTwelveMonths: true,
+        prices: [
+          { label: "Starter", zar: "R15,000", gbp: "£950" },
+          { label: "Standard fixed build", zar: "R35,000 fixed build", gbp: "£2,200 fixed build" },
+          { label: "Maintenance", zar: "R3,500/month maintenance", gbp: "£220/month maintenance" },
+        ],
+      },
+      {
+        id: "ai-agent-build-deploy",
+        name: "AI Agent Build & Deploy",
+        description: "A custom AI helper built around the tasks you choose.",
+        ownedAfterTwelveMonths: true,
+        prices: [{ label: "Fixed build", zar: "R150,000+ fixed build", gbp: "£8,000+ fixed build" }],
+      },
+      {
+        id: "ai-operations-service",
+        name: "AI Operations Service",
+        description: "Monthly care for AI checks, fixes, and small changes.",
+        ownedAfterTwelveMonths: true,
+        prices: [{ label: "Retainer", zar: "R3,500–R8,500/month retainer", gbp: "£220–£520/month retainer" }],
+      },
+      {
+        id: "ai-receptionist",
+        name: "AI Receptionist",
+        description: "Calls and messages answered, logged, and sent to the right person.",
+        ownedAfterTwelveMonths: true,
+        prices: [
+          { label: "Setup", zar: "R4,000 setup", gbp: "£200 setup" },
+          { label: "Monthly", zar: "R999/month", gbp: "£80/month" },
+        ],
+      },
+      {
+        id: "ai-marketing-ops",
+        name: "AI Marketing Ops",
+        description: "Campaign admin, content drafts, and follow-up tasks kept moving.",
+        ownedAfterTwelveMonths: true,
+        prices: [
+          { label: "Starter", zar: "R8,000/month", gbp: "£500/month" },
+          { label: "Growth", zar: "R13,000/month", gbp: "£800/month" },
+          { label: "Full Ops", zar: "R18,000/month", gbp: "£1,100/month" },
+        ],
+      },
+    ],
   },
   {
-    name: "Android App",
-    from: "£1,500",
-    period: "/month",
-    desc: "Native Android builds from wireframe to Play Store.",
-    features: ["UI/UX wireframing", "Native development", "Play Store submission", "Source code handover after Month 12"],
-    highlight: false,
+    id: "people",
+    label: "People",
+    intro: "People support for hiring, payroll movement, and basic HR care.",
+    services: [
+      {
+        id: "employer-of-record",
+        name: "Employer of Record SA↔UK",
+        description: "Employment admin for teams working between South Africa and the UK.",
+        prices: [{ label: "Per employee", zar: "R4,500–R7,500 per employee/month", gbp: NOT_QUOTED }],
+      },
+      {
+        id: "outsourced-hr",
+        name: "Outsourced HR",
+        description: "Practical HR help for questions, changes, and employee records.",
+        prices: [{ label: "Monthly", zar: "R3,000–R8,000/month", gbp: "£100–£500/month" }],
+      },
+      {
+        id: "onboarding-policy-automation",
+        name: "Onboarding & Policy Automation",
+        description: "New-starter steps and policy tasks set up in one clear process.",
+        prices: [
+          { label: "Build", zar: "R18,000 build", gbp: "£1,250 build" },
+          { label: "Retainer", zar: "R1,800/month retainer", gbp: "£125/month retainer" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "build",
+    label: "Build",
+    intro: "Web, app, and business build work with ownership after 12 months.",
+    services: [
+      {
+        id: "custom-web-app",
+        name: "Custom Web App",
+        description: "A web app built around how your business works.",
+        ownedAfterTwelveMonths: true,
+        prices: [
+          { label: "MVP", zar: "R27,000–R51,000", gbp: "£1,850–£3,500" },
+          { label: "SaaS", zar: "R90,000–R210,000", gbp: "£6,500–£15,290" },
+        ],
+      },
+      {
+        id: "android-app",
+        name: "Android App",
+        description: "An Android app built from first screen to launch-ready build.",
+        ownedAfterTwelveMonths: true,
+        prices: [
+          { label: "Basic", zar: "R27,000–R45,000", gbp: "£1,850–£3,100" },
+          { label: "Full", zar: "R75,000–R150,000", gbp: "£5,200–£10,350" },
+        ],
+      },
+      {
+        id: "website-in-3-days",
+        name: "Website in 3 Days",
+        description: "A focused website built quickly once your content is ready.",
+        ownedAfterTwelveMonths: true,
+        prices: [{ label: "Pricing", zar: "Available on request", gbp: "Available on request" }],
+      },
+      {
+        id: "business-plans",
+        name: "Business Plans",
+        description: "Clear plans, packs, and funding documents for your next step.",
+        ownedAfterTwelveMonths: true,
+        prices: [
+          { label: "Plan", zar: "R2,700", gbp: "£195" },
+          { label: "Startup Pack", zar: "R5,700", gbp: "£415" },
+          { label: "Funding Application", zar: "R2,100", gbp: "£160" },
+          { label: "Full Bundle", zar: "R6,900", gbp: "£500" },
+        ],
+      },
+      {
+        id: "business-development",
+        name: "Business Development",
+        description: "Sales support for finding leads, writing offers, and following up.",
+        ownedAfterTwelveMonths: true,
+        prices: [{ label: "Pricing", zar: "Available on request", gbp: "Available on request" }],
+      },
+    ],
   },
 ];
 
-const FINANCE_PLANS = [
-  {
-    name: "Bookkeeping",
-    from: "£550",
-    period: "/month",
-    desc: "Dedicated bookkeeper. UK-aware. Cancel anytime.",
-    features: ["Monthly reconciliation", "Accounts payable/receivable", "VAT and HMRC submissions", "Monthly management accounts"],
-    highlight: false,
-  },
-  {
-    name: "CFO-as-a-Service",
-    from: "£1,600",
-    period: "/month",
-    desc: "Senior financial oversight without the full-time salary.",
-    features: ["Monthly review calls", "Cash flow forecasting", "Board reporting", "Fundraising and M&A support"],
-    highlight: true,
-  },
-  {
-    name: "Xero Implementation",
-    from: "£750",
-    period: " one-time",
-    desc: "Proper setup, bank feeds, custom reports, and training.",
-    features: ["Chart of accounts setup", "Bank feed connections", "Custom report templates", "Team training session"],
-    highlight: false,
-  },
-];
+function RevealBlock({
+  children,
+  className,
+  delay = 0,
+}: {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.18 });
 
-const STRATEGY_PLANS = [
-  {
-    name: "Business Development",
-    from: "£1,200",
-    period: "/month",
-    desc: "Your pipeline filled and worked while you run the business.",
-    features: ["ICP and lead list build", "Outreach sequences", "Proposal writing", "CRM setup and management"],
-    highlight: false,
-  },
-  {
-    name: "Business Plan",
-    from: "£1,800",
-    period: " per plan",
-    desc: "Investor-ready plans and grant applications.",
-    features: ["Market research", "3-year financial projections", "Investor-ready deck", "Revision rounds until submission-ready"],
-    highlight: true,
-  },
-];
-
-const FAQS = [
-  {
-    q: "When do I get invoiced?",
-    a: "Never before you're satisfied. We build Phase 1, you test it, and you sign off that it works. Only then do we send a first invoice. If something isn't right, we fix it — no charge — until it is.",
-  },
-  {
-    q: "What does 'ownership after 12 months' mean exactly?",
-    a: "For software builds, the IP and codebase transfer to you after 12 months of retainer payments. You receive full source code, documentation, and all deployment credentials. There are no ongoing licence fees — the software is yours, permanently.",
-  },
-  {
-    q: "Is there a minimum contract length?",
-    a: "No. Every engagement is month-to-month. The 12-month ownership milestone applies to software builds — the retainer funds the build, and ownership is the outcome. For finance and strategy services, cancel with one month's notice.",
-  },
-  {
-    q: "Why are your rates so much lower than UK alternatives?",
-    a: "We operate out of South Africa with a local salary base. Senior talent costs a fraction of the UK equivalent — and we pass that saving to you. The arbitrage is the entire point of the model.",
-  },
-  {
-    q: "Do you work with UK businesses only?",
-    a: "No. We work with South African startups and UK SMEs. Our finance services are HMRC-aware for UK clients and SARS-compliant for SA clients. If you're building something and need a team that understands both markets, we're built for that.",
-  },
-  {
-    q: "What happens if I want to pause or stop mid-build?",
-    a: "You can pause or stop at any time. If you stop before Month 12, you keep all work completed to that point — code, documents, and assets. You just won't receive the formal IP transfer until the 12-month milestone is reached.",
-  },
-];
-
-type Plan = { name: string; from: string; period: string; desc: string; features: string[]; highlight: boolean };
-
-function PlanCard({ plan }: { plan: Plan }) {
   return (
-    <div
-      className="card-hover glow-border flex flex-col rounded-2xl"
-      style={{
-        backgroundColor: plan.highlight ? "#132040" : "#0F1622",
-        border: plan.highlight ? "1px solid rgba(27,119,242,0.35)" : "1px solid rgba(255,255,255,0.08)",
-        position: "relative",
-        overflow: "hidden",
-      }}
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 40 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay, ease: EASE }}
+      className={className}
     >
-      {plan.highlight && (
-        <div
-          className="absolute inset-x-0 top-0 h-px"
-          style={{ background: "linear-gradient(90deg, transparent, #1B77F2, transparent)" }}
-        />
-      )}
-      <div className="flex-1 p-7">
-        {plan.highlight && (
-          <span
-            className="mb-4 inline-block rounded-full px-3 py-0.5 text-[11px] font-medium uppercase tracking-widest"
-            style={{ backgroundColor: "rgba(27,119,242,0.18)", color: "#1B77F2", fontFamily: "var(--font-dm-sans)" }}
-          >
-            Most popular
-          </span>
-        )}
-        <p
-          className="mb-1"
-          style={{ fontFamily: "var(--font-syne)", fontSize: "18px", color: "#F5F7FA", fontWeight: 600, letterSpacing: "-0.022em" }}
-        >
-          {plan.name}
-        </p>
-        <p
-          className="mb-5"
-          style={{ fontFamily: "var(--font-dm-sans)", fontSize: "13px", color: "#8892A4", lineHeight: 1.5 }}
-        >
-          {plan.desc}
-        </p>
-        <div className="mb-6 flex items-baseline gap-1">
-          <span
-            style={{ fontFamily: "var(--font-syne)", fontSize: "36px", color: "#F5F7FA", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1 }}
-          >
-            {plan.from}
-          </span>
-          <span style={{ fontFamily: "var(--font-dm-sans)", fontSize: "14px", color: "#8892A4" }}>
-            {plan.period}
-          </span>
+      {children}
+    </motion.div>
+  );
+}
+
+function PriceTable({ prices }: { prices: PriceLine[] }) {
+  return (
+    <div className="price-table" aria-label="Service prices">
+      <div className="price-row price-head">
+        <span>Item</span>
+        <span>ZAR</span>
+        <span>GBP</span>
+      </div>
+      {prices.map((price) => (
+        <div className="price-row" key={`${price.label}-${price.zar}-${price.gbp}`}>
+          <span className="price-label">{price.label}</span>
+          <span className={price.zar === NOT_QUOTED ? "price-muted" : "price-zar"}>{price.zar}</span>
+          <span className={price.gbp === NOT_QUOTED ? "price-muted" : "price-gbp"}>{price.gbp}</span>
         </div>
-        <ul className="flex flex-col gap-3">
-          {plan.features.map((f) => (
-            <li key={f} className="flex items-start gap-3">
-              <span
-                className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full"
-                style={{ backgroundColor: "rgba(27,119,242,0.12)", border: "1px solid rgba(27,119,242,0.3)" }}
-              >
-                <Check size={11} color="#1B77F2" strokeWidth={2.5} />
-              </span>
-              <span style={{ fontFamily: "var(--font-dm-sans)", fontSize: "14px", color: "#C8D0DC", lineHeight: 1.5 }}>
-                {f}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="p-7 pt-0">
-        <Link
-          href="/contact"
-          className={`${plan.highlight ? "cta-glow " : ""}glow-border-blue flex items-center justify-center gap-2 rounded-full py-3 text-[14px] font-medium text-white hover:-translate-y-px`}
-          style={{
-            backgroundColor: plan.highlight ? "#1B77F2" : "rgba(255,255,255,0.07)",
-            boxShadow: plan.highlight ? "0 4px 16px rgba(27,119,242,0.3)" : "none",
-          }}
-        >
-          Get a quote
-          <ArrowRight size={14} />
-        </Link>
-      </div>
+      ))}
     </div>
   );
 }
 
-function PracticeSection({ label, title, plans }: { label: string; title: string; plans: Plan[] }) {
-  const colClass = plans.length === 2
-    ? "grid-cols-1 sm:grid-cols-2"
-    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+function ServiceContent({ service }: { service: Service }) {
+  return (
+    <div className="service-content">
+      <p className="service-description">{service.description}</p>
+      <PriceTable prices={service.prices} />
+      {service.ownedAfterTwelveMonths && <p className="ownership-line">Yours after 12 months</p>}
+    </div>
+  );
+}
+
+function PillarPanel({ pillar }: { pillar: Pillar }) {
+  const items: AccordionItem[] = pillar.services.map((service) => ({
+    id: service.id,
+    trigger: service.name,
+    content: <ServiceContent service={service} />,
+  }));
 
   return (
-    <section className="relative overflow-hidden py-16 lg:py-20" style={{ backgroundColor: "#0A0F1A" }}>
-      <GrainOverlay />
-      <div className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8">
-        <p className="mb-3 text-[12px] uppercase tracking-widest" style={{ color: "#8892A4", fontFamily: "var(--font-dm-sans)" }}>
-          {label}
-        </p>
-        <h2
-          className="mb-10 sm:mb-14"
-          style={{ fontFamily: "var(--font-syne)", fontSize: "clamp(26px, 3.5vw, 36px)", color: "#F5F7FA", letterSpacing: "-0.022em", lineHeight: 1.0, fontWeight: 700 }}
-        >
-          {title}
-        </h2>
-        <div className={`grid gap-4 ${colClass}`}>
-          {plans.map((p, i) => (
-            <Reveal key={p.name} delay={i * 0.1} amount={0.15}>
-              <PlanCard plan={p} />
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
+    <div className="pillar-panel">
+      <p className="pillar-intro">{pillar.intro}</p>
+      <Accordion items={items} allowMultiple className="pricing-accordion" />
+    </div>
   );
 }
 
 export default function PricingPage() {
+  const [activeTab, setActiveTab] = useState(PILLARS[0].id);
+  const tabs = useMemo<Tab[]>(
+    () =>
+      PILLARS.map((pillar) => ({
+        id: pillar.id,
+        label: pillar.label,
+        content: <PillarPanel pillar={pillar} />,
+      })),
+    [],
+  );
+
   return (
-    <main style={{ backgroundColor: "#0A0F1A" }}>
+    <main className="pricing-page">
       <Nav />
 
-      <PageHero
-        eyebrow="Pricing"
-        headline="Transparent pricing. No surprises."
-        sub="All prices are indicative starting points. Every engagement is scoped before a number is confirmed — we don't guess and neither should you."
-      />
-
-      <div style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.08)" }} />
-
-      {/* Disclaimer banner */}
-      <div style={{ backgroundColor: "#0F1622", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-        <div className="mx-auto max-w-[1440px] px-6 sm:px-8 py-4">
-          <p style={{ fontFamily: "var(--font-dm-sans)", fontSize: "13px", color: "#8892A4", lineHeight: 1.6 }}>
-            <span style={{ color: "#00D4AA", fontWeight: 500 }}>Remember:</span>{" "}
-            No invoice is sent until you confirm Phase 1 works. No upfront payment. No contract to sign to get started.
-          </p>
+      <section className="pricing-hero relative overflow-hidden">
+        <GrainOverlay />
+        <div className="pricing-wrap relative z-10">
+          <RevealBlock>
+            <p className="pricing-label">Pricing</p>
+            <h1>One clear place to compare what we do.</h1>
+            <p className="hero-copy">
+              Choose a pillar, open the service you need, and compare South African Rand and British Pound pricing side by side.
+            </p>
+          </RevealBlock>
         </div>
-      </div>
-
-      {/* Website in 3 Days */}
-      <section className="relative overflow-hidden py-16 lg:py-20" style={{ backgroundColor: "#0A0F1A" }}>
-        <GrainOverlay />
-        <Reveal className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8">
-          <p className="mb-3 text-[12px] uppercase tracking-widest" style={{ color: "#8892A4", fontFamily: "var(--font-dm-sans)" }}>
-            Web Design
-          </p>
-          <h2
-            className="mb-10 sm:mb-14"
-            style={{ fontFamily: "var(--font-syne)", fontSize: "clamp(26px, 3.5vw, 36px)", color: "#F5F7FA", letterSpacing: "-0.022em", lineHeight: 1.0, fontWeight: 700 }}
-          >
-            Your business online in 72 hours.
-          </h2>
-          <div className="mx-auto max-w-[520px]">
-            <div
-              className="flex flex-col rounded-2xl"
-              style={{
-                backgroundColor: "#132040",
-                border: "1px solid rgba(27,119,242,0.35)",
-                position: "relative",
-                overflow: "hidden",
-              }}
-            >
-              <div
-                className="absolute inset-x-0 top-0 h-px"
-                style={{ background: "linear-gradient(90deg, transparent, #1B77F2, transparent)" }}
-              />
-              <div className="flex-1 p-7">
-                <p
-                  className="mb-1"
-                  style={{ fontFamily: "var(--font-syne)", fontSize: "18px", color: "#F5F7FA", fontWeight: 600, letterSpacing: "-0.022em" }}
-                >
-                  Website in 3 Days
-                </p>
-                <p
-                  className="mb-5"
-                  style={{ fontFamily: "var(--font-dm-sans)", fontSize: "13px", color: "#8892A4", lineHeight: 1.5 }}
-                >
-                  Brief us on Monday. Review your site on Thursday. Pay only when you&apos;re satisfied.
-                </p>
-
-                <div className="mb-4 flex items-baseline gap-1">
-                  <span style={{ fontFamily: "var(--font-syne)", fontSize: "36px", color: "#F5F7FA", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1 }}>
-                    R850 / £40
-                  </span>
-                </div>
-                <p className="mb-6" style={{ fontFamily: "var(--font-dm-sans)", fontSize: "13px", color: "#8892A4" }}>
-                  Once-off setup
-                </p>
-
-                <div className="mb-4 flex items-baseline gap-1">
-                  <span style={{ fontFamily: "var(--font-syne)", fontSize: "32px", color: "#1B77F2", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1 }}>
-                    R299 / £15
-                  </span>
-                  <span style={{ fontFamily: "var(--font-dm-sans)", fontSize: "14px", color: "#8892A4" }}>
-                    /month
-                  </span>
-                </div>
-                <p className="mb-6" style={{ fontFamily: "var(--font-dm-sans)", fontSize: "13px", color: "#8892A4" }}>
-                  Monthly for 12 months
-                </p>
-
-                <ul className="flex flex-col gap-3">
-                  {[
-                    "See it first — pay only when you're satisfied",
-                    "Unlimited pages",
-                    "Live chat included",
-                    "Mobile friendly",
-                    "Free changes for 12 months",
-                    "Yours after 12 months — only pay domain renewal",
-                  ].map((f) => (
-                    <li key={f} className="flex items-start gap-3">
-                      <span
-                        className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full"
-                        style={{ backgroundColor: "rgba(27,119,242,0.12)", border: "1px solid rgba(27,119,242,0.3)" }}
-                      >
-                        <Check size={11} color="#1B77F2" strokeWidth={2.5} />
-                      </span>
-                      <span style={{ fontFamily: "var(--font-dm-sans)", fontSize: "14px", color: "#C8D0DC", lineHeight: 1.5 }}>
-                        {f}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="p-7 pt-0">
-                <Link
-                  href="/website-in-3-days"
-                  className="cta-glow glow-border-blue flex items-center justify-center gap-2 rounded-full py-3 text-[14px] font-medium text-white hover:-translate-y-px"
-                  style={{
-                    backgroundColor: "#1B77F2",
-                    boxShadow: "0 4px 16px rgba(27,119,242,0.3)",
-                  }}
-                >
-                  Start my 3-day build
-                  <ArrowRight size={14} />
-                </Link>
-                <p
-                  className="mt-3 text-center"
-                  style={{ fontFamily: "var(--font-dm-sans)", fontSize: "12px", color: "#8892A4", lineHeight: 1.5 }}
-                >
-                  No contract. Cancel anytime in the first 30 days.
-                </p>
-              </div>
-            </div>
-          </div>
-        </Reveal>
       </section>
 
-      <div style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.08)" }} />
-
-      <PracticeSection label="Technology" title="Software that becomes yours." plans={TECH_PLANS} />
-
-      <div style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.08)" }} />
-
-      <PracticeSection label="Finance" title="Senior finance without the headcount." plans={FINANCE_PLANS} />
-
-      <div style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.08)" }} />
-
-      <PracticeSection label="Strategy" title="Growth support that actually ships." plans={STRATEGY_PLANS} />
-
-      <div style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.08)" }} />
-
-      {/* FAQ */}
-      <section className="relative overflow-hidden py-16 lg:py-20" style={{ backgroundColor: "#0F1622" }}>
+      <section className="pricing-tabs-section relative overflow-hidden">
         <GrainOverlay />
-        <Reveal className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8">
-          <p className="mb-3 text-[12px] uppercase tracking-widest" style={{ color: "#8892A4", fontFamily: "var(--font-dm-sans)" }}>
-            FAQs
-          </p>
-          <h2
-            className="mb-12"
-            style={{ fontFamily: "var(--font-syne)", fontSize: "clamp(26px, 3.5vw, 36px)", color: "#F5F7FA", letterSpacing: "-0.022em", lineHeight: 1.0, fontWeight: 700 }}
-          >
-            Questions we always get asked.
-          </h2>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
-            {FAQS.map((faq, i) => (
-              <Reveal key={faq.q} delay={i * 0.05} amount={0.15}>
-                <div
-                className="card-hover glow-border rounded-xl p-6"
-                style={{ backgroundColor: "#0A0F1A", border: "1px solid rgba(255,255,255,0.08)" }}
-              >
-                <h3
-                  className="mb-3"
-                  style={{ fontFamily: "var(--font-syne)", fontSize: "17px", color: "#F5F7FA", lineHeight: 1.3, fontWeight: 600, letterSpacing: "-0.015em" }}
-                >
-                  {faq.q}
-                </h3>
-                <p style={{ fontFamily: "var(--font-dm-sans)", fontSize: "15px", color: "#8892A4", lineHeight: 1.7, letterSpacing: "-0.011em" }}>
-                  {faq.a}
-                </p>
-              </div>
-              </Reveal>
-            ))}
-          </div>
-        </Reveal>
+        <RevealBlock className="pricing-wrap relative z-10">
+          <TabSwitcher tabs={tabs} activeId={activeTab} onChange={setActiveTab} className="pricing-tabs" />
+        </RevealBlock>
       </section>
 
-      <div style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.08)" }} />
-
-      {/* Bottom CTA */}
-      <section className="relative overflow-hidden py-16 lg:py-24" style={{ backgroundColor: "#0A0F1A" }}>
+      <section className="anti-section relative overflow-hidden">
         <GrainOverlay />
-        <Reveal className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8 flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-          <div className="max-w-[540px]">
-            <h2
-              style={{ fontFamily: "var(--font-syne)", fontSize: "clamp(26px, 3.5vw, 36px)", color: "#F5F7FA", letterSpacing: "-0.022em", lineHeight: 1.05, fontWeight: 700 }}
-            >
-              Not sure which service fits?
-            </h2>
-            <p className="mt-3" style={{ fontFamily: "var(--font-dm-sans)", fontSize: "16px", color: "#8892A4", lineHeight: 1.7, letterSpacing: "-0.011em" }}>
-              Book a free 30-minute scoping call. We&apos;ll tell you exactly what we&apos;d recommend and what it would cost — no commitment required.
+        <RevealBlock className="pricing-wrap relative z-10">
+          <div className="anti-copy">
+            <p className="pricing-label">Ownership</p>
+            <h2>You pay once. Then you own it.</h2>
+            <p>
+              Every other provider charges a monthly subscription forever. Prices go up.
+              You own nothing. BPOLytix builds and deploys your solution, you pay a fixed monthly
+              fee for 12 months, and then it's yours. Fully built for your business. Future
+              upgrades are add-ons — not price hikes on a platform you'll never own.
             </p>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/contact"
-              className="cta-glow glow-border-blue inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-[15px] font-medium text-white hover:-translate-y-px"
-              style={{ backgroundColor: "#1B77F2", boxShadow: "0 4px 16px rgba(27,119,242,0.25)", whiteSpace: "nowrap" }}
-            >
-              Book a scoping call
-              <ArrowRight size={15} />
+        </RevealBlock>
+      </section>
+
+      <section className="final-cta relative overflow-hidden">
+        <GrainOverlay />
+        <RevealBlock className="pricing-wrap relative z-10">
+          <div className="cta-inner">
+            <div>
+              <p className="pricing-label">Packaged offerings</p>
+              <h2>Need more than one service?</h2>
+            </div>
+            <Link href="/contact" className="pricing-cta">
+              Speak to us about packaged offerings
+              <ArrowRight size={17} strokeWidth={2.2} />
             </Link>
-            <a
-              href="https://wa.me/27781790363?text=Hi%2C+I%27d+like+to+find+out+more+about+BPOLytix+pricing"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-[15px] font-medium transition-colors hover:bg-white/10"
-              style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "#F5F7FA", whiteSpace: "nowrap" }}
-            >
-              WhatsApp us
-            </a>
           </div>
-        </Reveal>
+        </RevealBlock>
       </section>
 
       <Footer />
+
+      <style jsx>{`
+        .pricing-page {
+          background-color: #0D1B2A;
+          color: #F5F7FA;
+        }
+
+        .pricing-wrap {
+          max-width: 1440px;
+          margin: 0 auto;
+          padding-left: 32px;
+          padding-right: 32px;
+        }
+
+        .pricing-hero,
+        .pricing-tabs-section,
+        .anti-section,
+        .final-cta {
+          background-color: #0D1B2A;
+          border-bottom: 1px solid #1E2D3D;
+        }
+
+        .pricing-hero {
+          padding-top: 96px;
+          padding-bottom: 96px;
+        }
+
+        .pricing-tabs-section,
+        .anti-section {
+          padding-top: 96px;
+          padding-bottom: 128px;
+        }
+
+        .final-cta {
+          padding-top: 96px;
+          padding-bottom: 96px;
+        }
+
+        .pricing-label {
+          margin: 0 0 16px;
+          color: #8892A4;
+          font-family: var(--font-dm-sans);
+          font-size: 13px;
+          letter-spacing: 0.08em;
+          line-height: 1.4;
+          text-transform: uppercase;
+        }
+
+        h1,
+        h2 {
+          margin: 0;
+          color: #F5F7FA;
+          font-family: var(--font-syne);
+          font-weight: 700;
+          letter-spacing: -0.022em;
+        }
+
+        h1 {
+          max-width: 900px;
+          font-size: 72px;
+          line-height: 1.05;
+        }
+
+        h2 {
+          font-size: 48px;
+          line-height: 1;
+        }
+
+        .hero-copy {
+          max-width: 660px;
+          margin: 24px 0 0;
+          color: #8892A4;
+          font-family: var(--font-dm-sans);
+          font-size: 18px;
+          line-height: 1.7;
+        }
+
+        .pricing-tabs {
+          overflow: hidden;
+          border: 1px solid #1E2D3D;
+          border-radius: 12px;
+          background-color: #111F2E;
+        }
+
+        .pillar-panel {
+          padding: 28px;
+          background-color: #111F2E;
+        }
+
+        .pillar-intro {
+          max-width: 720px;
+          margin: 0 0 24px;
+          color: #8892A4;
+          font-family: var(--font-dm-sans);
+          font-size: 16px;
+          line-height: 1.7;
+        }
+
+        .service-content {
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+        }
+
+        .service-description {
+          margin: 0;
+          color: #F5F7FA;
+          font-family: var(--font-dm-sans);
+          font-size: 15px;
+          line-height: 1.7;
+        }
+
+        .price-table {
+          overflow: hidden;
+          border: 1px solid #1E2D3D;
+          border-radius: 8px;
+          background-color: #0D1B2A;
+        }
+
+        .price-row {
+          display: grid;
+          grid-template-columns: 1.4fr 1fr 1fr;
+          min-height: 52px;
+          border-top: 1px solid #1E2D3D;
+        }
+
+        .price-row:first-child {
+          border-top: 0;
+        }
+
+        .price-row > span {
+          display: flex;
+          align-items: center;
+          padding: 13px 16px;
+          border-left: 1px solid #1E2D3D;
+          color: #F5F7FA;
+          font-family: var(--font-dm-sans);
+          font-size: 14px;
+          line-height: 1.45;
+        }
+
+        .price-row > span:first-child {
+          border-left: 0;
+        }
+
+        .price-head {
+          background-color: #1C2A3A;
+        }
+
+        .price-head > span {
+          color: #8892A4;
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        .price-label {
+          color: #8892A4;
+        }
+
+        .price-zar {
+          color: #00D4AA;
+          font-weight: 700;
+        }
+
+        .price-gbp {
+          color: #F5F7FA;
+          font-weight: 700;
+        }
+
+        .price-muted {
+          color: #8892A4;
+        }
+
+        .ownership-line {
+          width: fit-content;
+          margin: 0;
+          padding: 8px 12px;
+          border: 1px solid #1E2D3D;
+          border-radius: 9999px;
+          background-color: #1C2A3A;
+          color: #00D4AA;
+          font-family: var(--font-dm-sans);
+          font-size: 13px;
+          font-weight: 700;
+          line-height: 1.4;
+        }
+
+        .anti-copy {
+          max-width: 840px;
+          padding: 36px;
+          border: 1px solid #1E2D3D;
+          border-radius: 12px;
+          background-color: #111F2E;
+        }
+
+        .anti-copy p:last-child {
+          margin: 24px 0 0;
+          color: #F5F7FA;
+          font-family: var(--font-dm-sans);
+          font-size: 18px;
+          line-height: 1.7;
+        }
+
+        .cta-inner {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          align-items: center;
+          gap: 32px;
+          padding: 36px;
+          border: 1px solid #1E2D3D;
+          border-radius: 12px;
+          background-color: #111F2E;
+        }
+
+        .pricing-cta {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          min-height: 48px;
+          padding: 0 24px;
+          border-radius: 9999px;
+          background-color: #1B77F2;
+          color: #F5F7FA;
+          font-family: var(--font-dm-sans);
+          font-size: 15px;
+          font-weight: 700;
+          line-height: 1.2;
+          text-decoration: none;
+          transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .pricing-cta:hover {
+          box-shadow: 0 0 24px #1B77F2;
+          transform: translateY(-1px);
+        }
+
+        @media (max-width: 767px) {
+          .pricing-wrap {
+            padding-left: 24px;
+            padding-right: 24px;
+          }
+
+          .pricing-hero {
+            padding-top: 72px;
+            padding-bottom: 72px;
+          }
+
+          .pricing-tabs-section,
+          .anti-section {
+            padding-top: 64px;
+            padding-bottom: 72px;
+          }
+
+          .final-cta {
+            padding-top: 64px;
+            padding-bottom: 64px;
+          }
+
+          h1 {
+            font-size: 42px;
+          }
+
+          h2 {
+            font-size: 32px;
+          }
+
+          .hero-copy,
+          .anti-copy p:last-child {
+            font-size: 16px;
+          }
+
+          .pillar-panel {
+            padding: 20px;
+          }
+
+          .price-row {
+            grid-template-columns: 1fr;
+          }
+
+          .price-row > span {
+            min-height: 44px;
+            border-left: 0;
+            border-top: 1px solid #1E2D3D;
+          }
+
+          .price-row > span:first-child {
+            border-top: 0;
+          }
+
+          .price-head {
+            display: none;
+          }
+
+          .price-zar::before,
+          .price-gbp::before,
+          .price-muted::before {
+            display: inline-block;
+            width: 48px;
+            flex: 0 0 auto;
+            color: #8892A4;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+          }
+
+          .price-zar::before {
+            content: "ZAR";
+          }
+
+          .price-gbp::before {
+            content: "GBP";
+          }
+
+          .price-muted:nth-child(2)::before {
+            content: "ZAR";
+          }
+
+          .price-muted:nth-child(3)::before {
+            content: "GBP";
+          }
+
+          .anti-copy,
+          .cta-inner {
+            padding: 24px;
+          }
+
+          .cta-inner {
+            grid-template-columns: 1fr;
+            align-items: start;
+          }
+
+          .pricing-cta {
+            width: 100%;
+          }
+        }
+      `}</style>
     </main>
   );
 }
