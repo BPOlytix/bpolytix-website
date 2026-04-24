@@ -1,13 +1,33 @@
 "use client";
 
-import { useMemo, useRef, useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { motion, useInView } from "framer-motion";
+import {
+  ArrowRight,
+  BarChart2,
+  BookOpen,
+  Bot,
+  Briefcase,
+  ChevronDown,
+  Code,
+  FileText,
+  Globe,
+  Lock,
+  Megaphone,
+  Phone,
+  Settings,
+  Shield,
+  Smartphone,
+  TrendingUp,
+  UserCheck,
+  Users,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
+import { AnimatePresence, motion, useInView } from "framer-motion";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { GrainOverlay } from "@/components/GrainOverlay";
-import { Accordion, TabSwitcher, type AccordionItem, type Tab } from "@/components/ui";
 
 type PriceLine = {
   label: string;
@@ -32,6 +52,28 @@ type Pillar = {
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 const NOT_QUOTED = "Not quoted";
+
+const SERVICE_ICONS: Record<string, LucideIcon> = {
+  "bookkeeping": BookOpen,
+  "fractional-cfo": TrendingUp,
+  "payroll": Users,
+  "xero": BarChart2,
+  "compliance-sa": Shield,
+  "compliance-uk": Shield,
+  "ai-workflow-automation": Zap,
+  "ai-agent-build-deploy": Bot,
+  "ai-operations-service": Settings,
+  "ai-receptionist": Phone,
+  "ai-marketing-ops": Megaphone,
+  "employer-of-record": Globe,
+  "outsourced-hr": UserCheck,
+  "onboarding-policy-automation": FileText,
+  "custom-web-app": Code,
+  "android-app": Smartphone,
+  "website-in-3-days": Globe,
+  "business-plans": BookOpen,
+  "business-development": Briefcase,
+};
 
 const PILLARS: Pillar[] = [
   {
@@ -268,14 +310,15 @@ function RevealBlock({
 
 function PriceTable({ prices }: { prices: PriceLine[] }) {
   return (
-    <div aria-label="Service prices">
+    <div aria-label="Service prices" style={{ display: "flex", flexDirection: "column" }}>
       {prices.map((price) => (
         <div
           key={`${price.label}-${price.zar}-${price.gbp}`}
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "16px",
+            justifyContent: "space-between",
+            gap: "20px",
             padding: "8px 0",
             borderBottom: "1px solid #1E2D3D",
             fontFamily: "var(--font-dm-sans)",
@@ -285,7 +328,9 @@ function PriceTable({ prices }: { prices: PriceLine[] }) {
         >
           <span style={{ flex: "1 1 38%", minWidth: 0, color: "#8892A4" }}>{price.label}</span>
           <span style={{ flex: "1 1 32%", minWidth: 0, color: "#F5F7FA", fontWeight: 500 }}>{price.zar}</span>
-          <span style={{ flex: "1 1 30%", minWidth: 0, color: "#8892A4", textAlign: "right" }}>{price.gbp}</span>
+          <span style={{ flex: "1 1 30%", minWidth: 0, color: "#00D4AA", fontWeight: 500, textAlign: "right" }}>
+            {price.gbp}
+          </span>
         </div>
       ))}
     </div>
@@ -294,14 +339,14 @@ function PriceTable({ prices }: { prices: PriceLine[] }) {
 
 function ServiceContent({ service }: { service: Service }) {
   return (
-    <div style={{ fontFamily: "var(--font-dm-sans)" }}>
+    <div style={{ paddingTop: "12px", fontFamily: "var(--font-dm-sans)" }}>
       <p
         style={{
-          margin: "0 0 16px",
+          margin: "0 0 12px",
           color: "#8892A4",
           fontFamily: "var(--font-dm-sans)",
-          fontSize: "15px",
-          lineHeight: 1.7,
+          fontSize: "14px",
+          lineHeight: 1.6,
         }}
       >
         {service.description}
@@ -310,13 +355,17 @@ function ServiceContent({ service }: { service: Service }) {
       {service.ownedAfterTwelveMonths && (
         <p
           style={{
-            margin: "16px 0 0",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            margin: "12px 0 0",
             color: "#00D4AA",
             fontFamily: "var(--font-dm-sans)",
             fontSize: "14px",
             lineHeight: 1.5,
           }}
         >
+          <Lock size={14} color="#00D4AA" strokeWidth={2} />
           Yours after 12 months
         </p>
       )}
@@ -324,32 +373,104 @@ function ServiceContent({ service }: { service: Service }) {
   );
 }
 
-function PillarPanel({ pillar }: { pillar: Pillar }) {
-  const items: AccordionItem[] = pillar.services.map((service) => ({
-    id: service.id,
-    trigger: service.name,
-    content: <ServiceContent service={service} />,
-  }));
+function ServiceCard({ service }: { service: Service }) {
+  const [open, setOpen] = useState(false);
+  const Icon = SERVICE_ICONS[service.id] ?? Briefcase;
 
   return (
-    <div className="pillar-panel">
-      <p className="pillar-intro">{pillar.intro}</p>
-      <Accordion items={items} allowMultiple className="pricing-accordion" />
+    <motion.div
+      style={{
+        backgroundColor: "#111F2E",
+        border: "1px solid #1E2D3D",
+        borderRadius: "8px",
+        padding: "20px 24px",
+      }}
+      whileHover={{ y: -4, borderColor: "#1B77F2" }}
+      transition={{ duration: 0.2, ease: EASE }}
+    >
+      <button
+        type="button"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          width: "100%",
+          gap: "14px",
+          padding: 0,
+          backgroundColor: "#111F2E",
+          border: 0,
+          cursor: "pointer",
+          textAlign: "left",
+        }}
+      >
+        <Icon size={20} color="#1B77F2" strokeWidth={1.8} style={{ flex: "0 0 auto" }} />
+        <span
+          style={{
+            flex: 1,
+            minWidth: 0,
+            color: "#F5F7FA",
+            fontFamily: "var(--font-syne)",
+            fontSize: "16px",
+            fontWeight: 600,
+            lineHeight: 1.3,
+          }}
+        >
+          {service.name}
+        </span>
+        <motion.span
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.25, ease: EASE }}
+          style={{ display: "flex", flex: "0 0 auto", alignItems: "center" }}
+        >
+          <ChevronDown size={18} color="#8892A4" strokeWidth={2} />
+        </motion.span>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: EASE }}
+            style={{ overflow: "hidden" }}
+          >
+            <ServiceContent service={service} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
+function PillarPanel({ pillar }: { pillar: Pillar }) {
+  return (
+    <div style={{ paddingTop: "18px" }}>
+      <p
+        style={{
+          maxWidth: "720px",
+          margin: "0 0 16px",
+          color: "#8892A4",
+          fontFamily: "var(--font-dm-sans)",
+          fontSize: "16px",
+          lineHeight: 1.7,
+        }}
+      >
+        {pillar.intro}
+      </p>
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        {pillar.services.map((service) => (
+          <ServiceCard key={service.id} service={service} />
+        ))}
+      </div>
     </div>
   );
 }
 
 export default function PricingPage() {
   const [activeTab, setActiveTab] = useState(PILLARS[0].id);
-  const tabs = useMemo<Tab[]>(
-    () =>
-      PILLARS.map((pillar) => ({
-        id: pillar.id,
-        label: pillar.label,
-        content: <PillarPanel pillar={pillar} />,
-      })),
-    [],
-  );
+  const activePillar = PILLARS.find((pillar) => pillar.id === activeTab) ?? PILLARS[0];
 
   return (
     <main className="pricing-page">
@@ -371,7 +492,35 @@ export default function PricingPage() {
       <section className="pricing-tabs-section relative overflow-hidden">
         <GrainOverlay />
         <RevealBlock className="pricing-wrap relative z-10">
-          <TabSwitcher tabs={tabs} activeId={activeTab} onChange={setActiveTab} className="pricing-tabs" />
+          <div className="tab-shell">
+            <div className="tab-list" role="tablist" aria-label="Pricing pillars">
+              {PILLARS.map((pillar) => {
+                const isActive = pillar.id === activeTab;
+
+                return (
+                  <button
+                    key={pillar.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-controls={`panel-${pillar.id}`}
+                    id={`tab-${pillar.id}`}
+                    onClick={() => setActiveTab(pillar.id)}
+                    className="pricing-tab"
+                    style={{
+                      color: isActive ? "#F5F7FA" : "#8892A4",
+                      borderBottomColor: isActive ? "#1B77F2" : "#1E2D3D",
+                    }}
+                  >
+                    {pillar.label}
+                  </button>
+                );
+              })}
+            </div>
+            <div role="tabpanel" id={`panel-${activePillar.id}`} aria-labelledby={`tab-${activePillar.id}`}>
+              <PillarPanel pillar={activePillar} />
+            </div>
+          </div>
         </RevealBlock>
       </section>
 
@@ -427,23 +576,26 @@ export default function PricingPage() {
         .anti-section,
         .final-cta {
           background-color: #0D1B2A;
-          border-bottom: 1px solid #1E2D3D;
         }
 
         .pricing-hero {
-          padding-top: 96px;
-          padding-bottom: 96px;
+          padding-top: 72px;
+          padding-bottom: 28px;
         }
 
-        .pricing-tabs-section,
+        .pricing-tabs-section {
+          padding-top: 0;
+          padding-bottom: 24px;
+        }
+
         .anti-section {
-          padding-top: 96px;
-          padding-bottom: 128px;
+          padding-top: 0;
+          padding-bottom: 16px;
         }
 
         .final-cta {
-          padding-top: 96px;
-          padding-bottom: 96px;
+          padding-top: 0;
+          padding-bottom: 64px;
         }
 
         .pricing-label {
@@ -467,12 +619,12 @@ export default function PricingPage() {
 
         h1 {
           max-width: 900px;
-          font-size: 72px;
+          font-size: 64px;
           line-height: 1.05;
         }
 
         h2 {
-          font-size: 48px;
+          font-size: 28px;
           line-height: 1;
         }
 
@@ -481,135 +633,49 @@ export default function PricingPage() {
           margin: 24px 0 0;
           color: #8892A4;
           font-family: var(--font-dm-sans);
-          font-size: 18px;
-          line-height: 1.7;
-        }
-
-        .pricing-tabs {
-          overflow: hidden;
-          border: 1px solid #1E2D3D;
-          border-radius: 12px;
-          background-color: #111F2E;
-        }
-
-        .pillar-panel {
-          padding: 28px;
-          background-color: #111F2E;
-        }
-
-        .pillar-intro {
-          max-width: 720px;
-          margin: 0 0 24px;
-          color: #8892A4;
-          font-family: var(--font-dm-sans);
           font-size: 16px;
           line-height: 1.7;
         }
 
-        .service-content {
+        .tab-shell {
           display: flex;
           flex-direction: column;
-          gap: 18px;
+          gap: 0;
         }
 
-        .service-description {
-          margin: 0;
-          color: #F5F7FA;
-          font-family: var(--font-dm-sans);
-          font-size: 15px;
-          line-height: 1.7;
-        }
-
-        .price-table {
-          overflow: hidden;
-          border: 1px solid #1E2D3D;
-          border-radius: 8px;
-          background-color: #0D1B2A;
-        }
-
-        .price-row {
-          display: grid;
-          grid-template-columns: 1.4fr 1fr 1fr;
-          min-height: 52px;
-          border-top: 1px solid #1E2D3D;
-        }
-
-        .price-row:first-child {
-          border-top: 0;
-        }
-
-        .price-row > span {
+        .tab-list {
           display: flex;
-          align-items: center;
-          padding: 13px 16px;
-          border-left: 1px solid #1E2D3D;
-          color: #F5F7FA;
+          gap: 24px;
+          overflow-x: auto;
+          border-bottom: 1px solid #1E2D3D;
+        }
+
+        .pricing-tab {
+          min-height: 44px;
+          padding: 0 0 12px;
+          background-color: #0D1B2A;
+          border: 0;
+          border-bottom: 2px solid #1E2D3D;
+          cursor: pointer;
           font-family: var(--font-dm-sans);
           font-size: 14px;
-          line-height: 1.45;
-        }
-
-        .price-row > span:first-child {
-          border-left: 0;
-        }
-
-        .price-head {
-          background-color: #1C2A3A;
-        }
-
-        .price-head > span {
-          color: #8892A4;
-          font-size: 12px;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-        }
-
-        .price-label {
-          color: #8892A4;
-        }
-
-        .price-zar {
-          color: #00D4AA;
-          font-weight: 700;
-        }
-
-        .price-gbp {
-          color: #F5F7FA;
-          font-weight: 700;
-        }
-
-        .price-muted {
-          color: #8892A4;
-        }
-
-        .ownership-line {
-          width: fit-content;
-          margin: 0;
-          padding: 8px 12px;
-          border: 1px solid #1E2D3D;
-          border-radius: 9999px;
-          background-color: #1C2A3A;
-          color: #00D4AA;
-          font-family: var(--font-dm-sans);
-          font-size: 13px;
-          font-weight: 700;
-          line-height: 1.4;
+          font-weight: 500;
+          white-space: nowrap;
         }
 
         .anti-copy {
-          max-width: 840px;
-          padding: 36px;
+          width: 100%;
+          padding: 40px;
           border: 1px solid #1E2D3D;
-          border-radius: 12px;
+          border-radius: 8px;
           background-color: #111F2E;
         }
 
         .anti-copy p:last-child {
-          margin: 24px 0 0;
-          color: #F5F7FA;
+          margin: 16px 0 0;
+          color: #8892A4;
           font-family: var(--font-dm-sans);
-          font-size: 18px;
+          font-size: 16px;
           line-height: 1.7;
         }
 
@@ -617,11 +683,8 @@ export default function PricingPage() {
           display: grid;
           grid-template-columns: minmax(0, 1fr) auto;
           align-items: center;
-          gap: 32px;
-          padding: 36px;
-          border: 1px solid #1E2D3D;
-          border-radius: 12px;
-          background-color: #111F2E;
+          gap: 24px;
+          padding: 24px 0 0;
         }
 
         .pricing-cta {
@@ -643,7 +706,6 @@ export default function PricingPage() {
         }
 
         .pricing-cta:hover {
-          box-shadow: 0 0 24px #1B77F2;
           transform: translateY(-1px);
         }
 
@@ -653,87 +715,15 @@ export default function PricingPage() {
             padding-right: 24px;
           }
 
-          .pricing-hero {
-            padding-top: 72px;
-            padding-bottom: 72px;
-          }
-
-          .pricing-tabs-section,
-          .anti-section {
-            padding-top: 64px;
-            padding-bottom: 72px;
-          }
-
-          .final-cta {
-            padding-top: 64px;
-            padding-bottom: 64px;
-          }
-
           h1 {
-            font-size: 42px;
+            font-size: 48px;
           }
 
           h2 {
-            font-size: 32px;
+            font-size: 28px;
           }
 
-          .hero-copy,
-          .anti-copy p:last-child {
-            font-size: 16px;
-          }
-
-          .pillar-panel {
-            padding: 20px;
-          }
-
-          .price-row {
-            grid-template-columns: 1fr;
-          }
-
-          .price-row > span {
-            min-height: 44px;
-            border-left: 0;
-            border-top: 1px solid #1E2D3D;
-          }
-
-          .price-row > span:first-child {
-            border-top: 0;
-          }
-
-          .price-head {
-            display: none;
-          }
-
-          .price-zar::before,
-          .price-gbp::before,
-          .price-muted::before {
-            display: inline-block;
-            width: 48px;
-            flex: 0 0 auto;
-            color: #8892A4;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-          }
-
-          .price-zar::before {
-            content: "ZAR";
-          }
-
-          .price-gbp::before {
-            content: "GBP";
-          }
-
-          .price-muted:nth-child(2)::before {
-            content: "ZAR";
-          }
-
-          .price-muted:nth-child(3)::before {
-            content: "GBP";
-          }
-
-          .anti-copy,
-          .cta-inner {
+          .anti-copy {
             padding: 24px;
           }
 
