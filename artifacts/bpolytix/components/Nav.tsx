@@ -39,9 +39,9 @@ function BrandMark() {
         BPOLytix
       </p>
       <p
+        className="text-[9.5px] md:text-[12px]"
         style={{
           fontFamily: "var(--font-dm-sans)",
-          fontSize: "9.5px",
           color: "#8892A4",
           letterSpacing: "0.02em",
           lineHeight: 1.3,
