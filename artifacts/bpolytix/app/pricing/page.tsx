@@ -32,6 +32,7 @@ import { ServiceFlowDiagram } from "@/components/pricing/ServiceFlowDiagram";
 
 type Country = "ZA" | "UK";
 type BusinessSize = "startup" | "sme" | "growth";
+type PillarFilter = "All" | Service["pillar"];
 
 type Service = {
   id: string;
@@ -299,7 +300,7 @@ const BUSINESS_SIZES: { id: BusinessSize; label: string }[] = [
   { id: "growth", label: "Growth (50+)" },
 ];
 
-const PILLARS = ["Finance", "AI & Automation", "People", "Build"] as const;
+const PILLARS: PillarFilter[] = ["All", "Finance", "AI & Automation", "People", "Build"];
 
 function RevealBlock({ children, className }: { children: ReactNode; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -521,10 +522,15 @@ export default function PricingPage() {
   const [businessSize, setBusinessSize] = useState<BusinessSize>("startup");
   const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>([]);
   const [mobilePanelExpanded, setMobilePanelExpanded] = useState(false);
+  const [activePillar, setActivePillar] = useState<PillarFilter>("All");
 
   const selectedServices = useMemo(
     () => SERVICES.filter((service) => selectedServiceIds.includes(service.id)),
     [selectedServiceIds],
+  );
+  const filteredServices = useMemo(
+    () => (activePillar === "All" ? SERVICES : SERVICES.filter((service) => service.pillar === activePillar)),
+    [activePillar],
   );
 
   const monthlyBpolytix = selectedServices.reduce(
@@ -634,14 +640,31 @@ export default function PricingPage() {
                 <p>{selectedLabel(selectedServiceIds.length)}</p>
               </div>
 
-              <div className="pillar-strip" aria-label="Service pillars">
-                {PILLARS.map((pillar) => (
-                  <span key={pillar}>{pillar}</span>
-                ))}
+              <div className="pillar-strip" role="tablist" aria-label="Service pillars">
+                {PILLARS.map((pillar) => {
+                  const selected = pillar === activePillar;
+
+                  return (
+                    <button
+                      key={pillar}
+                      type="button"
+                      role="tab"
+                      aria-selected={selected}
+                      onClick={() => setActivePillar(pillar)}
+                      style={{
+                        backgroundColor: selected ? "#1B77F2" : "transparent",
+                        borderColor: selected ? "#1B77F2" : "#1E2D3D",
+                        color: selected ? "#F5F7FA" : "#8892A4",
+                      }}
+                    >
+                      {pillar}
+                    </button>
+                  );
+                })}
               </div>
 
               <div className="service-grid">
-                {SERVICES.map((service) => (
+                {filteredServices.map((service) => (
                   <ServiceCard
                     key={service.id}
                     service={service}
@@ -1152,16 +1175,17 @@ export default function PricingPage() {
           margin-bottom: 14px;
         }
 
-        .pillar-strip span {
+        .pillar-strip button {
           display: inline-flex;
           align-items: center;
           min-height: 30px;
           padding: 0 12px;
           border: 1px solid #1E2D3D;
           border-radius: 9999px;
-          color: #8892A4;
+          cursor: pointer;
           font-family: var(--font-dm-sans);
           font-size: 13px;
+          font-weight: 700;
           line-height: 1;
         }
 
