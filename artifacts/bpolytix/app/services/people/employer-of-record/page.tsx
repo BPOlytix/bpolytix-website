@@ -149,106 +149,123 @@ function CorridorMapVisual() {
   const reduceMotion = useReducedMotion();
   const canAnimate = inView && !reduceMotion;
 
-  const corridorNodes = [
-    { x: 146, y: 244, label: "Contract" },
-    { x: 226, y: 166, label: "Payroll" },
-    { x: 334, y: 166, label: "PAYE/UIF" },
-    { x: 414, y: 244, label: "BCEA Compliance" },
+  const flowDots = [
+    {
+      cx: [116, 145, 190, 245, 300],
+      cy: [160, 112, 98, 104, 160],
+      delay: 0,
+    },
+    {
+      cx: [116, 145, 190, 245, 300],
+      cy: [160, 208, 222, 216, 160],
+      delay: 0.55,
+    },
+    {
+      cx: [484, 455, 410, 355, 300],
+      cy: [160, 112, 98, 104, 160],
+      delay: 1.1,
+    },
+    {
+      cx: [484, 455, 410, 355, 300],
+      cy: [160, 208, 222, 216, 160],
+      delay: 1.65,
+    },
   ];
 
   return (
     <div ref={ref} className="corridor-visual" aria-hidden="true">
-      <svg className="corridor-svg" viewBox="0 0 560 380" role="presentation">
-        <rect x="1" y="1" width="558" height="378" rx="8" fill="#111F2E" stroke="#1E2D3D" />
-        <path d="M52 80 H508 M52 190 H508 M52 300 H508" fill="none" stroke="#1E2D3D" strokeWidth="1" />
-        <path d="M84 80 V300 M280 80 V300 M476 80 V300" fill="none" stroke="#1E2D3D" strokeWidth="1" />
+      <svg className="corridor-svg" viewBox="0 0 600 320" role="presentation">
+        <rect x="1" y="1" width="598" height="318" rx="8" fill="#111F2E" stroke="#1E2D3D" />
+        <path d="M44 80 H556 M44 160 H556 M44 240 H556" fill="none" stroke="#1E2D3D" strokeWidth="1" />
+        <path d="M80 48 V272 M300 48 V272 M520 48 V272" fill="none" stroke="#1E2D3D" strokeWidth="1" />
+
+        <path d="M116 160 Q145 112 190 98 Q245 104 300 160" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="2" strokeLinecap="round" />
+        <path d="M116 160 Q145 208 190 222 Q245 216 300 160" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="2" strokeLinecap="round" />
+        <path d="M484 160 Q455 112 410 98 Q355 104 300 160" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="2" strokeLinecap="round" />
+        <path d="M484 160 Q455 208 410 222 Q355 216 300 160" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="2" strokeLinecap="round" />
+
+        {flowDots.map((dot, index) => (
+          <motion.circle
+            key={index}
+            r="4"
+            fill="#00D4AA"
+            stroke="#00D4AA"
+            strokeWidth="1"
+            initial={false}
+            animate={
+              canAnimate
+                ? {
+                    cx: dot.cx,
+                    cy: dot.cy,
+                    opacity: [0, 1, 1, 1, 0],
+                  }
+                : { cx: 300, cy: 160, opacity: 1 }
+            }
+            transition={{
+              duration: 4.2,
+              delay: dot.delay,
+              repeat: canAnimate ? Infinity : 0,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
 
         <g>
-          <circle cx="72" cy="190" r="34" fill="#0D1B2A" stroke="#8892A4" strokeWidth="2" />
-          <rect x="50" y="177" width="44" height="26" rx="3" fill="#1B77F2" stroke="#1E2D3D" strokeWidth="1" />
-          <path d="M50 177 L94 203 M94 177 L50 203" fill="none" stroke="#F5F7FA" strokeWidth="3" />
-          <path d="M72 177 V203 M50 190 H94" fill="none" stroke="#FF4444" strokeWidth="3" />
-          <text x="72" y="238" fill="#8892A4" fontFamily="DM Sans, sans-serif" fontSize="12" fontWeight="700" textAnchor="middle">
+          <circle cx="80" cy="160" r="36" fill="#0D1B2A" stroke="#1B77F2" strokeWidth="2" />
+          <rect x="57" y="146" width="46" height="28" rx="3" fill="#1B77F2" stroke="#1E2D3D" strokeWidth="1" />
+          <path d="M57 146 L103 174 M103 146 L57 174" fill="none" stroke="#F5F7FA" strokeWidth="3" />
+          <path d="M80 146 V174 M57 160 H103" fill="none" stroke="#FF4444" strokeWidth="3" />
+          <text x="80" y="212" fill="#8892A4" fontFamily="DM Sans, sans-serif" fontSize="12" fontWeight="700" textAnchor="middle">
             UK
           </text>
         </g>
 
         <g>
-          <circle cx="488" cy="190" r="34" fill="#0D1B2A" stroke="#8892A4" strokeWidth="2" />
-          <rect x="466" y="177" width="44" height="26" rx="3" fill="#F5F7FA" stroke="#1E2D3D" strokeWidth="1" />
-          <rect x="466" y="177" width="44" height="9" fill="#FF4444" stroke="#FF4444" strokeWidth="1" />
-          <rect x="466" y="194" width="44" height="9" fill="#1B77F2" stroke="#1B77F2" strokeWidth="1" />
-          <path d="M466 177 L486 190 L466 203 Z" fill="#00D4AA" stroke="#00D4AA" strokeWidth="1" />
-          <path d="M466 177 L492 190 L466 203" fill="none" stroke="#0D1B2A" strokeWidth="2" />
-          <text x="488" y="238" fill="#8892A4" fontFamily="DM Sans, sans-serif" fontSize="12" fontWeight="700" textAnchor="middle">
+          <circle cx="520" cy="160" r="36" fill="#0D1B2A" stroke="#1B77F2" strokeWidth="2" />
+          <rect x="497" y="146" width="46" height="28" rx="3" fill="#F5F7FA" stroke="#1E2D3D" strokeWidth="1" />
+          <rect x="497" y="146" width="46" height="9" fill="#FF4444" stroke="#FF4444" strokeWidth="1" />
+          <rect x="497" y="165" width="46" height="9" fill="#1B77F2" stroke="#1B77F2" strokeWidth="1" />
+          <path d="M497 146 L518 160 L497 174 Z" fill="#00D4AA" stroke="#00D4AA" strokeWidth="1" />
+          <path d="M497 146 L524 160 L497 174" fill="none" stroke="#0D1B2A" strokeWidth="2" />
+          <text x="520" y="212" fill="#8892A4" fontFamily="DM Sans, sans-serif" fontSize="12" fontWeight="700" textAnchor="middle">
             SA
           </text>
         </g>
 
-        <path
-          d="M106 190 C156 116 224 118 280 190 C336 262 404 264 454 190"
-          fill="none"
-          stroke="#1E2D3D"
-          strokeWidth="10"
-          strokeLinecap="round"
-          opacity="0.75"
-        />
-        <path
-          d="M106 190 C156 116 224 118 280 190 C336 262 404 264 454 190"
-          fill="none"
-          stroke="#00D4AA"
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeDasharray="4 14"
-        />
-
-        <motion.circle
-          r="7"
-          fill="#00D4AA"
-          stroke="#00D4AA"
-          strokeWidth="1"
-          initial={false}
-          animate={
-            canAnimate
-              ? {
-                  cx: [106, 156, 224, 280, 336, 404, 454],
-                  cy: [190, 116, 118, 190, 262, 264, 190],
-                  opacity: [0, 1, 1, 1, 1, 1, 0],
-                }
-              : { cx: 280, cy: 190, opacity: 1 }
-          }
-          transition={{
-            duration: 6.2,
-            repeat: canAnimate ? Infinity : 0,
-            ease: "easeInOut",
-          }}
-        />
-
         <g>
-          <circle cx="280" cy="190" r="48" fill="#1B77F2" stroke="#1B77F2" strokeWidth="2" />
-          <circle cx="280" cy="190" r="36" fill="#111F2E" stroke="#00D4AA" strokeWidth="2" />
-          <text x="280" y="186" fill="#F5F7FA" fontFamily="DM Sans, sans-serif" fontSize="12" fontWeight="700" textAnchor="middle">
-            BPOLytix
-          </text>
-          <text x="280" y="202" fill="#00D4AA" fontFamily="DM Sans, sans-serif" fontSize="12" fontWeight="700" textAnchor="middle">
-            EOR
+          <rect x="145" y="63" width="90" height="34" rx="8" fill="rgba(0,212,170,0.08)" stroke="#00D4AA" strokeWidth="1" />
+          <text x="190" y="84" fill="#F5F7FA" fontFamily="DM Sans, sans-serif" fontSize="12" fontWeight="700" textAnchor="middle">
+            Contract
           </text>
         </g>
 
-        {corridorNodes.map((node, index) => (
-          <motion.g
-            key={node.label}
-            initial={reduceMotion ? false : { opacity: 0, y: 14 }}
-            animate={reduceMotion || inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
-            transition={{ duration: 0.7, delay: index * 0.08, ease: EASE }}
-          >
-            <rect x={node.x - 56} y={node.y - 19} width="112" height="38" rx="8" fill="#0D1B2A" stroke="#1E2D3D" strokeWidth="1" />
-            <circle cx={node.x - 38} cy={node.y} r="5" fill="#00D4AA" stroke="#00D4AA" strokeWidth="1" />
-            <text x={node.x - 24} y={node.y + 4} fill="#F5F7FA" fontFamily="DM Sans, sans-serif" fontSize="11" fontWeight="700">
-              {node.label}
-            </text>
-          </motion.g>
-        ))}
+        <g>
+          <rect x="369" y="63" width="82" height="34" rx="8" fill="rgba(0,212,170,0.08)" stroke="#00D4AA" strokeWidth="1" />
+          <text x="410" y="84" fill="#F5F7FA" fontFamily="DM Sans, sans-serif" fontSize="12" fontWeight="700" textAnchor="middle">
+            Payroll
+          </text>
+        </g>
+
+        <g>
+          <rect x="147" y="223" width="86" height="34" rx="8" fill="rgba(0,212,170,0.08)" stroke="#00D4AA" strokeWidth="1" />
+          <text x="190" y="244" fill="#F5F7FA" fontFamily="DM Sans, sans-serif" fontSize="12" fontWeight="700" textAnchor="middle">
+            PAYE/UIF
+          </text>
+        </g>
+
+        <g>
+          <rect x="347" y="223" width="126" height="34" rx="8" fill="rgba(0,212,170,0.08)" stroke="#00D4AA" strokeWidth="1" />
+          <text x="410" y="244" fill="#F5F7FA" fontFamily="DM Sans, sans-serif" fontSize="12" fontWeight="700" textAnchor="middle">
+            BCEA Compliance
+          </text>
+        </g>
+
+        <g>
+          <circle cx="300" cy="160" r="52" fill="rgba(27,119,242,0.12)" stroke="#1B77F2" strokeWidth="2" />
+          <text x="300" y="166" fill="#F5F7FA" fontFamily="Syne, sans-serif" fontSize="15" fontWeight="600" textAnchor="middle">
+            EOR
+          </text>
+        </g>
       </svg>
 
       <div className="corridor-status">
