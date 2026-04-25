@@ -4,9 +4,9 @@ import Link from "next/link";
 import type { MouseEvent } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
-  ChartNoAxesCombined,
-  Layers3,
-  UsersRound,
+  Layers,
+  TrendingUp,
+  Users,
   Workflow,
   type LucideIcon,
 } from "lucide-react";
@@ -16,14 +16,25 @@ type PillarVisualProps = {
   canAnimate: boolean;
 };
 
-const PILLARS: { label: string; icon: LucideIcon }[] = [
-  { label: "Finance", icon: ChartNoAxesCombined },
-  { label: "AI & Automation", icon: Workflow },
-  { label: "People", icon: UsersRound },
-  { label: "Build", icon: Layers3 },
+type PillarNode = {
+  label: string;
+  icon: LucideIcon;
+  className: string;
+  x: number;
+  y: number;
+  dotDelay: number;
+};
+
+const HUB = { x: 260, y: 150 };
+
+const PILLARS: PillarNode[] = [
+  { label: "Finance", icon: TrendingUp, className: "finance", x: 118, y: 88, dotDelay: 0 },
+  { label: "AI & Automation", icon: Workflow, className: "automation", x: 402, y: 88, dotDelay: 1 },
+  { label: "People", icon: Users, className: "people", x: 118, y: 294, dotDelay: 2 },
+  { label: "Build", icon: Layers, className: "build", x: 402, y: 294, dotDelay: 3 },
 ];
 
-function PulseDot({ canAnimate }: PillarVisualProps) {
+function PulseDot({ canAnimate, delay = 0 }: PillarVisualProps & { delay?: number }) {
   return (
     <span className="live-pulse-dot" aria-hidden="true">
       <span className="live-pulse-core" />
@@ -31,198 +42,131 @@ function PulseDot({ canAnimate }: PillarVisualProps) {
         <motion.span
           className="live-pulse-ring"
           animate={{ scale: [1, 3.2], opacity: [0.62, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: [0.66, 0, 0, 1] }}
+          transition={{ duration: 3, delay, repeat: Infinity, ease: [0.66, 0, 0, 1] }}
         />
       ) : null}
     </span>
   );
 }
 
-function FinanceVisual({ canAnimate }: PillarVisualProps) {
+function FlowConnector({
+  pillar,
+  canAnimate,
+}: {
+  pillar: PillarNode;
+  canAnimate: boolean;
+}) {
   return (
-    <svg className="pillar-mini finance-mini" viewBox="0 0 160 72" role="presentation">
+    <g>
       <path
-        className="mini-grid"
-        d="M8 58 H152 M8 38 H152 M8 18 H152"
-        fill="none"
-        stroke="#1E2D3D"
-        strokeWidth="1"
-        strokeLinecap="round"
-      />
-      <motion.path
-        className="finance-line"
-        d="M12 54 C34 50 38 36 56 40 C76 45 84 26 102 30 C122 34 130 18 148 16"
-        fill="none"
-        stroke="#00D4AA"
-        strokeWidth="3"
-        strokeLinecap="round"
-        initial={canAnimate ? { pathLength: 0.4, opacity: 0.55 } : false}
-        animate={
-          canAnimate
-            ? { pathLength: [0.4, 1, 1], opacity: [0.55, 1, 0.72] }
-            : { pathLength: 1, opacity: 0.78 }
-        }
-        transition={{
-          duration: 5.8,
-          repeat: canAnimate ? Infinity : 0,
-          repeatDelay: 1.2,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.circle
-        className="finance-marker"
-        cx="148"
-        cy="16"
-        r="4"
-        fill="#00D4AA"
-        stroke="#00D4AA"
-        strokeWidth="1"
-        animate={canAnimate ? { scale: [1, 1.45, 1], opacity: [0.7, 1, 0.78] } : { scale: 1, opacity: 0.9 }}
-        transition={{ duration: 2.8, repeat: canAnimate ? Infinity : 0, ease: "easeInOut" }}
-      />
-    </svg>
-  );
-}
-
-function AutomationVisual({ canAnimate }: PillarVisualProps) {
-  const nodes = [
-    { cx: 30, cy: 38 },
-    { cx: 72, cy: 24 },
-    { cx: 112, cy: 42 },
-    { cx: 136, cy: 22 },
-  ];
-
-  return (
-    <svg className="pillar-mini automation-mini" viewBox="0 0 160 72" role="presentation">
-      <path
-        className="node-line"
-        d="M30 38 L72 24 L112 42 L136 22"
+        d={`M${HUB.x} ${HUB.y} L${pillar.x} ${pillar.y}`}
         fill="none"
         stroke="#1B77F2"
-        strokeOpacity="0.6"
-        strokeWidth="2"
+        strokeOpacity="0.3"
+        strokeWidth="1.5"
         strokeLinecap="round"
       />
-      {nodes.map((node, index) => (
-        <motion.circle
-          key={`${node.cx}-${node.cy}`}
-          className="node-dot"
-          cx={node.cx}
-          cy={node.cy}
-          r="5"
-          fill="#00D4AA"
-          stroke="#00D4AA"
-          strokeWidth="1"
-          animate={
-            canAnimate
-              ? { scale: [1, 1.55, 1], opacity: [0.58, 1, 0.7] }
-              : { scale: 1, opacity: 0.82 }
-          }
-          transition={{
-            duration: 2.4,
-            delay: index * 0.42,
-            repeat: canAnimate ? Infinity : 0,
-            repeatDelay: canAnimate ? 1.2 : 0,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-    </svg>
+      {canAnimate ? (
+        <>
+          <motion.line
+            x1={HUB.x}
+            y1={HUB.y}
+            x2={HUB.x}
+            y2={HUB.y}
+            fill="none"
+            stroke="#00D4AA"
+            strokeOpacity="0.28"
+            strokeWidth="3"
+            strokeLinecap="round"
+            animate={{
+              x1: [HUB.x, HUB.x, pillar.x],
+              y1: [HUB.y, HUB.y, pillar.y],
+              x2: [HUB.x, pillar.x, pillar.x],
+              y2: [HUB.y, pillar.y, pillar.y],
+              opacity: [0, 0.34, 0],
+            }}
+            transition={{
+              duration: 4,
+              delay: pillar.dotDelay,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.circle
+            cx={HUB.x}
+            cy={HUB.y}
+            r="4"
+            fill="#00D4AA"
+            stroke="#00D4AA"
+            strokeWidth="1"
+            animate={{ cx: [HUB.x, pillar.x], cy: [HUB.y, pillar.y], opacity: [0, 1, 0.9, 0] }}
+            transition={{
+              duration: 4,
+              delay: pillar.dotDelay,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        </>
+      ) : null}
+    </g>
   );
 }
 
-function PeopleVisual({ canAnimate }: PillarVisualProps) {
-  return (
-    <svg className="pillar-mini people-mini" viewBox="0 0 160 72" role="presentation">
-      <path
-        className="people-rail"
-        d="M32 36 H128"
-        fill="none"
-        stroke="#1B77F2"
-        strokeOpacity="0.6"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      <circle className="people-anchor" cx="32" cy="36" r="7" fill="#111F2E" stroke="#00D4AA" strokeWidth="2" />
-      <circle className="people-anchor" cx="128" cy="36" r="7" fill="#111F2E" stroke="#00D4AA" strokeWidth="2" />
-      <motion.circle
-        className="people-transfer"
-        cx="32"
-        cy="36"
-        r="4"
-        fill="#00D4AA"
-        stroke="#00D4AA"
-        strokeWidth="1"
-        animate={canAnimate ? { cx: [32, 128, 32], opacity: [0.72, 1, 0.72] } : { cx: 128, opacity: 0.86 }}
-        transition={{ duration: 5.4, repeat: canAnimate ? Infinity : 0, ease: "easeInOut" }}
-      />
-    </svg>
-  );
-}
+function SatelliteNode({
+  pillar,
+  canAnimate,
+  mobile = false,
+}: {
+  pillar: PillarNode;
+  canAnimate: boolean;
+  mobile?: boolean;
+}) {
+  const Icon = pillar.icon;
 
-function BuildVisual({ canAnimate }: PillarVisualProps) {
   return (
-    <div className="pillar-mini build-mini" aria-hidden="true">
-      {[0, 1, 2].map((frame) => (
-        <motion.span
-          key={frame}
-          className={`build-frame build-frame-${frame + 1}`}
-          animate={
-            canAnimate
-              ? {
-                  opacity: [0.46, 0.88, 0.68],
-                  x: [10 - frame * 5, 0, 0],
-                  y: [8 - frame * 3, 0, 0],
-                  borderColor: ["#1E2D3D", "#00D4AA", "#1E2D3D"],
-                }
-              : { opacity: 0.78, x: 0, y: 0, borderColor: "#1E2D3D" }
-          }
-          transition={{
-            duration: 4.8,
-            delay: frame * 0.38,
-            repeat: canAnimate ? Infinity : 0,
-            repeatDelay: canAnimate ? 1.1 : 0,
-            ease: "easeInOut",
-          }}
-        >
-          <i />
-          <b />
-        </motion.span>
-      ))}
+    <div className={`satellite-node ${mobile ? "mobile" : pillar.className}`}>
+      <span className="satellite-corner-dot">
+        <PulseDot canAnimate={canAnimate} delay={pillar.dotDelay * 0.3} />
+      </span>
+      <Icon size={16} color="#00D4AA" strokeWidth={1.8} />
+      <span>{pillar.label}</span>
     </div>
   );
 }
 
-function FourPillarVisual() {
+function HubAndSpokeVisual() {
   const reduceMotion = useReducedMotion();
   const canAnimate = !reduceMotion;
 
   return (
-    <div className="pillar-panel" aria-label="Four BPOLytix pillars">
-      <div className="pillar-panel-topline">
-        <PulseDot canAnimate={canAnimate} />
-        <span>Full circle back office</span>
+    <div className="hub-panel" aria-label="Four offices connected to BPOLytix">
+      <div className="hub-diagram" aria-hidden="true">
+        <svg className="connector-map" viewBox="0 0 520 380" role="presentation">
+          {PILLARS.map((pillar) => (
+            <FlowConnector pillar={pillar} canAnimate={canAnimate} key={pillar.label} />
+          ))}
+          <circle cx={HUB.x} cy={HUB.y} r="32" fill="#0D1B2A" stroke="#00D4AA" strokeWidth="2" />
+        </svg>
+
+        <div className="hub-node">
+          BPOLytix
+        </div>
+
+        {PILLARS.map((pillar) => (
+          <SatelliteNode pillar={pillar} canAnimate={canAnimate} key={pillar.label} />
+        ))}
       </div>
 
-      <div className="pillar-grid">
-        {PILLARS.map((pillar) => {
-          const Icon = pillar.icon;
-
-          return (
-            <div className="pillar-quadrant" key={pillar.label}>
-              <div className="pillar-label">
-                <PulseDot canAnimate={canAnimate} />
-                <span>{pillar.label}</span>
-                <Icon size={17} color="#00D4AA" strokeWidth={1.8} />
-              </div>
-
-              {pillar.label === "Finance" && <FinanceVisual canAnimate={canAnimate} />}
-              {pillar.label === "AI & Automation" && <AutomationVisual canAnimate={canAnimate} />}
-              {pillar.label === "People" && <PeopleVisual canAnimate={canAnimate} />}
-              {pillar.label === "Build" && <BuildVisual canAnimate={canAnimate} />}
-            </div>
-          );
-        })}
+      <div className="hub-mobile-stack">
+        <div className="hub-node mobile">
+          BPOLytix
+        </div>
+        <div className="mobile-node-list">
+          {PILLARS.map((pillar) => (
+            <SatelliteNode pillar={pillar} canAnimate={canAnimate} mobile key={pillar.label} />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -268,7 +212,7 @@ export function HeroSection() {
         </div>
 
         <div className="hero-visual-wrap">
-          <FourPillarVisual />
+          <HubAndSpokeVisual />
         </div>
       </div>
 
@@ -370,36 +314,113 @@ export function HeroSection() {
           min-width: 0;
         }
 
-        :global(.pillar-panel) {
+        :global(.hub-panel) {
           position: relative;
-          min-height: 392px;
+          width: 100%;
+          min-height: 376px;
           border: 1px solid #1E2D3D;
           border-radius: 8px;
           background-color: #111F2E;
+          box-shadow: inset 0 0 0 1px #1E2D3D;
           overflow: hidden;
           padding: 16px;
         }
 
-        :global(.pillar-panel-topline) {
+        :global(.hub-diagram) {
+          display: none;
+        }
+
+        :global(.connector-map) {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          overflow: visible;
+        }
+
+        :global(.hub-node) {
           display: flex;
-          min-height: 30px;
+          width: 64px;
+          height: 64px;
           align-items: center;
-          gap: 10px;
-          border-bottom: 1px solid #1E2D3D;
-          color: #8892A4;
+          justify-content: center;
+          border: 2px solid #00D4AA;
+          border-radius: 9999px;
+          background-color: #0D1B2A;
+          box-shadow: 0 0 18px #00D4AA;
+          color: #F5F7FA;
+          font-family: var(--font-dm-sans);
+          font-size: 12px;
+          font-weight: 500;
+          letter-spacing: 0;
+          line-height: 1;
+          text-align: center;
+        }
+
+        :global(.hub-diagram > .hub-node) {
+          position: absolute;
+          left: 50%;
+          top: 39.5%;
+          transform: translate(-50%, -50%);
+          z-index: 3;
+        }
+
+        :global(.satellite-node) {
+          position: absolute;
+          z-index: 4;
+          display: flex;
+          width: 136px;
+          height: 44px;
+          align-items: center;
+          gap: 7px;
+          border: 1px solid #1E2D3D;
+          border-radius: 8px;
+          background-color: #0D1B2A;
+          color: #F5F7FA;
           font-family: var(--font-dm-sans);
           font-size: 12px;
           font-weight: 700;
-          letter-spacing: 0.08em;
+          letter-spacing: 0;
           line-height: 1;
-          text-transform: uppercase;
+          padding: 0 12px 0 14px;
+          transform: translate(-50%, -50%);
+        }
+
+        :global(.satellite-node svg) {
+          flex: 0 0 auto;
+        }
+
+        :global(.satellite-node.finance) {
+          left: 22.7%;
+          top: 23.2%;
+        }
+
+        :global(.satellite-node.automation) {
+          left: 77.3%;
+          top: 23.2%;
+        }
+
+        :global(.satellite-node.people) {
+          left: 22.7%;
+          top: 77.4%;
+        }
+
+        :global(.satellite-node.build) {
+          left: 77.3%;
+          top: 77.4%;
+        }
+
+        :global(.satellite-corner-dot) {
+          position: absolute;
+          left: 8px;
+          top: 8px;
         }
 
         :global(.live-pulse-dot) {
           position: relative;
           display: inline-flex;
-          width: 9px;
-          height: 9px;
+          width: 6px;
+          height: 6px;
           align-items: center;
           justify-content: center;
           flex: 0 0 auto;
@@ -409,159 +430,61 @@ export function HeroSection() {
           position: relative;
           z-index: 2;
           display: block;
-          width: 7px;
-          height: 7px;
+          width: 5px;
+          height: 5px;
           border-radius: 9999px;
           background-color: #00D4AA;
         }
 
         :global(.live-pulse-ring) {
           position: absolute;
-          inset: 1px;
+          inset: 0;
           z-index: 1;
           border: 1px solid #00D4AA;
           border-radius: 9999px;
         }
 
-        :global(.pillar-grid) {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 10px;
-          padding-top: 14px;
+        :global(.hub-mobile-stack) {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 18px;
+          min-height: 344px;
+          justify-content: center;
         }
 
-        :global(.pillar-quadrant) {
-          position: relative;
-          min-height: 128px;
-          border: 1px solid #1E2D3D;
-          border-radius: 8px;
-          background-color: #1C2A3A;
-          overflow: hidden;
-          padding: 14px;
-        }
-
-        :global(.pillar-label) {
+        :global(.hub-node.mobile) {
           position: relative;
           z-index: 2;
-          display: flex;
-          align-items: center;
-          gap: 9px;
-          color: #F5F7FA;
-          font-family: var(--font-dm-sans);
-          font-size: 13px;
-          font-weight: 700;
-          letter-spacing: 0;
-          line-height: 1;
         }
 
-        :global(.pillar-label svg) {
-          margin-left: auto;
-          flex: 0 0 auto;
+        :global(.mobile-node-list) {
+          display: grid;
+          width: min(100%, 280px);
+          gap: 10px;
         }
 
-        :global(.pillar-mini) {
-          position: absolute;
-          right: 12px;
-          bottom: 10px;
-          left: 12px;
-          height: 58px;
+        :global(.satellite-node.mobile) {
+          position: relative;
+          width: 100%;
+          height: 42px;
+          transform: none;
         }
 
-        :global(.mini-grid),
-        :global(.node-line),
-        :global(.people-rail) {
-          fill: none;
-          stroke-linecap: round;
-        }
+        @media (min-width: 768px) {
+          :global(.hub-panel) {
+            min-height: 392px;
+          }
 
-        :global(.mini-grid) {
-          stroke: #1E2D3D;
-          stroke-width: 1;
-        }
+          :global(.hub-diagram) {
+            position: relative;
+            display: block;
+            min-height: 360px;
+          }
 
-        :global(.finance-line) {
-          fill: none;
-          stroke: #00D4AA;
-          stroke-linecap: round;
-          stroke-width: 3;
-        }
-
-        :global(.finance-marker),
-        :global(.node-dot),
-        :global(.people-transfer) {
-          fill: #00D4AA;
-          stroke: #00D4AA;
-          transform-box: fill-box;
-          transform-origin: center;
-        }
-
-        :global(.node-line),
-        :global(.people-rail) {
-          stroke: #1B77F2;
-          stroke-opacity: 0.6;
-        }
-
-        :global(.node-line) {
-          stroke-width: 2;
-        }
-
-        :global(.people-rail) {
-          stroke-width: 3;
-        }
-
-        :global(.people-anchor) {
-          fill: #111F2E;
-          stroke: #00D4AA;
-          stroke-width: 2;
-        }
-
-        :global(.build-mini) {
-          display: block;
-        }
-
-        :global(.build-frame) {
-          position: absolute;
-          display: block;
-          width: 58%;
-          height: 38px;
-          border: 1px solid #1E2D3D;
-          border-radius: 8px;
-          background-color: #111F2E;
-          padding: 9px;
-        }
-
-        :global(.build-frame-1) {
-          left: 6%;
-          top: 18px;
-        }
-
-        :global(.build-frame-2) {
-          left: 22%;
-          top: 9px;
-        }
-
-        :global(.build-frame-3) {
-          left: 38%;
-          top: 2px;
-        }
-
-        :global(.build-frame i),
-        :global(.build-frame b) {
-          display: block;
-          height: 6px;
-          border-radius: 9999px;
-        }
-
-        :global(.build-frame i) {
-          width: 72%;
-          background-color: #1B77F2;
-          opacity: 0.6;
-        }
-
-        :global(.build-frame b) {
-          width: 42%;
-          margin-top: 8px;
-          background-color: #00D4AA;
+          :global(.hub-mobile-stack) {
+            display: none;
+          }
         }
 
         @media (min-width: 640px) {
@@ -577,10 +500,6 @@ export function HeroSection() {
             flex-direction: row;
             flex-wrap: wrap;
             gap: 16px;
-          }
-
-          :global(.pillar-grid) {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
           }
         }
 
@@ -598,26 +517,13 @@ export function HeroSection() {
             font-size: 18px;
           }
 
-          :global(.pillar-panel) {
+          :global(.hub-panel) {
             min-height: 420px;
             padding: 18px;
           }
 
-          :global(.pillar-grid) {
-            gap: 12px;
-            padding-top: 14px;
-          }
-
-          :global(.pillar-quadrant) {
-            min-height: 162px;
-            padding: 14px;
-          }
-
-          :global(.pillar-mini) {
-            bottom: 14px;
-            left: 14px;
-            right: 14px;
-            height: 64px;
+          :global(.hub-diagram) {
+            min-height: 384px;
           }
         }
 
