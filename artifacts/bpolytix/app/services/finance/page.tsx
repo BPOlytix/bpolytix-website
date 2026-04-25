@@ -498,7 +498,7 @@ export default function FinanceOfficePage() {
               BPOLytix
             </div>
 
-            {COMPARISON_ROWS.map((row, index) => (
+            {COMPARISON_ROWS.map((row) => (
               <Fragment key={row.dimension}>
                 <div className="comparison-cell comparison-label-cell">
                   {row.dimension}
@@ -509,11 +509,7 @@ export default function FinanceOfficePage() {
                 <div className="comparison-cell comparison-provider-cell">
                   {row.traditional}
                 </div>
-                <div
-                  className={`comparison-cell comparison-provider-cell comparison-bpolytix${
-                    index === COMPARISON_ROWS.length - 1 ? " comparison-bpolytix-bottom" : ""
-                  }`}
-                >
+                <div className="comparison-cell comparison-provider-cell comparison-bpolytix">
                   {row.bpolytix}
                 </div>
               </Fragment>
@@ -920,6 +916,10 @@ export default function FinanceOfficePage() {
           display: grid;
           grid-template-columns: minmax(132px, 0.58fr) repeat(3, minmax(0, 1fr));
           align-items: stretch;
+          overflow: hidden;
+          border: 1px solid #1E2D3D;
+          border-radius: 8px;
+          background-color: #111F2E;
         }
 
         .comparison-mobile {
@@ -930,7 +930,7 @@ export default function FinanceOfficePage() {
           display: flex;
           min-height: 62px;
           align-items: center;
-          border-bottom: 1px solid #1E2D3D;
+          border-bottom: 1px solid rgba(30, 45, 61, 0.4);
           font-family: var(--font-dm-sans);
           font-size: 15px;
           font-weight: 700;
@@ -939,9 +939,12 @@ export default function FinanceOfficePage() {
           padding: 16px 18px;
         }
 
+        .comparison-cell:nth-last-child(-n + 4) {
+          border-bottom: 0;
+        }
+
         .comparison-header-cell {
           min-height: 68px;
-          border-top: 1px solid #1E2D3D;
         }
 
         .comparison-label-cell {
@@ -953,14 +956,9 @@ export default function FinanceOfficePage() {
         .comparison-provider-cell {
           position: relative;
           justify-content: center;
-          border-left: 1px solid #1E2D3D;
           background-color: #111F2E;
           color: #8892A4;
           text-align: center;
-        }
-
-        .comparison-provider-cell:nth-child(4n) {
-          border-right: 1px solid #1E2D3D;
         }
 
         .comparison-header-cell.comparison-provider-cell {
@@ -968,17 +966,13 @@ export default function FinanceOfficePage() {
         }
 
         .comparison-bpolytix {
-          border-left-color: rgba(0, 212, 170, 0.42);
-          border-right: 1px solid rgba(0, 212, 170, 0.42);
           color: #F5F7FA;
-          box-shadow: inset 1px 0 0 rgba(0, 212, 170, 0.14),
-            inset -1px 0 0 rgba(0, 212, 170, 0.14);
         }
 
         .comparison-bpolytix-top {
           overflow: hidden;
-          border-top-color: rgba(0, 212, 170, 0.42);
-          color: #00D4AA;
+          color: #F5F7FA;
+          font-weight: 800;
         }
 
         .comparison-bpolytix-top::before {
@@ -996,8 +990,15 @@ export default function FinanceOfficePage() {
           pointer-events: none;
         }
 
-        .comparison-bpolytix-bottom {
-          border-bottom-color: rgba(0, 212, 170, 0.42);
+        .comparison-bpolytix-top::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          right: 0;
+          left: 0;
+          height: 2px;
+          background-color: #00D4AA;
+          pointer-events: none;
         }
 
         .services-grid {
@@ -1213,8 +1214,7 @@ export default function FinanceOfficePage() {
           }
 
           .comparison-card-elevated {
-            border-color: rgba(0, 212, 170, 0.42);
-            box-shadow: inset 0 1px 0 rgba(0, 212, 170, 0.14);
+            border-color: #1E2D3D;
           }
 
           .comparison-card-elevated::before {
@@ -1232,8 +1232,20 @@ export default function FinanceOfficePage() {
             pointer-events: none;
           }
 
+          .comparison-card-elevated::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: 2px;
+            background-color: #00D4AA;
+            pointer-events: none;
+          }
+
           .comparison-card-elevated h3 {
-            color: #00D4AA;
+            color: #F5F7FA;
+            font-weight: 800;
           }
 
           .comparison-card-rows {
@@ -1246,7 +1258,7 @@ export default function FinanceOfficePage() {
             min-height: 48px;
             align-items: center;
             gap: 16px;
-            border-top: 1px solid #1E2D3D;
+            border-top: 1px solid rgba(30, 45, 61, 0.4);
             font-family: var(--font-dm-sans);
             font-size: 15px;
             letter-spacing: 0;
