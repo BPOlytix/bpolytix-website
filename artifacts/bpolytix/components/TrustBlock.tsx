@@ -1,29 +1,29 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ShieldCheck, Key, Clock, Globe } from "lucide-react";
+import { BadgeCheck, KeyRound, Network, Scale } from "lucide-react";
 import { GrainOverlay } from "./GrainOverlay";
 
 const CARDS = [
   {
-    icon: ShieldCheck,
-    title: "No invoice until you're satisfied.",
-    body: "We don't send a bill until you've tested the build and confirmed it works. That's the whole model.",
+    icon: BadgeCheck,
+    title: "No invoice until we deliver.",
+    body: "We don't send a bill until you've reviewed the work and confirmed it works. That applies whether we built you software, closed your books, or onboarded a hire.",
   },
   {
-    icon: Key,
-    title: "You own the code after 12 months.",
-    body: "No software licences. No SaaS dependency. The IP transfers to you. Full stop.",
+    icon: KeyRound,
+    title: "You own what we build.",
+    body: "Every automation, every application, every website — yours fully after 12 months. No software licences. No platform fees. No subscription that creeps up forever.",
   },
   {
-    icon: Clock,
-    title: "First month is always free.",
-    body: "Every engagement starts with a free month. If it's not right, you walk away. No contracts signed yet.",
+    icon: Network,
+    title: "Four offices, one contract.",
+    body: "Finance, AI, People, and Build. One partner manages all of it. One invoice, not five. One conversation when something needs to change.",
   },
   {
-    icon: Globe,
-    title: "Built for SA costs. Scoped for UK standards.",
-    body: "South African development rates. UK-grade delivery process. The arbitrage is the point.",
+    icon: Scale,
+    title: "SA rates. UK standards.",
+    body: "South African operating costs. UK delivery process and professional standards. The arbitrage is real and it's the point.",
   },
 ];
 
