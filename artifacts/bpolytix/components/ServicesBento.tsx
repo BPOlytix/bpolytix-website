@@ -2,38 +2,47 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  Bot, Globe2, Smartphone, Calculator,
-  LineChart, Briefcase, FileText, Database, Globe, ArrowRight,
-} from "lucide-react";
+import { BookOpen, Zap, Users, Layers, ArrowRight } from "lucide-react";
 import { GrainOverlay } from "./GrainOverlay";
 
-type ServiceItem = {
-  icon: typeof Bot;
-  title: string;
+type Pillar = {
+  icon: typeof BookOpen;
+  name: string;
+  tagline: string;
   desc: string;
-  area: string;
-  href?: string;
-  badge?: string;
+  href: string;
 };
 
-const SERVICES: ServiceItem[] = [
-  { icon: Bot,        title: "AI Business Automation",   desc: "Custom workflows that replace repetitive manual processes.",        area: "ai"      },
-  { icon: Globe2,     title: "Custom Web Applications",  desc: "SaaS tools built to your spec. You own them after Year 1.",        area: "web"     },
-  { icon: Smartphone, title: "Android App Development",  desc: "Native Android apps scoped, built, and handed over.",              area: "android" },
-  { icon: Calculator, title: "Bookkeeping & Accounting", desc: "Remote bookkeepers. No employment contracts. Cancel anytime.",      area: "books"   },
-  { icon: LineChart,  title: "CFO-as-a-Service",         desc: "Senior financial oversight without a full-time salary.",           area: "cfo"     },
-  { icon: Briefcase,  title: "Business Development",     desc: "Pipeline building, proposal writing, and market entry support.",   area: "biz"     },
-  { icon: FileText,   title: "Business Plans & Funding", desc: "Investor-ready plans and funding applications that get read.",     area: "plans"   },
-  { icon: Database,   title: "Xero Implementation",      desc: "Xero setup, custom reports, and bespoke Xero integrations.",      area: "xero"    },
-  { icon: Globe,      title: "Website in 3 Days",        desc: "Brief us on Monday. Review your site on Thursday. Pay only when you're satisfied.", area: "site", href: "/website-in-3-days", badge: "New" },
+const PILLARS: Pillar[] = [
+  {
+    icon: BookOpen,
+    name: "Finance Office",
+    tagline: "Your books, your payroll, your compliance — handled.",
+    desc: "Bookkeeping, fractional CFO, payroll, Xero, and compliance-as-a-service. Dual-region UK and South Africa.",
+    href: "/services/finance",
+  },
+  {
+    icon: Zap,
+    name: "AI & Automation Office",
+    tagline: "Stop doing the same thing twice.",
+    desc: "Workflow automation, AI agents, AI receptionist, and AI marketing operations. Fixed price. You own it after 12 months.",
+    href: "/services/ai-automation",
+  },
+  {
+    icon: Users,
+    name: "People Office",
+    tagline: "Hire right, stay compliant, grow your team.",
+    desc: "Outsourced HR, onboarding, and Employer of Record on the SA↔UK corridor. The cross-border hiring others can't do cleanly.",
+    href: "/services/people",
+  },
+  {
+    icon: Layers,
+    name: "Build Office",
+    tagline: "We build it. You own it.",
+    desc: "Custom web apps, Android apps, websites in three days, business plans, and growth pipeline work. Fixed-price, no lock-in.",
+    href: "/services/build",
+  },
 ];
-
-const BASE_CARD = {
-  backgroundColor: "#0F1622",
-  border: "1px solid rgba(255,255,255,0.08)",
-  borderRadius: "12px",
-};
 
 export function ServicesBento() {
   return (
@@ -43,7 +52,10 @@ export function ServicesBento() {
     >
       <GrainOverlay />
       <div className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-8">
-        <p className="mb-4 text-[13px]" style={{ color: "#8892A4", fontFamily: "var(--font-dm-sans)" }}>
+        <p
+          className="mb-4 text-[13px]"
+          style={{ color: "#8892A4", fontFamily: "var(--font-dm-sans)" }}
+        >
           Services
         </p>
         <h2
@@ -56,186 +68,147 @@ export function ServicesBento() {
             fontWeight: 700,
           }}
         >
-          Eight ways we replace your overhead.
+          Four offices. One partner.
         </h2>
+        <p
+          className="bento-sub max-w-[640px]"
+          style={{
+            fontFamily: "var(--font-dm-sans)",
+            color: "#8892A4",
+            lineHeight: 1.7,
+            letterSpacing: "-0.011em",
+          }}
+        >
+          Each office runs independently. Together they replace the back-office
+          overhead you&apos;d otherwise hire, license, or piece together yourself.
+        </p>
 
-        {/* Desktop bento with grid-template-areas */}
-        <div className="bento-desktop">
-          {SERVICES.map((s, i) => {
-            const Icon = s.icon;
-            const inner = (
-              <>
-                {s.badge && (
-                  <span
-                    className="bento-badge"
-                    style={{
-                      position: "absolute",
-                      top: "16px",
-                      right: "16px",
-                      backgroundColor: "rgba(0,212,170,0.15)",
-                      color: "#00D4AA",
-                      border: "1px solid rgba(0,212,170,0.35)",
-                      borderRadius: "9999px",
-                      padding: "3px 10px",
-                      fontFamily: "var(--font-dm-sans)",
-                      fontSize: "11px",
-                      fontWeight: 600,
-                      letterSpacing: "0.04em",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {s.badge}
-                  </span>
-                )}
-                <div>
-                  <Icon size={24} color="#1B77F2" strokeWidth={1.75} />
-                  <h3 className="mt-6" style={{ fontFamily: "var(--font-syne)", fontSize: "20px", color: "#F5F7FA", lineHeight: 1.2, letterSpacing: "-0.022em", fontWeight: 600 }}>
-                    {s.title}
-                  </h3>
-                </div>
-                <p className="mt-4" style={{ fontFamily: "var(--font-dm-sans)", fontSize: "15px", color: "#8892A4", lineHeight: 1.6, letterSpacing: "-0.011em" }}>
-                  {s.desc}
-                </p>
-              </>
-            );
-            const cardStyle: React.CSSProperties = {
-              ...BASE_CARD,
-              gridArea: s.area,
-              padding: "32px",
-              position: "relative",
-            };
+        <div className="pillars-grid">
+          {PILLARS.map((p, i) => {
+            const Icon = p.icon;
             return (
               <motion.div
-                key={s.area}
+                key={p.href}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.1 }}
-                transition={{ duration: 0.5, delay: (i % 4) * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="bento-card glow-border"
-                style={cardStyle}
+                transition={{
+                  duration: 0.5,
+                  delay: i * 0.07,
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                }}
+                className="pillar-card"
+                style={{
+                  backgroundColor: "#0F1622",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  borderRadius: "12px",
+                }}
               >
-                {s.href ? (
-                  <Link href={s.href} className="flex h-full flex-col justify-between" style={{ color: "inherit", textDecoration: "none" }}>
-                    {inner}
-                  </Link>
-                ) : (
-                  <div className="flex h-full flex-col justify-between">{inner}</div>
-                )}
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Mobile: stacked cards */}
-        <div className="bento-mobile flex flex-col gap-3">
-          {SERVICES.map((s) => {
-            const Icon = s.icon;
-            const inner = (
-              <>
-                <div className="flex-none pt-0.5">
-                  <Icon size={20} color="#1B77F2" strokeWidth={1.75} />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 style={{ fontFamily: "var(--font-syne)", fontSize: "17px", color: "#F5F7FA", lineHeight: 1.2, letterSpacing: "-0.022em", fontWeight: 600 }}>
-                      {s.title}
+                <Link
+                  href={p.href}
+                  className="pillar-link flex h-full flex-col"
+                  style={{ color: "inherit", textDecoration: "none" }}
+                >
+                  <div className="flex-1">
+                    <Icon size={28} color="#1B77F2" strokeWidth={1.75} />
+                    <h3
+                      className="mt-5"
+                      style={{
+                        fontFamily: "var(--font-syne)",
+                        fontSize: "22px",
+                        color: "#F5F7FA",
+                        lineHeight: 1.15,
+                        letterSpacing: "-0.022em",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {p.name}
                     </h3>
-                    {s.badge && (
-                      <span
-                        style={{
-                          backgroundColor: "rgba(0,212,170,0.15)",
-                          color: "#00D4AA",
-                          border: "1px solid rgba(0,212,170,0.35)",
-                          borderRadius: "9999px",
-                          padding: "2px 8px",
-                          fontFamily: "var(--font-dm-sans)",
-                          fontSize: "10px",
-                          fontWeight: 600,
-                          letterSpacing: "0.04em",
-                          textTransform: "uppercase",
-                          flexShrink: 0,
-                        }}
-                      >
-                        {s.badge}
-                      </span>
-                    )}
+                    <p
+                      className="mt-2"
+                      style={{
+                        fontFamily: "var(--font-dm-sans)",
+                        fontSize: "14px",
+                        color: "#00D4AA",
+                        lineHeight: 1.5,
+                        letterSpacing: "-0.011em",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {p.tagline}
+                    </p>
+                    <p
+                      className="mt-4"
+                      style={{
+                        fontFamily: "var(--font-dm-sans)",
+                        fontSize: "15px",
+                        color: "#8892A4",
+                        lineHeight: 1.65,
+                        letterSpacing: "-0.011em",
+                      }}
+                    >
+                      {p.desc}
+                    </p>
                   </div>
-                  <p className="mt-1.5" style={{ fontFamily: "var(--font-dm-sans)", fontSize: "14px", color: "#8892A4", lineHeight: 1.6, letterSpacing: "-0.011em" }}>
-                    {s.desc}
-                  </p>
-                </div>
-              </>
-            );
-            return (
-              <motion.div
-                key={`m-${s.area}`}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.1 }}
-                transition={{ duration: 0.4, delay: 0, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="bento-card glow-border"
-                style={{ ...BASE_CARD, padding: "20px" }}
-              >
-                {s.href ? (
-                  <Link href={s.href} className="flex items-start gap-4" style={{ color: "inherit", textDecoration: "none" }}>
-                    {inner}
-                  </Link>
-                ) : (
-                  <div className="flex items-start gap-4">{inner}</div>
-                )}
+                  <div
+                    className="view-office mt-6 inline-flex items-center gap-2"
+                    style={{
+                      fontFamily: "var(--font-dm-sans)",
+                      fontSize: "14px",
+                      color: "#1B77F2",
+                      fontWeight: 500,
+                    }}
+                  >
+                    View office
+                    <ArrowRight size={14} strokeWidth={2} />
+                  </div>
+                </Link>
               </motion.div>
             );
           })}
-        </div>
-
-        <div className="mt-8 sm:mt-12">
-          <Link
-            href="/services"
-            className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-[14px] font-medium transition-colors hover:bg-white/10 sm:text-[15px]"
-            style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "#F5F7FA" }}
-          >
-            See full service details
-            <ArrowRight size={16} />
-          </Link>
         </div>
       </div>
 
       <style jsx>{`
-        /* Mobile */
+        /* Mobile — single column */
         .bento-section { padding-top: 64px; padding-bottom: 72px; }
-        .bento-h2 { font-size: 32px; margin-bottom: 40px; }
-        .bento-desktop { display: none; }
-        .bento-mobile  { display: flex; }
+        .bento-h2 { font-size: 32px; margin-bottom: 16px; }
+        .bento-sub { font-size: 16px; margin-bottom: 40px; }
+        .pillars-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .pillar-card { padding: 28px 24px; }
 
-        /* Tablet */
+        /* Tablet+ — 2×2 grid */
         @media (min-width: 640px) {
-          .bento-h2 { font-size: 40px; margin-bottom: 48px; }
+          .bento-h2 { font-size: 40px; }
+          .bento-sub { font-size: 17px; margin-bottom: 48px; }
+          .pillars-grid { grid-template-columns: 1fr 1fr; }
+          .pillar-card { padding: 32px 28px; }
         }
 
-        /* Desktop bento with explicit grid-template-areas */
+        /* Desktop */
         @media (min-width: 1024px) {
           .bento-section { padding-top: 96px; padding-bottom: 128px; }
-          .bento-h2 { font-size: 48px; margin-bottom: 64px; }
-          .bento-desktop {
-            display: grid;
-            gap: 14px;
-            grid-template-columns: repeat(12, 1fr);
-            grid-template-rows: 280px 240px 260px 220px;
-            grid-template-areas:
-              "ai    ai    ai    ai    ai    web   web   web   web   android android android"
-              "books books books books cfo   cfo   cfo   biz   biz   biz     biz     biz"
-              "plans plans plans plans plans plans xero  xero  xero  xero    xero    xero"
-              "site  site  site  site  site  site  site  site  site  site    site    site";
-          }
-          .bento-mobile { display: none; }
+          .bento-h2 { font-size: 48px; margin-bottom: 20px; }
+          .bento-sub { font-size: 18px; margin-bottom: 64px; }
+          .pillar-card { padding: 40px 36px; }
         }
 
-        .bento-card {
+        .pillar-card {
           transition: transform 200ms ease, border-color 200ms ease;
         }
-        .bento-card:hover {
+        .pillar-card:hover {
           transform: translateY(-4px);
           border-color: rgba(27, 119, 242, 0.3) !important;
+        }
+        .view-office {
+          transition: color 200ms ease;
+        }
+        .pillar-card:hover .view-office {
+          color: #00D4AA;
         }
       `}</style>
     </section>
