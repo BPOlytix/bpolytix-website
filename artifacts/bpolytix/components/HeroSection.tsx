@@ -374,7 +374,7 @@ export function HeroSection() {
           z-index: 4;
           display: flex;
           width: 188px;
-          height: 64px;
+          height: 88px;
           align-items: center;
           gap: 7px;
           border: 1px solid #1E2D3D;
@@ -397,34 +397,34 @@ export function HeroSection() {
         :global(.satellite-copy) {
           display: grid;
           min-width: 0;
-          gap: 5px;
+          gap: 7px;
           text-align: left;
         }
 
-        :global(.satellite-label),
-        :global(.satellite-stat) {
+        :global(.satellite-label) {
           display: block;
           overflow: visible;
           text-overflow: clip;
           white-space: nowrap;
-        }
-
-        :global(.satellite-label) {
           color: #F5F7FA;
           font-family: var(--font-dm-sans);
-          font-size: 12px;
+          font-size: 16px;
           font-weight: 500;
           letter-spacing: 0;
-          line-height: 1;
+          line-height: 1.1;
         }
 
         :global(.satellite-stat) {
+          display: block;
+          overflow: visible;
+          text-overflow: clip;
+          white-space: normal;
           color: #8892A4;
           font-family: var(--font-dm-sans);
-          font-size: 10.5px;
+          font-size: 13px;
           font-weight: 400;
           letter-spacing: 0;
-          line-height: 1;
+          line-height: 1.15;
         }
 
         :global(.satellite-node.finance) {
