@@ -28,10 +28,10 @@ type PillarNode = {
 const HUB = { x: 260, y: 150 };
 
 const PILLARS: PillarNode[] = [
-  { label: "Finance", icon: TrendingUp, className: "finance", x: 118, y: 88, dotDelay: 0 },
-  { label: "AI & Automation", icon: Workflow, className: "automation", x: 402, y: 88, dotDelay: 1 },
-  { label: "People", icon: Users, className: "people", x: 118, y: 294, dotDelay: 2 },
-  { label: "Build", icon: Layers, className: "build", x: 402, y: 294, dotDelay: 3 },
+  { label: "Finance", icon: TrendingUp, className: "finance", x: 96, y: 48, dotDelay: 0 },
+  { label: "AI & Automation", icon: Workflow, className: "automation", x: 424, y: 48, dotDelay: 1 },
+  { label: "People", icon: Users, className: "people", x: 96, y: 332, dotDelay: 2 },
+  { label: "Build", icon: Layers, className: "build", x: 424, y: 332, dotDelay: 3 },
 ];
 
 function PulseDot({ canAnimate, delay = 0 }: PillarVisualProps & { delay?: number }) {
@@ -146,7 +146,7 @@ function HubAndSpokeVisual() {
           {PILLARS.map((pillar) => (
             <FlowConnector pillar={pillar} canAnimate={canAnimate} key={pillar.label} />
           ))}
-          <circle cx={HUB.x} cy={HUB.y} r="32" fill="#0D1B2A" stroke="#00D4AA" strokeWidth="2" />
+          <circle cx={HUB.x} cy={HUB.y} r="39" fill="#0D1B2A" stroke="#00D4AA" strokeWidth="2" />
         </svg>
 
         <div className="hub-node">
@@ -340,8 +340,8 @@ export function HeroSection() {
 
         :global(.hub-node) {
           display: flex;
-          width: 64px;
-          height: 64px;
+          width: 78px;
+          height: 78px;
           align-items: center;
           justify-content: center;
           border: 2px solid #00D4AA;
@@ -369,8 +369,8 @@ export function HeroSection() {
           position: absolute;
           z-index: 4;
           display: flex;
-          width: 136px;
-          height: 44px;
+          width: 160px;
+          height: 48px;
           align-items: center;
           gap: 7px;
           border: 1px solid #1E2D3D;
@@ -391,23 +391,23 @@ export function HeroSection() {
         }
 
         :global(.satellite-node.finance) {
-          left: 22.7%;
-          top: 23.2%;
+          left: 18.5%;
+          top: 12.6%;
         }
 
         :global(.satellite-node.automation) {
-          left: 77.3%;
-          top: 23.2%;
+          left: 81.5%;
+          top: 12.6%;
         }
 
         :global(.satellite-node.people) {
-          left: 22.7%;
-          top: 77.4%;
+          left: 18.5%;
+          top: 87.4%;
         }
 
         :global(.satellite-node.build) {
-          left: 77.3%;
-          top: 77.4%;
+          left: 81.5%;
+          top: 87.4%;
         }
 
         :global(.satellite-corner-dot) {
