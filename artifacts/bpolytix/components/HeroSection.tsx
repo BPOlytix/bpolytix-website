@@ -23,13 +23,39 @@ const PILLARS: { label: string; icon: LucideIcon }[] = [
   { label: "Build", icon: Layers3 },
 ];
 
+function PulseDot({ canAnimate }: PillarVisualProps) {
+  return (
+    <span className="live-pulse-dot" aria-hidden="true">
+      <span className="live-pulse-core" />
+      {canAnimate ? (
+        <motion.span
+          className="live-pulse-ring"
+          animate={{ scale: [1, 3.2], opacity: [0.62, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: [0.66, 0, 0, 1] }}
+        />
+      ) : null}
+    </span>
+  );
+}
+
 function FinanceVisual({ canAnimate }: PillarVisualProps) {
   return (
     <svg className="pillar-mini finance-mini" viewBox="0 0 160 72" role="presentation">
-      <path className="mini-grid" d="M8 58 H152 M8 38 H152 M8 18 H152" />
+      <path
+        className="mini-grid"
+        d="M8 58 H152 M8 38 H152 M8 18 H152"
+        fill="none"
+        stroke="#1E2D3D"
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
       <motion.path
         className="finance-line"
         d="M12 54 C34 50 38 36 56 40 C76 45 84 26 102 30 C122 34 130 18 148 16"
+        fill="none"
+        stroke="#00D4AA"
+        strokeWidth="3"
+        strokeLinecap="round"
         initial={canAnimate ? { pathLength: 0.4, opacity: 0.55 } : false}
         animate={
           canAnimate
@@ -48,6 +74,9 @@ function FinanceVisual({ canAnimate }: PillarVisualProps) {
         cx="148"
         cy="16"
         r="4"
+        fill="#00D4AA"
+        stroke="#00D4AA"
+        strokeWidth="1"
         animate={canAnimate ? { scale: [1, 1.45, 1], opacity: [0.7, 1, 0.78] } : { scale: 1, opacity: 0.9 }}
         transition={{ duration: 2.8, repeat: canAnimate ? Infinity : 0, ease: "easeInOut" }}
       />
@@ -65,7 +94,15 @@ function AutomationVisual({ canAnimate }: PillarVisualProps) {
 
   return (
     <svg className="pillar-mini automation-mini" viewBox="0 0 160 72" role="presentation">
-      <path className="node-line" d="M30 38 L72 24 L112 42 L136 22" />
+      <path
+        className="node-line"
+        d="M30 38 L72 24 L112 42 L136 22"
+        fill="none"
+        stroke="#1B77F2"
+        strokeOpacity="0.6"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
       {nodes.map((node, index) => (
         <motion.circle
           key={`${node.cx}-${node.cy}`}
@@ -73,6 +110,9 @@ function AutomationVisual({ canAnimate }: PillarVisualProps) {
           cx={node.cx}
           cy={node.cy}
           r="5"
+          fill="#00D4AA"
+          stroke="#00D4AA"
+          strokeWidth="1"
           animate={
             canAnimate
               ? { scale: [1, 1.55, 1], opacity: [0.58, 1, 0.7] }
@@ -94,14 +134,25 @@ function AutomationVisual({ canAnimate }: PillarVisualProps) {
 function PeopleVisual({ canAnimate }: PillarVisualProps) {
   return (
     <svg className="pillar-mini people-mini" viewBox="0 0 160 72" role="presentation">
-      <path className="people-rail" d="M32 36 H128" />
-      <circle className="people-anchor" cx="32" cy="36" r="7" />
-      <circle className="people-anchor" cx="128" cy="36" r="7" />
+      <path
+        className="people-rail"
+        d="M32 36 H128"
+        fill="none"
+        stroke="#1B77F2"
+        strokeOpacity="0.6"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <circle className="people-anchor" cx="32" cy="36" r="7" fill="#111F2E" stroke="#00D4AA" strokeWidth="2" />
+      <circle className="people-anchor" cx="128" cy="36" r="7" fill="#111F2E" stroke="#00D4AA" strokeWidth="2" />
       <motion.circle
         className="people-transfer"
         cx="32"
         cy="36"
         r="4"
+        fill="#00D4AA"
+        stroke="#00D4AA"
+        strokeWidth="1"
         animate={canAnimate ? { cx: [32, 128, 32], opacity: [0.72, 1, 0.72] } : { cx: 128, opacity: 0.86 }}
         transition={{ duration: 5.4, repeat: canAnimate ? Infinity : 0, ease: "easeInOut" }}
       />
@@ -149,7 +200,7 @@ function FourPillarVisual() {
   return (
     <div className="pillar-panel" aria-label="Four BPOLytix pillars">
       <div className="pillar-panel-topline">
-        <span className="live-dot" />
+        <PulseDot canAnimate={canAnimate} />
         <span>Full circle back office</span>
       </div>
 
@@ -160,7 +211,7 @@ function FourPillarVisual() {
           return (
             <div className="pillar-quadrant" key={pillar.label}>
               <div className="pillar-label">
-                <span className="live-dot small" />
+                <PulseDot canAnimate={canAnimate} />
                 <span>{pillar.label}</span>
                 <Icon size={17} color="#00D4AA" strokeWidth={1.8} />
               </div>
@@ -319,19 +370,19 @@ export function HeroSection() {
           min-width: 0;
         }
 
-        .pillar-panel {
+        :global(.pillar-panel) {
           position: relative;
-          min-height: 420px;
+          min-height: 392px;
           border: 1px solid #1E2D3D;
           border-radius: 8px;
           background-color: #111F2E;
           overflow: hidden;
-          padding: 18px;
+          padding: 16px;
         }
 
-        .pillar-panel-topline {
+        :global(.pillar-panel-topline) {
           display: flex;
-          min-height: 34px;
+          min-height: 30px;
           align-items: center;
           gap: 10px;
           border-bottom: 1px solid #1E2D3D;
@@ -344,38 +395,52 @@ export function HeroSection() {
           text-transform: uppercase;
         }
 
-        .live-dot {
-          display: block;
-          width: 8px;
-          height: 8px;
-          border-radius: 9999px;
-          background-color: #00D4AA;
+        :global(.live-pulse-dot) {
+          position: relative;
+          display: inline-flex;
+          width: 9px;
+          height: 9px;
+          align-items: center;
+          justify-content: center;
           flex: 0 0 auto;
         }
 
-        .live-dot.small {
+        :global(.live-pulse-core) {
+          position: relative;
+          z-index: 2;
+          display: block;
           width: 7px;
           height: 7px;
+          border-radius: 9999px;
+          background-color: #00D4AA;
         }
 
-        .pillar-grid {
+        :global(.live-pulse-ring) {
+          position: absolute;
+          inset: 1px;
+          z-index: 1;
+          border: 1px solid #00D4AA;
+          border-radius: 9999px;
+        }
+
+        :global(.pillar-grid) {
           display: grid;
           grid-template-columns: 1fr;
-          gap: 12px;
-          padding-top: 18px;
+          gap: 10px;
+          padding-top: 14px;
         }
 
-        .pillar-quadrant {
+        :global(.pillar-quadrant) {
           position: relative;
-          min-height: 156px;
+          min-height: 128px;
           border: 1px solid #1E2D3D;
           border-radius: 8px;
           background-color: #1C2A3A;
           overflow: hidden;
-          padding: 16px;
+          padding: 14px;
         }
 
-        .pillar-label {
+        :global(.pillar-label) {
           position: relative;
           z-index: 2;
           display: flex;
@@ -389,108 +454,111 @@ export function HeroSection() {
           line-height: 1;
         }
 
-        .pillar-label svg {
+        :global(.pillar-label svg) {
           margin-left: auto;
           flex: 0 0 auto;
         }
 
-        .pillar-mini {
+        :global(.pillar-mini) {
           position: absolute;
-          right: 14px;
-          bottom: 14px;
-          left: 14px;
-          height: 72px;
+          right: 12px;
+          bottom: 10px;
+          left: 12px;
+          height: 58px;
         }
 
-        .mini-grid,
-        .node-line,
-        .people-rail {
+        :global(.mini-grid),
+        :global(.node-line),
+        :global(.people-rail) {
           fill: none;
-          stroke: #1E2D3D;
           stroke-linecap: round;
         }
 
-        .mini-grid {
+        :global(.mini-grid) {
+          stroke: #1E2D3D;
           stroke-width: 1;
         }
 
-        .finance-line {
+        :global(.finance-line) {
           fill: none;
           stroke: #00D4AA;
           stroke-linecap: round;
           stroke-width: 3;
         }
 
-        .finance-marker,
-        .node-dot,
-        .people-transfer {
+        :global(.finance-marker),
+        :global(.node-dot),
+        :global(.people-transfer) {
           fill: #00D4AA;
+          stroke: #00D4AA;
           transform-box: fill-box;
           transform-origin: center;
         }
 
-        .node-line {
-          stroke-width: 2;
-        }
-
-        .node-dot {
+        :global(.node-line),
+        :global(.people-rail) {
           stroke: #1B77F2;
+          stroke-opacity: 0.6;
+        }
+
+        :global(.node-line) {
           stroke-width: 2;
         }
 
-        .people-rail {
+        :global(.people-rail) {
           stroke-width: 3;
         }
 
-        .people-anchor {
+        :global(.people-anchor) {
           fill: #111F2E;
           stroke: #00D4AA;
           stroke-width: 2;
         }
 
-        .build-mini {
+        :global(.build-mini) {
           display: block;
         }
 
-        .build-frame {
+        :global(.build-frame) {
           position: absolute;
           display: block;
           width: 58%;
-          height: 42px;
+          height: 38px;
           border: 1px solid #1E2D3D;
           border-radius: 8px;
           background-color: #111F2E;
-          padding: 10px;
+          padding: 9px;
         }
 
-        .build-frame-1 {
+        :global(.build-frame-1) {
           left: 6%;
-          top: 22px;
+          top: 18px;
         }
 
-        .build-frame-2 {
+        :global(.build-frame-2) {
           left: 22%;
-          top: 12px;
+          top: 9px;
         }
 
-        .build-frame-3 {
+        :global(.build-frame-3) {
           left: 38%;
           top: 2px;
         }
 
-        .build-frame i,
-        .build-frame b {
+        :global(.build-frame i),
+        :global(.build-frame b) {
           display: block;
           height: 6px;
           border-radius: 9999px;
-          background-color: #1E2D3D;
         }
 
-        .build-frame i {
+        :global(.build-frame i) {
           width: 72%;
+          background-color: #1B77F2;
+          opacity: 0.6;
         }
 
-        .build-frame b {
+        :global(.build-frame b) {
           width: 42%;
           margin-top: 8px;
           background-color: #00D4AA;
@@ -511,7 +579,7 @@ export function HeroSection() {
             gap: 16px;
           }
 
-          .pillar-grid {
+          :global(.pillar-grid) {
             grid-template-columns: repeat(2, minmax(0, 1fr));
           }
         }
@@ -530,29 +598,36 @@ export function HeroSection() {
             font-size: 18px;
           }
 
-          .pillar-panel {
-            min-height: 520px;
-            padding: 20px;
+          :global(.pillar-panel) {
+            min-height: 420px;
+            padding: 18px;
           }
 
-          .pillar-grid {
-            gap: 14px;
+          :global(.pillar-grid) {
+            gap: 12px;
+            padding-top: 14px;
           }
 
-          .pillar-quadrant {
-            min-height: 218px;
+          :global(.pillar-quadrant) {
+            min-height: 162px;
+            padding: 14px;
           }
 
-          .pillar-mini {
-            bottom: 20px;
-            left: 16px;
-            right: 16px;
+          :global(.pillar-mini) {
+            bottom: 14px;
+            left: 14px;
+            right: 14px;
+            height: 64px;
           }
         }
 
         @media (prefers-reduced-motion: reduce) {
           .hero-cta {
             transition: none;
+          }
+
+          :global(.live-pulse-ring) {
+            display: none;
           }
         }
       `}</style>
