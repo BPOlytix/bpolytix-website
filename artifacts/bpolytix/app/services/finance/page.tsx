@@ -950,7 +950,6 @@ export default function FinanceOfficePage() {
         .comparison-label-cell {
           justify-content: flex-start;
           color: #8892A4;
-          padding-left: 0;
         }
 
         .comparison-provider-cell {
