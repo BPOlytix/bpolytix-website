@@ -149,7 +149,7 @@ export default function LegalPage() {
           <P>
             BPOLytix Business Solutions operates bpolytix.com. Our registered address is Medstone
             Building, 19 The High Street, Umhlanga, Durban, South Africa, 4319. You can reach us at
-            info@bpolytix.com.
+            mitesh@bpolytix.com.
           </P>
 
           <hr style={dividerStyle} />
@@ -183,14 +183,14 @@ export default function LegalPage() {
           <P>
             Form submissions are processed via Resend and delivered to our internal inbox. We
             retain enquiry data for a maximum of 24 months. You may request deletion at any time
-            by emailing info@bpolytix.com.
+            by emailing mitesh@bpolytix.com.
           </P>
 
           <hr style={dividerStyle} />
           <SubHeading>Your Rights</SubHeading>
           <P>
             You have the right to access, correct, or delete any personal information we hold
-            about you. To exercise these rights, contact us at info@bpolytix.com. We will respond
+            about you. To exercise these rights, contact us at mitesh@bpolytix.com. We will respond
             within 30 days.
           </P>
         </LegalCard>

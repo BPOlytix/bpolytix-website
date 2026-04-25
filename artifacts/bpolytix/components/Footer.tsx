@@ -43,11 +43,11 @@ export function Footer() {
           {/* Contact */}
           <div className="flex flex-col items-start gap-4 md:items-end">
             <a
-              href="mailto:info@bpolytix.com"
+              href="mailto:mitesh@bpolytix.com"
               className="transition-colors hover:text-[#F5F7FA]"
               style={{ fontFamily: "var(--font-dm-sans)", fontSize: "14px", color: "#8892A4" }}
             >
-              info@bpolytix.com
+              mitesh@bpolytix.com
             </a>
           </div>
         </div>

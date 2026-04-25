@@ -170,7 +170,7 @@ export default function ContactPage() {
                     style={{ fontFamily: "var(--font-dm-sans)", fontSize: "16px", color: "#8892A4", lineHeight: 1.7 }}
                   >
                     Your email client should have opened with a pre-filled message. If not, you can reach us directly at{" "}
-                    <a href="mailto:info@bpolytix.com" style={{ color: "#1B77F2" }}>info@bpolytix.com</a>. We reply within one business day.
+                    <a href="mailto:mitesh@bpolytix.com" style={{ color: "#1B77F2" }}>mitesh@bpolytix.com</a>. We reply within one business day.
                   </p>
                   <Link
                     href="/"
@@ -341,13 +341,13 @@ export default function ContactPage() {
                 </h3>
                 <div className="flex flex-col gap-4">
                   <a
-                    href="mailto:info@bpolytix.com"
+                    href="mailto:mitesh@bpolytix.com"
                     className="flex items-start gap-3 transition-colors hover:text-[#F5F7FA] group"
                   >
                     <Mail size={16} color="#1B77F2" className="mt-0.5 flex-none" />
                     <div>
                       <p style={{ fontFamily: "var(--font-dm-sans)", fontSize: "13px", color: "#8892A4" }}>Email</p>
-                      <p style={{ fontFamily: "var(--font-dm-sans)", fontSize: "14px", color: "#C8D0DC" }}>info@bpolytix.com</p>
+                      <p style={{ fontFamily: "var(--font-dm-sans)", fontSize: "14px", color: "#C8D0DC" }}>mitesh@bpolytix.com</p>
                     </div>
                   </a>
                   <a
