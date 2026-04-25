@@ -12,10 +12,10 @@ type Stat = {
 };
 
 const STATS: Stat[] = [
-  { target: 70, display: (n) => `${Math.round(n)}%`,       label: "average cost saving vs in-house"     },
-  { target: 0,  display: () => "R0", raw: "R0",            label: "to start your build"                 },
-  { target: 12, display: (n) => `${Math.round(n)} months`, label: "until you own the software outright" },
-  { target: 30, display: (n) => `${Math.round(n)} days`,   label: "average delivery for Phase 1"        },
+  { target: 70, display: (n) => `${Math.round(n)}%`, label: "average saving versus hiring in-house"  },
+  { target: 0,  display: () => "R0", raw: "R0",      label: "upfront. No invoice until we deliver."  },
+  { target: 4,  display: (n) => `${Math.round(n)}`,  label: "back-office pillars under one partner"  },
+  { target: 12, display: (n) => `${Math.round(n)}`,  label: "months until you own what we built"     },
 ];
 
 function CountUp({ stat, inView }: { stat: Stat; inView: boolean }) {
