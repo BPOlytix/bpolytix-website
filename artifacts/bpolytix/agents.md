@@ -1,4 +1,4 @@
-# CODEX.md — BPOLytix Website
+# agents.md — BPOLytix Website
 # Version: 1.0 | Created: 2026-04-24
 # Place this file at: artifacts/bpolytix/CODEX.md
 # Read this file at the start of every Codex session before doing anything else.
