@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, type ReactNode } from "react";
+import { Fragment, useRef, type ReactNode } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
@@ -39,6 +39,13 @@ type WorkStep = {
 type ClaimItem = {
   text: string;
   icon: LucideIcon;
+};
+
+type ComparisonRow = {
+  dimension: string;
+  inHouse: string;
+  traditional: string;
+  bpolytix: string;
 };
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
@@ -157,6 +164,57 @@ const PROOF_LINES: ClaimItem[] = [
     icon: KeyRound,
   },
 ];
+
+const COMPARISON_ROWS: ComparisonRow[] = [
+  {
+    dimension: "Cost",
+    inHouse: "£60k+ per year",
+    traditional: "Hourly + retainer",
+    bpolytix: "Fixed monthly",
+  },
+  {
+    dimension: "Speed",
+    inHouse: "Slow",
+    traditional: "Monthly cycles",
+    bpolytix: "Real-time",
+  },
+  {
+    dimension: "Errors",
+    inHouse: "Human-paced",
+    traditional: "Caught at month-end",
+    bpolytix: "Caught early",
+  },
+  {
+    dimension: "Reporting",
+    inHouse: "Delayed",
+    traditional: "Static reports",
+    bpolytix: "Live dashboard",
+  },
+  {
+    dimension: "Hiring & onboarding",
+    inHouse: "You handle it",
+    traditional: "Not their job",
+    bpolytix: "Built in",
+  },
+  {
+    dimension: "Compliance",
+    inHouse: "On you",
+    traditional: "On their schedule",
+    bpolytix: "Built in",
+  },
+  {
+    dimension: "Ownership",
+    inHouse: "You hire, you keep",
+    traditional: "They keep, forever",
+    bpolytix: "Yours after 12 months",
+  },
+];
+
+const COMPARISON_PROVIDERS = [
+  { name: "In-House Team", valueKey: "inHouse", elevated: false },
+  { name: "Traditional BPO", valueKey: "traditional", elevated: false },
+  { name: "BPOLytix", valueKey: "bpolytix", elevated: true },
+] as const;
 
 function serviceDescription(service: FinanceService) {
   return `What it is\n${service.whatItIs}\n\nWhat you get\n- ${service.whatYouGet.join("\n- ")}`;
@@ -417,6 +475,68 @@ export default function FinanceOfficePage() {
                 );
               })}
             </div>
+          </div>
+        </div>
+      </RevealSection>
+
+      <RevealSection className="comparison-section">
+        <GrainOverlay />
+        <div className="page-wrap">
+          <div className="section-heading comparison-heading">
+            <h2>How BPOLytix compares.</h2>
+          </div>
+
+          <div className="comparison-desktop" aria-label="Finance office comparison">
+            <div className="comparison-cell comparison-label-cell comparison-header-cell" />
+            <div className="comparison-cell comparison-provider-cell comparison-header-cell">
+              In-House Team
+            </div>
+            <div className="comparison-cell comparison-provider-cell comparison-header-cell">
+              Traditional BPO
+            </div>
+            <div className="comparison-cell comparison-provider-cell comparison-header-cell comparison-bpolytix comparison-bpolytix-top">
+              BPOLytix
+            </div>
+
+            {COMPARISON_ROWS.map((row, index) => (
+              <Fragment key={row.dimension}>
+                <div className="comparison-cell comparison-label-cell">
+                  {row.dimension}
+                </div>
+                <div className="comparison-cell comparison-provider-cell">
+                  {row.inHouse}
+                </div>
+                <div className="comparison-cell comparison-provider-cell">
+                  {row.traditional}
+                </div>
+                <div
+                  className={`comparison-cell comparison-provider-cell comparison-bpolytix${
+                    index === COMPARISON_ROWS.length - 1 ? " comparison-bpolytix-bottom" : ""
+                  }`}
+                >
+                  {row.bpolytix}
+                </div>
+              </Fragment>
+            ))}
+          </div>
+
+          <div className="comparison-mobile" aria-label="Finance office comparison">
+            {COMPARISON_PROVIDERS.map((provider) => (
+              <div
+                className={`comparison-card${provider.elevated ? " comparison-card-elevated" : ""}`}
+                key={provider.name}
+              >
+                <h3>{provider.name}</h3>
+                <div className="comparison-card-rows">
+                  {COMPARISON_ROWS.map((row) => (
+                    <div className="comparison-card-row" key={`${provider.name}-${row.dimension}`}>
+                      <span>{row.dimension}</span>
+                      <b>{row[provider.valueKey]}</b>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </RevealSection>
@@ -705,6 +825,7 @@ export default function FinanceOfficePage() {
         .services-section,
         .office-strip-section,
         .proof-strip-section,
+        .comparison-section,
         .work-section,
         .final-cta-section {
           padding-top: 64px;
@@ -780,6 +901,10 @@ export default function FinanceOfficePage() {
           margin-bottom: 0;
         }
 
+        .comparison-heading {
+          margin-bottom: 28px;
+        }
+
         .section-heading h2,
         .final-cta h2 {
           margin: 0;
@@ -789,6 +914,90 @@ export default function FinanceOfficePage() {
           font-weight: 700;
           letter-spacing: 0;
           line-height: 1;
+        }
+
+        .comparison-desktop {
+          display: grid;
+          grid-template-columns: minmax(132px, 0.58fr) repeat(3, minmax(0, 1fr));
+          align-items: stretch;
+        }
+
+        .comparison-mobile {
+          display: none;
+        }
+
+        .comparison-cell {
+          display: flex;
+          min-height: 62px;
+          align-items: center;
+          border-bottom: 1px solid #1E2D3D;
+          font-family: var(--font-dm-sans);
+          font-size: 15px;
+          font-weight: 700;
+          letter-spacing: 0;
+          line-height: 1.35;
+          padding: 16px 18px;
+        }
+
+        .comparison-header-cell {
+          min-height: 68px;
+          border-top: 1px solid #1E2D3D;
+        }
+
+        .comparison-label-cell {
+          justify-content: flex-start;
+          color: #8892A4;
+          padding-left: 0;
+        }
+
+        .comparison-provider-cell {
+          position: relative;
+          justify-content: center;
+          border-left: 1px solid #1E2D3D;
+          background-color: #111F2E;
+          color: #8892A4;
+          text-align: center;
+        }
+
+        .comparison-provider-cell:nth-child(4n) {
+          border-right: 1px solid #1E2D3D;
+        }
+
+        .comparison-header-cell.comparison-provider-cell {
+          color: #8892A4;
+        }
+
+        .comparison-bpolytix {
+          border-left-color: rgba(0, 212, 170, 0.42);
+          border-right: 1px solid rgba(0, 212, 170, 0.42);
+          color: #F5F7FA;
+          box-shadow: inset 1px 0 0 rgba(0, 212, 170, 0.14),
+            inset -1px 0 0 rgba(0, 212, 170, 0.14);
+        }
+
+        .comparison-bpolytix-top {
+          overflow: hidden;
+          border-top-color: rgba(0, 212, 170, 0.42);
+          color: #00D4AA;
+        }
+
+        .comparison-bpolytix-top::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          right: 0;
+          left: 0;
+          height: 64px;
+          background: linear-gradient(
+            180deg,
+            rgba(0, 212, 170, 0.18) 0%,
+            rgba(0, 212, 170, 0) 100%
+          );
+          pointer-events: none;
+        }
+
+        .comparison-bpolytix-bottom {
+          border-bottom-color: rgba(0, 212, 170, 0.42);
         }
 
         .services-grid {
@@ -921,6 +1130,7 @@ export default function FinanceOfficePage() {
           .office-strip-section,
           .services-section,
           .proof-strip-section,
+          .comparison-section,
           .work-section,
           .final-cta-section {
             padding-top: 48px;
@@ -970,6 +1180,88 @@ export default function FinanceOfficePage() {
           .final-cta {
             align-items: flex-start;
             flex-direction: column;
+          }
+        }
+
+        @media (max-width: 767px) {
+          .comparison-desktop {
+            display: none;
+          }
+
+          .comparison-mobile {
+            display: grid;
+            gap: 16px;
+          }
+
+          .comparison-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #1E2D3D;
+            border-radius: 8px;
+            background-color: #111F2E;
+            padding: 22px;
+          }
+
+          .comparison-card h3 {
+            margin: 0 0 18px;
+            color: #8892A4;
+            font-family: var(--font-syne);
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0;
+            line-height: 1.1;
+          }
+
+          .comparison-card-elevated {
+            border-color: rgba(0, 212, 170, 0.42);
+            box-shadow: inset 0 1px 0 rgba(0, 212, 170, 0.14);
+          }
+
+          .comparison-card-elevated::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: 72px;
+            background: linear-gradient(
+              180deg,
+              rgba(0, 212, 170, 0.18) 0%,
+              rgba(0, 212, 170, 0) 100%
+            );
+            pointer-events: none;
+          }
+
+          .comparison-card-elevated h3 {
+            color: #00D4AA;
+          }
+
+          .comparison-card-rows {
+            display: grid;
+          }
+
+          .comparison-card-row {
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+            min-height: 48px;
+            align-items: center;
+            gap: 16px;
+            border-top: 1px solid #1E2D3D;
+            font-family: var(--font-dm-sans);
+            font-size: 15px;
+            letter-spacing: 0;
+            line-height: 1.35;
+          }
+
+          .comparison-card-row span {
+            color: #8892A4;
+            font-weight: 700;
+          }
+
+          .comparison-card-row b {
+            color: #F5F7FA;
+            font-weight: 700;
+            text-align: right;
           }
         }
 
