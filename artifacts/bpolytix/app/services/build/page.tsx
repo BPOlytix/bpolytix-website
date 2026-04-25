@@ -6,17 +6,14 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
   BadgeCheck,
-  Blocks,
   BriefcaseBusiness,
   ClipboardList,
   Code2,
   FileCheck2,
   Handshake,
+  Key,
   KeyRound,
-  LayoutTemplate,
-  Rocket,
   ShieldOff,
-  Smartphone,
   type LucideIcon,
 } from "lucide-react";
 import { Footer } from "@/components/Footer";
@@ -160,12 +157,6 @@ const PROOF_LINES: ClaimItem[] = [
   },
 ];
 
-const STAGES = [
-  { title: "Wireframe", icon: LayoutTemplate },
-  { title: "Build", icon: Blocks },
-  { title: "Deploy", icon: Rocket },
-];
-
 function serviceDescription(service: BuildService) {
   return `What it is\n${service.whatItIs}\n\nWhat you get\n- ${service.whatYouGet.join("\n- ")}`;
 }
@@ -199,95 +190,165 @@ function BuildStageVisual() {
   const inView = useInView(ref, { once: false, amount: 0.35 });
   const reduceMotion = useReducedMotion();
   const canAnimate = inView && !reduceMotion;
+  const sequenceDuration = 6.8;
 
   return (
     <div ref={ref} className="build-visual" aria-hidden="true">
-      <div className="stage-frames">
-        {STAGES.map((stage, index) => {
-          const Icon = stage.icon;
-
-          return (
-            <motion.div
-              className={`stage-frame frame-${index + 1}`}
-              key={stage.title}
-              animate={
-                canAnimate
-                  ? {
-                      opacity: [0.58, 1, 0.7],
-                      y: [0, -8, 0],
-                      borderColor: ["#1E2D3D", "#00D4AA", "#1E2D3D"],
-                    }
-                  : { opacity: 0.78, y: 0, borderColor: "#1E2D3D" }
-              }
-              transition={{
-                duration: 5.4,
-                delay: index * 1.1,
-                repeat: canAnimate ? Infinity : 0,
-                ease: "easeInOut",
-              }}
-            >
-              <div className="stage-topline">
-                <Icon size={18} color="#00D4AA" strokeWidth={1.8} />
-                <span>{stage.title}</span>
-              </div>
-              <div className="stage-lines">
-                <i />
-                <i />
-                <i />
-              </div>
-            </motion.div>
-          );
-        })}
+      <div className="handover-marker">
+        <Handshake size={18} color="#00D4AA" strokeWidth={1.8} />
+        <span>Handover ready</span>
       </div>
 
-      <svg className="stage-path" viewBox="0 0 520 210" role="presentation">
-        <path className="stage-guide" d="M50 98 H470" />
-        <motion.path
-          className="stage-progress"
-          d="M50 98 H470"
-          initial={{ pathLength: 0, opacity: 0.45 }}
-          animate={
-            canAnimate
-              ? { pathLength: [0, 0.35, 0.68, 1, 1], opacity: [0.45, 1, 1, 1, 0.65] }
-              : { pathLength: 1, opacity: 0.7 }
-          }
-          transition={{
-            duration: 6.4,
-            repeat: canAnimate ? Infinity : 0,
-            repeatDelay: 1.2,
-            ease: "easeInOut",
-          }}
-        />
-        {[50, 260, 470].map((cx, index) => (
-          <motion.circle
-            className="stage-node"
-            key={cx}
-            cx={cx}
-            cy="98"
-            r="7"
-            animate={canAnimate ? { scale: [1, 1.4, 1] } : { scale: 1 }}
+      <div className="timeline-area">
+        <div className="timeline-badge badge-left">BPOLytix</div>
+        <div className="timeline-badge badge-right">You</div>
+
+        <svg className="timeline-track" viewBox="0 0 520 120" role="presentation">
+          <path className="timeline-guide" d="M52 64 H468" />
+          <motion.path
+            className="timeline-progress"
+            d="M52 64 H468"
+            initial={{ pathLength: 0, opacity: 0.5 }}
+            animate={
+              canAnimate
+                ? { pathLength: [0, 0.32, 0.66, 1, 1], opacity: [0.5, 1, 1, 1, 0.65] }
+                : { pathLength: 1, opacity: 0.72 }
+            }
             transition={{
-              duration: 2.8,
-              delay: index * 1.1,
+              duration: sequenceDuration,
               repeat: canAnimate ? Infinity : 0,
               ease: "easeInOut",
             }}
           />
-        ))}
-      </svg>
+          {[64, 260, 456].map((cx, index) => (
+            <motion.circle
+              className="timeline-node"
+              key={cx}
+              cx={cx}
+              cy="64"
+              r="6"
+              animate={canAnimate ? { scale: [1, 1.35, 1] } : { scale: 1 }}
+              transition={{
+                duration: 1.5,
+                delay: index * 1.5,
+                repeat: canAnimate ? Infinity : 0,
+                repeatDelay: canAnimate ? sequenceDuration - 1.5 : 0,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+        </svg>
 
-      <motion.div
-        className="handover-marker"
-        animate={
-          canAnimate
-            ? { opacity: [0.55, 1, 0.75], x: [0, 8, 0] }
-            : { opacity: 0.76, x: 0 }
-        }
-        transition={{ duration: 4.2, delay: 3.2, repeat: canAnimate ? Infinity : 0, ease: "easeInOut" }}
-      >
-        <Handshake size={18} color="#00D4AA" strokeWidth={1.8} />
-        <span>Handover ready</span>
-      </motion.div>
+        {[0, 1, 2].map((card) => (
+          <motion.div
+            className={`product-card product-card-${card + 1}`}
+            key={card}
+            animate={
+              canAnimate
+                ? {
+                    opacity: [0.52, 1, 1, 0.76],
+                    y: [8, 0, 0, 0],
+                    borderColor: ["#1E2D3D", "#00D4AA", "#1E2D3D", "#1E2D3D"],
+                  }
+                : { opacity: 0.9, y: 0, borderColor: "#1E2D3D" }
+            }
+            transition={{
+              duration: 1.5,
+              delay: card * 1.5,
+              repeat: canAnimate ? Infinity : 0,
+              repeatDelay: canAnimate ? sequenceDuration - 1.5 : 0,
+              ease: "easeInOut",
+            }}
+          >
+            <div className="product-topline">
+              {[0, 1, 2].map((dot) => (
+                <motion.i
+                  key={dot}
+                  animate={canAnimate ? { opacity: [0, 1, 1] } : { opacity: 1 }}
+                  transition={{
+                    duration: 0.45,
+                    delay: card * 1.5 + dot * 0.08,
+                    repeat: canAnimate ? Infinity : 0,
+                    repeatDelay: canAnimate ? sequenceDuration - 0.45 : 0,
+                    ease: "easeInOut",
+                  }}
+                />
+              ))}
+            </div>
+            <div className="product-lines">
+              {[0, 1, 2].map((line) => (
+                <motion.span
+                  key={line}
+                  animate={
+                    canAnimate
+                      ? { opacity: [0, 1, 1], scaleX: [0.2, 1, 1] }
+                      : { opacity: 1, scaleX: 1 }
+                  }
+                  transition={{
+                    duration: 0.55,
+                    delay: card * 1.5 + 0.22 + line * 0.12,
+                    repeat: canAnimate ? Infinity : 0,
+                    repeatDelay: canAnimate ? sequenceDuration - 0.55 : 0,
+                    ease: "easeInOut",
+                  }}
+                />
+              ))}
+            </div>
+            <motion.b
+              animate={
+                canAnimate
+                  ? { opacity: [0, 1, 1], scale: [0.85, 1, 1] }
+                  : { opacity: 1, scale: 1 }
+              }
+              transition={{
+                duration: 0.5,
+                delay: card * 1.5 + 0.85,
+                repeat: canAnimate ? Infinity : 0,
+                repeatDelay: canAnimate ? sequenceDuration - 0.5 : 0,
+                ease: "easeInOut",
+              }}
+            />
+          </motion.div>
+        ))}
+
+        <svg className="key-lane-svg" viewBox="0 0 520 260" role="presentation">
+          <motion.path
+            className="key-lane"
+            d="M82 210 C172 172 350 172 438 210"
+            initial={{ pathLength: 0, opacity: 0.35 }}
+            animate={
+              canAnimate
+                ? { pathLength: [0, 0, 1, 1], opacity: [0, 0.35, 0.7, 0] }
+                : { pathLength: 1, opacity: 0.35 }
+            }
+            transition={{
+              duration: sequenceDuration,
+              repeat: canAnimate ? Infinity : 0,
+              ease: "easeInOut",
+            }}
+          />
+        </svg>
+        <div className="key-transfer">
+          <motion.span
+            className="ownership-key"
+            animate={
+              canAnimate
+                ? {
+                    left: ["0%", "0%", "calc(100% - 36px)", "calc(100% - 36px)"],
+                    opacity: [0, 1, 1, 0.72],
+                  }
+                : { left: "calc(100% - 36px)", opacity: 0.9 }
+            }
+            transition={{
+              duration: sequenceDuration,
+              repeat: canAnimate ? Infinity : 0,
+              ease: "easeInOut",
+            }}
+          >
+            <Key size={18} color="#00D4AA" strokeWidth={1.9} />
+          </motion.span>
+        </div>
+      </div>
 
       <div className="ownership-panel">
         {["Scope signed", "Build live", "Keys handed over"].map((item, index) => (
@@ -513,6 +574,7 @@ export default function BuildOfficePage() {
         }
 
         .hero-copy {
+          min-width: 0;
           max-width: 780px;
         }
 
@@ -581,6 +643,8 @@ export default function BuildOfficePage() {
 
         .build-visual {
           position: relative;
+          width: 100%;
+          min-width: 0;
           min-height: 560px;
           border: 1px solid #1E2D3D;
           border-radius: 8px;
@@ -588,103 +652,177 @@ export default function BuildOfficePage() {
           overflow: hidden;
         }
 
-        .stage-frames {
+        .timeline-area {
           position: absolute;
-          inset: 44px 32px 180px;
+          top: 86px;
+          right: 28px;
+          left: 28px;
+          height: 270px;
         }
 
-        .stage-frame {
+        .timeline-badge {
           position: absolute;
-          width: 58%;
-          min-height: 132px;
+          top: 0;
+          z-index: 2;
+          display: inline-flex;
+          min-height: 34px;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #1E2D3D;
+          border-radius: 9999px;
+          background-color: #0D1B2A;
+          color: #F5F7FA;
+          font-family: var(--font-dm-sans);
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 0;
+          line-height: 1;
+          padding: 0 12px;
+        }
+
+        .badge-left {
+          left: 0;
+        }
+
+        .badge-right {
+          right: 0;
+          color: #00D4AA;
+        }
+
+        .timeline-track,
+        .key-lane-svg {
+          position: absolute;
+          right: 0;
+          left: 0;
+          width: 100%;
+          height: auto;
+        }
+
+        .timeline-track {
+          top: 68px;
+        }
+
+        .key-lane-svg {
+          top: 0;
+          pointer-events: none;
+        }
+
+        .timeline-guide,
+        .timeline-progress,
+        .key-lane {
+          fill: none;
+          stroke-linecap: round;
+        }
+
+        .timeline-guide {
+          stroke: #1E2D3D;
+          stroke-width: 6;
+        }
+
+        .timeline-progress,
+        .key-lane {
+          stroke: #00D4AA;
+          stroke-width: 4;
+        }
+
+        .timeline-node {
+          fill: #1B77F2;
+          transform-box: fill-box;
+          transform-origin: center;
+        }
+
+        .product-card {
+          position: absolute;
+          top: 90px;
+          z-index: 1;
+          width: 30%;
+          min-height: 128px;
           border: 1px solid #1E2D3D;
           border-radius: 8px;
           background-color: #1C2A3A;
           padding: 18px;
         }
 
-        .frame-1 {
-          top: 0;
+        .product-card-1 {
           left: 0;
         }
 
-        .frame-2 {
-          top: 72px;
+        .product-card-2 {
+          left: 35%;
+        }
+
+        .product-card-3 {
           right: 0;
         }
 
-        .frame-3 {
-          right: 40px;
-          bottom: 0;
-        }
-
-        .stage-topline {
+        .product-topline {
           display: flex;
           align-items: center;
-          gap: 8px;
-          color: #F5F7FA;
-          font-family: var(--font-dm-sans);
-          font-size: 13px;
-          font-weight: 700;
-          letter-spacing: 0;
-          line-height: 1;
+          gap: 6px;
           margin-bottom: 18px;
         }
 
-        .stage-lines {
-          display: grid;
-          gap: 12px;
+        .product-topline i {
+          width: 7px;
+          height: 7px;
+          border-radius: 9999px;
+          background-color: #00D4AA;
         }
 
-        .stage-lines i {
+        .product-lines {
+          display: grid;
+          gap: 10px;
+        }
+
+        .product-lines span {
           display: block;
           height: 8px;
           border-radius: 9999px;
           background-color: #1E2D3D;
+          transform-origin: left center;
         }
 
-        .stage-lines i:nth-child(1) {
+        .product-lines span:nth-child(1) {
           width: 88%;
         }
 
-        .stage-lines i:nth-child(2) {
-          width: 64%;
-          background-color: #00D4AA;
+        .product-lines span:nth-child(2) {
+          width: 62%;
         }
 
-        .stage-lines i:nth-child(3) {
+        .product-lines span:nth-child(3) {
           width: 74%;
         }
 
-        .stage-path {
+        .product-card b {
           position: absolute;
-          right: 20px;
-          bottom: 120px;
-          left: 20px;
-          width: calc(100% - 40px);
-          height: 180px;
+          right: 18px;
+          bottom: 16px;
+          width: 38px;
+          height: 14px;
+          border-radius: 9999px;
+          background-color: #1B77F2;
         }
 
-        .stage-guide,
-        .stage-progress {
-          fill: none;
-          stroke-linecap: round;
+        .key-transfer {
+          position: absolute;
+          right: 72px;
+          bottom: 0;
+          left: 72px;
+          height: 36px;
         }
 
-        .stage-guide {
-          stroke: #1E2D3D;
-          stroke-width: 6;
-        }
-
-        .stage-progress {
-          stroke: #00D4AA;
-          stroke-width: 4;
-        }
-
-        .stage-node {
-          fill: #1B77F2;
-          transform-box: fill-box;
-          transform-origin: center;
+        .ownership-key {
+          position: absolute;
+          top: 0;
+          display: inline-flex;
+          width: 36px;
+          height: 36px;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #1E2D3D;
+          border-radius: 9999px;
+          background-color: #1E2D3D;
         }
 
         .handover-marker {
@@ -947,15 +1085,20 @@ export default function BuildOfficePage() {
           }
 
           .build-visual {
-            min-height: 430px;
+            min-height: 500px;
           }
 
-          .stage-frames {
-            inset: 30px 24px 150px;
+          .timeline-area {
+            top: 70px;
+            right: 24px;
+            left: 24px;
+            height: 230px;
           }
 
-          .stage-frame {
-            min-height: 110px;
+          .product-card {
+            top: 86px;
+            min-height: 112px;
+            padding: 15px;
           }
 
           .work-steps {
@@ -1035,36 +1178,64 @@ export default function BuildOfficePage() {
           }
 
           .build-visual {
-            min-height: 380px;
+            min-height: 470px;
           }
 
-          .stage-frames {
-            inset: 24px 16px 134px;
+          .timeline-area {
+            top: 70px;
+            right: 16px;
+            left: 16px;
+            width: 310px;
+            height: 214px;
           }
 
-          .stage-frame {
-            width: 68%;
-            min-height: 88px;
-            padding: 14px;
-          }
-
-          .frame-2 {
-            top: 60px;
-          }
-
-          .frame-3 {
-            right: 18px;
-          }
-
-          .stage-path {
-            right: 0;
-            bottom: 92px;
-            left: 0;
+          .timeline-track {
+            top: 66px;
             width: 100%;
           }
 
+          .product-card {
+            top: 92px;
+            width: 31%;
+            min-height: 92px;
+            padding: 12px;
+          }
+
+          .product-card-2 {
+            left: 34.5%;
+          }
+
+          .product-card-3 {
+            right: 0;
+          }
+
+          .badge-right {
+            right: 0;
+          }
+
+          .product-lines {
+            gap: 8px;
+          }
+
+          .product-lines span {
+            height: 7px;
+          }
+
+          .product-card b {
+            right: 12px;
+            bottom: 12px;
+            width: 30px;
+            height: 12px;
+          }
+
+          .key-transfer {
+            right: 46px;
+            left: 46px;
+          }
+
           .handover-marker {
-            right: 16px;
+            right: auto;
+            left: 164px;
             top: 18px;
           }
 

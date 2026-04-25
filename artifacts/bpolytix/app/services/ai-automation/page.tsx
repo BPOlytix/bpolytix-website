@@ -488,6 +488,7 @@ export default function AutomationOfficePage() {
         }
 
         .hero-copy {
+          min-width: 0;
           max-width: 780px;
         }
 
@@ -556,6 +557,8 @@ export default function AutomationOfficePage() {
 
         .ai-visual {
           position: relative;
+          width: 100%;
+          min-width: 0;
           min-height: 560px;
           border: 1px solid #1E2D3D;
           border-radius: 8px;
@@ -586,11 +589,11 @@ export default function AutomationOfficePage() {
 
         .flow-canvas {
           position: absolute;
+          top: 86px;
           right: -10px;
-          bottom: 112px;
           left: -16px;
           width: calc(100% + 26px);
-          height: auto;
+          height: 270px;
         }
 
         .flow-grid,
@@ -873,7 +876,12 @@ export default function AutomationOfficePage() {
           }
 
           .ai-visual {
-            min-height: 430px;
+            min-height: 500px;
+          }
+
+          .flow-canvas {
+            top: 72px;
+            height: 260px;
           }
 
           .work-steps {
@@ -953,7 +961,7 @@ export default function AutomationOfficePage() {
           }
 
           .ai-visual {
-            min-height: 380px;
+            min-height: 470px;
           }
 
           .flow-status {
@@ -962,10 +970,11 @@ export default function AutomationOfficePage() {
           }
 
           .flow-canvas {
+            top: 70px;
             right: -90px;
-            bottom: 92px;
             left: -82px;
             width: calc(100% + 172px);
+            height: 220px;
           }
 
           .automation-panel {

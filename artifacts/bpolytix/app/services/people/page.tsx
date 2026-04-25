@@ -448,6 +448,7 @@ export default function PeopleOfficePage() {
         }
 
         .hero-copy {
+          min-width: 0;
           max-width: 780px;
         }
 
@@ -516,6 +517,8 @@ export default function PeopleOfficePage() {
 
         .corridor-visual {
           position: relative;
+          width: 100%;
+          min-width: 0;
           min-height: 560px;
           border: 1px solid #1E2D3D;
           border-radius: 8px;
@@ -525,9 +528,9 @@ export default function PeopleOfficePage() {
 
         .corridor-map {
           position: absolute;
-          inset: 30px 20px 118px;
+          inset: 30px 20px 190px;
           width: calc(100% - 40px);
-          height: calc(100% - 148px);
+          height: calc(100% - 220px);
         }
 
         .corridor-shadow,
@@ -576,7 +579,7 @@ export default function PeopleOfficePage() {
 
         .anchor-sa {
           left: 42px;
-          bottom: 132px;
+          bottom: 198px;
         }
 
         .anchor-uk {
@@ -819,7 +822,17 @@ export default function PeopleOfficePage() {
           }
 
           .corridor-visual {
-            min-height: 430px;
+            min-height: 470px;
+          }
+
+          .corridor-map {
+            inset: 28px 20px 204px;
+            width: calc(100% - 40px);
+            height: calc(100% - 232px);
+          }
+
+          .anchor-sa {
+            bottom: 190px;
           }
 
           .work-steps {
@@ -895,13 +908,13 @@ export default function PeopleOfficePage() {
           }
 
           .corridor-visual {
-            min-height: 380px;
+            min-height: 440px;
           }
 
           .corridor-map {
-            inset: 28px -26px 114px;
+            inset: 28px -26px 188px;
             width: calc(100% + 52px);
-            height: calc(100% - 142px);
+            height: calc(100% - 216px);
           }
 
           .region-anchor {
@@ -912,11 +925,12 @@ export default function PeopleOfficePage() {
 
           .anchor-sa {
             left: 22px;
-            bottom: 126px;
+            bottom: 188px;
           }
 
           .anchor-uk {
-            right: 22px;
+            right: auto;
+            left: 260px;
             top: 26px;
           }
 
