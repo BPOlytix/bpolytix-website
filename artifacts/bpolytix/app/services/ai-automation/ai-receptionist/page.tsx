@@ -119,94 +119,19 @@ function CallFlowVisual() {
   const reduceMotion = useReducedMotion();
   const canAnimate = inView && !reduceMotion;
 
-  const mainNodes = [
-    { x: 72, y: 110, label: "Phone rings" },
-    { x: 204, y: 110, label: "AI answers" },
-    { x: 336, y: 110, label: "Intent detected" },
-  ];
-
   return (
     <div ref={ref} className="call-visual" aria-hidden="true">
       <svg className="call-svg" viewBox="0 0 560 340" role="presentation">
-        <defs>
-          <marker
-            id="mainArrow"
-            markerHeight="8"
-            markerWidth="8"
-            orient="auto"
-            refX="7"
-            refY="4"
-          >
-            <path d="M0 0 L8 4 L0 8 Z" fill="#1B77F2" stroke="#1B77F2" strokeWidth="1" />
-          </marker>
-          <marker
-            id="bookArrow"
-            markerHeight="8"
-            markerWidth="8"
-            orient="auto"
-            refX="7"
-            refY="4"
-          >
-            <path d="M0 0 L8 4 L0 8 Z" fill="#00D4AA" stroke="#00D4AA" strokeWidth="1" />
-          </marker>
-          <marker
-            id="queryArrow"
-            markerHeight="8"
-            markerWidth="8"
-            orient="auto"
-            refX="7"
-            refY="4"
-          >
-            <path d="M0 0 L8 4 L0 8 Z" fill="#1B77F2" stroke="#1B77F2" strokeWidth="1" />
-          </marker>
-          <marker
-            id="escalateArrow"
-            markerHeight="8"
-            markerWidth="8"
-            orient="auto"
-            refX="7"
-            refY="4"
-          >
-            <path d="M0 0 L8 4 L0 8 Z" fill="#8892A4" stroke="#8892A4" strokeWidth="1" />
-          </marker>
-        </defs>
-
         <rect x="1" y="1" width="558" height="338" rx="8" fill="#111F2E" stroke="#1E2D3D" />
-        <path d="M48 58 H512 M48 170 H512 M48 282 H512" fill="none" stroke="#1E2D3D" strokeWidth="1" />
-        <path d="M104 42 V300 M280 42 V300 M456 42 V300" fill="none" stroke="#1E2D3D" strokeWidth="1" />
+        <path d="M48 58 H512 M48 170 H512 M48 282 H512" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
+        <path d="M104 42 V300 M280 42 V300 M456 42 V300" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
 
-        <path
-          d="M112 110 H164 M244 110 H296"
-          fill="none"
-          stroke="#1B77F2"
-          strokeWidth="4"
-          strokeLinecap="round"
-          markerEnd="url(#mainArrow)"
-        />
-        <path
-          d="M376 110 C404 110 410 74 424 70"
-          fill="none"
-          stroke="#00D4AA"
-          strokeWidth="4"
-          strokeLinecap="round"
-          markerEnd="url(#bookArrow)"
-        />
-        <path
-          d="M376 110 C404 110 410 150 424 150"
-          fill="none"
-          stroke="#1B77F2"
-          strokeWidth="4"
-          strokeLinecap="round"
-          markerEnd="url(#queryArrow)"
-        />
-        <path
-          d="M376 110 C404 110 410 226 424 230"
-          fill="none"
-          stroke="#8892A4"
-          strokeWidth="4"
-          strokeLinecap="round"
-          markerEnd="url(#escalateArrow)"
-        />
+        <path d="M156 78 C190 78 204 170 216 170" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="3" strokeLinecap="round" />
+        <path d="M156 170 H216" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="3" strokeLinecap="round" />
+        <path d="M156 262 C190 262 204 170 216 170" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="3" strokeLinecap="round" />
+        <path d="M344 170 C356 170 370 78 404 78" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="3" strokeLinecap="round" />
+        <path d="M344 170 H404" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="3" strokeLinecap="round" />
+        <path d="M344 170 C356 170 370 262 404 262" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="3" strokeLinecap="round" />
 
         <motion.circle
           r="7"
@@ -217,70 +142,100 @@ function CallFlowVisual() {
           animate={
             canAnimate
               ? {
-                  cx: [72, 204, 336, 452, 452, 452],
-                  cy: [110, 110, 110, 70, 150, 230],
-                  opacity: [0, 1, 1, 1, 0.75, 0],
+                  cx: [156, 190, 204, 216],
+                  cy: [78, 78, 170, 170],
+                  opacity: [0, 1, 1, 0],
                 }
-              : { cx: 452, cy: 70, opacity: 1 }
+              : { cx: 216, cy: 170, opacity: 1 }
           }
-          transition={{
-            duration: 5.8,
-            repeat: canAnimate ? Infinity : 0,
-            repeatDelay: 1,
-            ease: "easeInOut",
-          }}
+          transition={{ duration: 3.2, repeat: canAnimate ? Infinity : 0, ease: "easeInOut" }}
+        />
+        <motion.circle
+          r="7"
+          fill="#00D4AA"
+          stroke="#00D4AA"
+          strokeWidth="1"
+          initial={false}
+          animate={canAnimate ? { cx: [156, 216], cy: [170, 170], opacity: [0, 1, 0] } : { cx: 216, cy: 170, opacity: 1 }}
+          transition={{ duration: 3.2, delay: 0.55, repeat: canAnimate ? Infinity : 0, ease: "easeInOut" }}
+        />
+        <motion.circle
+          r="7"
+          fill="#00D4AA"
+          stroke="#00D4AA"
+          strokeWidth="1"
+          initial={false}
+          animate={canAnimate ? { cx: [156, 190, 204, 216], cy: [262, 262, 170, 170], opacity: [0, 1, 1, 0] } : { cx: 216, cy: 170, opacity: 1 }}
+          transition={{ duration: 3.2, delay: 1.1, repeat: canAnimate ? Infinity : 0, ease: "easeInOut" }}
+        />
+        <motion.circle
+          r="7"
+          fill="#00D4AA"
+          stroke="#00D4AA"
+          strokeWidth="1"
+          initial={false}
+          animate={canAnimate ? { cx: [344, 356, 370, 404], cy: [170, 170, 78, 78], opacity: [0, 1, 1, 0] } : { cx: 404, cy: 78, opacity: 1 }}
+          transition={{ duration: 3.2, delay: 1.65, repeat: canAnimate ? Infinity : 0, ease: "easeInOut" }}
+        />
+        <motion.circle
+          r="7"
+          fill="#00D4AA"
+          stroke="#00D4AA"
+          strokeWidth="1"
+          initial={false}
+          animate={canAnimate ? { cx: [344, 404], cy: [170, 170], opacity: [0, 1, 0] } : { cx: 404, cy: 170, opacity: 1 }}
+          transition={{ duration: 3.2, delay: 2.2, repeat: canAnimate ? Infinity : 0, ease: "easeInOut" }}
+        />
+        <motion.circle
+          r="7"
+          fill="#00D4AA"
+          stroke="#00D4AA"
+          strokeWidth="1"
+          initial={false}
+          animate={canAnimate ? { cx: [344, 356, 370, 404], cy: [170, 170, 262, 262], opacity: [0, 1, 1, 0] } : { cx: 404, cy: 262, opacity: 1 }}
+          transition={{ duration: 3.2, delay: 2.75, repeat: canAnimate ? Infinity : 0, ease: "easeInOut" }}
         />
 
-        {mainNodes.map((node, index) => (
-          <motion.g
-            key={node.label}
-            initial={reduceMotion ? false : { opacity: 0, y: 14 }}
-            animate={reduceMotion || inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
-            transition={{ duration: 0.7, delay: index * 0.08, ease: EASE }}
-          >
-            <rect x={node.x - 52} y={node.y - 25} width="104" height="50" rx="8" fill="#0D1B2A" stroke="#1B77F2" strokeWidth="2" />
-            <circle cx={node.x - 31} cy={node.y} r="5" fill="#00D4AA" stroke="#00D4AA" strokeWidth="1" />
-            <text x={node.x - 17} y={node.y + 4} fill="#F5F7FA" fontFamily="DM Sans, sans-serif" fontSize="11" fontWeight="700">
-              {node.label}
-            </text>
-          </motion.g>
-        ))}
+        <rect x="36" y="54" width="120" height="48" rx="8" fill="rgba(27,119,242,0.08)" stroke="#1B77F2" strokeWidth="2" />
+        <text x="96" y="83" fill="#F5F7FA" fontFamily="DM Sans, sans-serif" fontSize="13" fontWeight="500" textAnchor="middle">
+          Inbound call
+        </text>
+        <rect x="36" y="146" width="120" height="48" rx="8" fill="rgba(27,119,242,0.08)" stroke="#1B77F2" strokeWidth="2" />
+        <text x="96" y="175" fill="#F5F7FA" fontFamily="DM Sans, sans-serif" fontSize="13" fontWeight="500" textAnchor="middle">
+          WhatsApp
+        </text>
+        <rect x="36" y="238" width="120" height="48" rx="8" fill="rgba(27,119,242,0.08)" stroke="#1B77F2" strokeWidth="2" />
+        <text x="96" y="267" fill="#F5F7FA" fontFamily="DM Sans, sans-serif" fontSize="13" fontWeight="500" textAnchor="middle">
+          Web enquiry
+        </text>
 
         <motion.g
-          initial={reduceMotion ? false : { opacity: 0, x: 16 }}
-          animate={reduceMotion || inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 16 }}
-          transition={{ duration: 0.7, delay: 0.18, ease: EASE }}
+          initial={false}
+          animate={canAnimate ? { scale: [1, 1.04, 1] } : { scale: 1 }}
+          transition={{ duration: 2, repeat: canAnimate ? Infinity : 0, ease: "easeInOut" }}
+          style={{ transformBox: "fill-box", transformOrigin: "center" }}
         >
-          <rect x="389" y="46" width="126" height="48" rx="8" fill="#0D1B2A" stroke="#00D4AA" strokeWidth="2" />
-          <circle cx="410" cy="70" r="5" fill="#00D4AA" stroke="#00D4AA" strokeWidth="1" />
-          <text x="424" y="74" fill="#F5F7FA" fontFamily="DM Sans, sans-serif" fontSize="11" fontWeight="700">
-            Book appointment
+          <rect x="216" y="128" width="128" height="84" rx="12" fill="rgba(27,119,242,0.12)" stroke="#1B77F2" strokeWidth="3" />
+          <text x="280" y="164" fill="#F5F7FA" fontFamily="Syne, sans-serif" fontSize="15" fontWeight="600" textAnchor="middle">
+            AI
+          </text>
+          <text x="280" y="184" fill="#F5F7FA" fontFamily="Syne, sans-serif" fontSize="15" fontWeight="600" textAnchor="middle">
+            Receptionist
           </text>
         </motion.g>
 
-        <motion.g
-          initial={reduceMotion ? false : { opacity: 0, x: 16 }}
-          animate={reduceMotion || inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 16 }}
-          transition={{ duration: 0.7, delay: 0.26, ease: EASE }}
-        >
-          <rect x="389" y="126" width="126" height="48" rx="8" fill="#0D1B2A" stroke="#1B77F2" strokeWidth="2" />
-          <circle cx="410" cy="150" r="5" fill="#1B77F2" stroke="#1B77F2" strokeWidth="1" />
-          <text x="424" y="154" fill="#F5F7FA" fontFamily="DM Sans, sans-serif" fontSize="11" fontWeight="700">
-            Answer query
-          </text>
-        </motion.g>
-
-        <motion.g
-          initial={reduceMotion ? false : { opacity: 0, x: 16 }}
-          animate={reduceMotion || inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 16 }}
-          transition={{ duration: 0.7, delay: 0.34, ease: EASE }}
-        >
-          <rect x="389" y="206" width="126" height="48" rx="8" fill="#0D1B2A" stroke="#8892A4" strokeWidth="2" />
-          <circle cx="410" cy="230" r="5" fill="#8892A4" stroke="#8892A4" strokeWidth="1" />
-          <text x="424" y="234" fill="#F5F7FA" fontFamily="DM Sans, sans-serif" fontSize="11" fontWeight="700">
-            Escalate to human
-          </text>
-        </motion.g>
+        <rect x="404" y="54" width="120" height="48" rx="8" fill="rgba(0,212,170,0.08)" stroke="#00D4AA" strokeWidth="2" />
+        <text x="464" y="83" fill="#F5F7FA" fontFamily="DM Sans, sans-serif" fontSize="13" fontWeight="500" textAnchor="middle">
+          Book appointment
+        </text>
+        <rect x="404" y="146" width="120" height="48" rx="8" fill="rgba(0,212,170,0.08)" stroke="#00D4AA" strokeWidth="2" opacity="0.72" />
+        <text x="464" y="175" fill="#F5F7FA" fontFamily="DM Sans, sans-serif" fontSize="13" fontWeight="500" textAnchor="middle">
+          Answer query
+        </text>
+        <rect x="404" y="238" width="120" height="48" rx="8" fill="rgba(136,146,164,0.08)" stroke="#8892A4" strokeWidth="2" />
+        <text x="464" y="267" fill="#F5F7FA" fontFamily="DM Sans, sans-serif" fontSize="13" fontWeight="500" textAnchor="middle">
+          Escalate to human
+        </text>
       </svg>
 
       <div className="call-status">
