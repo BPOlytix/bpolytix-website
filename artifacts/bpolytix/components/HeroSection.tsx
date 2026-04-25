@@ -18,6 +18,7 @@ type PillarVisualProps = {
 
 type PillarNode = {
   label: string;
+  stat: string;
   icon: LucideIcon;
   className: string;
   x: number;
@@ -28,10 +29,10 @@ type PillarNode = {
 const HUB = { x: 260, y: 150 };
 
 const PILLARS: PillarNode[] = [
-  { label: "Finance", icon: TrendingUp, className: "finance", x: 96, y: 48, dotDelay: 0 },
-  { label: "AI & Automation", icon: Workflow, className: "automation", x: 424, y: 48, dotDelay: 1 },
-  { label: "People", icon: Users, className: "people", x: 96, y: 332, dotDelay: 2 },
-  { label: "Build", icon: Layers, className: "build", x: 424, y: 332, dotDelay: 3 },
+  { label: "Finance", stat: "From R1,500 / £105 a month", icon: TrendingUp, className: "finance", x: 96, y: 48, dotDelay: 0 },
+  { label: "AI & Automation", stat: "Yours after 12 months", icon: Workflow, className: "automation", x: 424, y: 48, dotDelay: 1 },
+  { label: "People", stat: "Cheaper than Deel on SA hires", icon: Users, className: "people", x: 96, y: 332, dotDelay: 2 },
+  { label: "Build", stat: "Fixed price. No lock-in.", icon: Layers, className: "build", x: 424, y: 332, dotDelay: 3 },
 ];
 
 function PulseDot({ canAnimate, delay = 0 }: PillarVisualProps & { delay?: number }) {
@@ -130,7 +131,10 @@ function SatelliteNode({
         <PulseDot canAnimate={canAnimate} delay={pillar.dotDelay * 0.3} />
       </span>
       <Icon size={16} color="#00D4AA" strokeWidth={1.8} />
-      <span>{pillar.label}</span>
+      <span className="satellite-copy">
+        <span className="satellite-label">{pillar.label}</span>
+        <span className="satellite-stat">{pillar.stat}</span>
+      </span>
     </div>
   );
 }
@@ -369,8 +373,8 @@ export function HeroSection() {
           position: absolute;
           z-index: 4;
           display: flex;
-          width: 160px;
-          height: 48px;
+          width: 188px;
+          height: 64px;
           align-items: center;
           gap: 7px;
           border: 1px solid #1E2D3D;
@@ -379,15 +383,48 @@ export function HeroSection() {
           color: #F5F7FA;
           font-family: var(--font-dm-sans);
           font-size: 12px;
-          font-weight: 700;
+          font-weight: 500;
           letter-spacing: 0;
           line-height: 1;
-          padding: 0 12px 0 14px;
+          padding: 0 10px 0 14px;
           transform: translate(-50%, -50%);
         }
 
         :global(.satellite-node svg) {
           flex: 0 0 auto;
+        }
+
+        :global(.satellite-copy) {
+          display: grid;
+          min-width: 0;
+          gap: 5px;
+          text-align: left;
+        }
+
+        :global(.satellite-label),
+        :global(.satellite-stat) {
+          display: block;
+          overflow: visible;
+          text-overflow: clip;
+          white-space: nowrap;
+        }
+
+        :global(.satellite-label) {
+          color: #F5F7FA;
+          font-family: var(--font-dm-sans);
+          font-size: 12px;
+          font-weight: 500;
+          letter-spacing: 0;
+          line-height: 1;
+        }
+
+        :global(.satellite-stat) {
+          color: #8892A4;
+          font-family: var(--font-dm-sans);
+          font-size: 10.5px;
+          font-weight: 400;
+          letter-spacing: 0;
+          line-height: 1;
         }
 
         :global(.satellite-node.finance) {
@@ -467,7 +504,7 @@ export function HeroSection() {
         :global(.satellite-node.mobile) {
           position: relative;
           width: 100%;
-          height: 42px;
+          height: 64px;
           transform: none;
         }
 
