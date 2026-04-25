@@ -4,12 +4,11 @@ import { motion } from "framer-motion";
 import { GrainOverlay } from "./GrainOverlay";
 
 const STEPS = [
-  { num: "1.0", name: "Engage",  desc: "We scope your problem and confirm fit. No sales pressure." },
-  { num: "2.0", name: "Map",     desc: "We map your workflow and define the build spec together." },
-  { num: "3.0", name: "Build",   desc: "We build Phase 1 in Replit or VS Code. You watch progress." },
-  { num: "4.0", name: "Refine",  desc: "You test it. We fix everything until you're satisfied." },
-  { num: "5.0", name: "Satisfy", desc: "You confirm it works. Only then do we send an invoice." },
-  { num: "6.0", name: "Own",     desc: "After 12 months, full ownership transfers. No licence fees ever." },
+  { num: "1.0", name: "Engage",  desc: "We have a real conversation about your business — what's slow, what's broken, what's costing you time. No sales pressure." },
+  { num: "2.0", name: "Scope",   desc: "We map exactly what you need across Finance, AI, People, and Build — and what you don't. You get a fixed proposal, not an estimate." },
+  { num: "3.0", name: "Deliver", desc: "Bookkeeping starts. Compliance gets filed. The automation gets built. The hire gets onboarded. Whatever the work is, we run it end to end." },
+  { num: "4.0", name: "Review",  desc: "You see the work, you check it, you tell us what's missing. We fix it until it's right. Only then do we send an invoice." },
+  { num: "5.0", name: "Own",     desc: "After 12 months on the things we build for you — the automations, the apps, the websites — full ownership transfers to you. The recurring services keep running for as long as you want them to." },
 ];
 
 export function HowItWorks() {
@@ -37,7 +36,7 @@ export function HowItWorks() {
             fontWeight: 700,
           }}
         >
-          From first call to software you own.
+          From first call to a back office that runs.
         </h2>
 
         {/* Timeline */}
