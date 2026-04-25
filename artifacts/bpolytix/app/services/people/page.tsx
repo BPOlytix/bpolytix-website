@@ -178,14 +178,14 @@ function CorridorVisual() {
         <i />
       </div>
 
-      <svg className="corridor-map" viewBox="0 0 520 420" role="presentation">
+      <svg className="corridor-map" viewBox="0 0 560 420" overflow="visible" role="presentation">
         <path
           className="corridor-shadow"
-          d="M94 286 C170 180 250 160 330 142 C390 128 426 96 454 58"
+          d="M94 286 C170 180 250 160 330 142 C390 128 426 96 414 58"
         />
         <motion.path
           className="corridor-path"
-          d="M94 286 C170 180 250 160 330 142 C390 128 426 96 454 58"
+          d="M94 286 C170 180 250 160 330 142 C390 128 426 96 414 58"
           initial={{ pathLength: 0, opacity: 0.55 }}
           animate={
             canAnimate
@@ -208,7 +208,7 @@ function CorridorVisual() {
             animate={
               canAnimate
                 ? {
-                    cx: [94, 170, 250, 330, 390, 454],
+                    cx: [94, 170, 250, 330, 390, 414],
                     cy: [286, 180, 160, 142, 128, 58],
                     opacity: [0, 1, 1, 1, 0.75, 0],
                   }
