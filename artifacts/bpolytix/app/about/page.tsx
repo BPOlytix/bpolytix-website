@@ -218,23 +218,25 @@ function WhySection() {
       <Reveal delay={0.1} className="relative z-10 mx-auto max-w-[1440px] px-8">
         <div className="why-grid">
           <div>
-            <p style={{ ...EYEBROW, marginBottom: 16 }}>Our story</p>
-            <h2 style={H2}>The promise of AI was real. The price tag wasn&apos;t.</h2>
+            <p style={{ ...EYEBROW, marginBottom: 16 }}>AI era</p>
+            <h2 style={H2}>Why we built this.</h2>
             <div className="mt-7 flex flex-col gap-5">
               <p style={BODY}>
-                Every week, a new platform promises to automate your business for a monthly fee.
-                Every week, another startup burns cash on AI credits, no-code tools, and consultants
-                — and ends up with half-built workflows and no one who actually knows how to run
-                them.
+                Every major shift in how the world works has created the same problem: businesses
+                that kept doing things the old way fell behind. The ones that adapted early —
+                hired the right people, used the right tools, and cut the work that no longer
+                needed a human — pulled ahead.
               </p>
               <p style={BODY}>
-                We watched this happen from the inside. As a CFO and FP&amp;A specialist, our
-                founder saw early that AI was reshaping business the way the Industrial Revolution
-                reshaped industry. The corporations moved fast. Startups and SMEs got left behind —
-                priced out by dev costs, overwhelmed by choice, and underserved by platforms that
-                oversell what the technology can actually do today.
+                We&apos;re in that shift right now. AI is changing what back office work looks
+                like. The businesses that figure this out in the next two years will run leaner,
+                move faster, and spend less than their competitors.
               </p>
-              <p style={BODY}>BPOLytix was founded to close that gap.</p>
+              <p style={BODY}>
+                BPOLytix was built for that moment. We handle the finance, the compliance, the
+                people operations, and the technology — so our clients can focus on the work that
+                actually grows their business.
+              </p>
             </div>
           </div>
           <div className="flex items-center justify-center">
@@ -263,8 +265,10 @@ function WhySection() {
 /* ---------------- SECTION 3 — WHAT MAKES US DIFFERENT ---------------- */
 
 const PLATFORMS = [
-  "Zapier", "Make", "n8n", "Airtable", "Monday", "HubSpot", "Notion",
-  "Xero", "Supabase", "Vercel", "OpenAI", "Anthropic", "Replit", "Bubble", "Webflow",
+  "Finance Office", "Bookkeeping", "Payroll", "CFO", "Xero", "Compliance",
+  "AI & Automation Office", "Workflow automation", "AI agents", "AI receptionist", "AI marketing ops",
+  "People Office", "Employer of record", "Outsourced HR", "Onboarding",
+  "Build Office", "Web apps", "Mobile apps", "Websites", "Business plans", "Business development",
 ];
 
 function DifferentSection() {
@@ -282,18 +286,17 @@ function DifferentSection() {
         >
           <p style={{ ...EYEBROW, marginBottom: 16 }}>Our approach</p>
           <h2 style={{ ...H2, maxWidth: 820 }}>
-            We&apos;ve tested the platforms so you don&apos;t have to.
+            Four offices. One back office partner.
           </h2>
           <div className="mt-7 flex flex-col gap-5" style={{ maxWidth: 820 }}>
             <p style={BODY}>
-              We&apos;ve trialled, stress-tested, and built on most of the major automation and AI
-              platforms available today. We know which ones deliver, which ones overpromise, and
-              which ones will cost you more to migrate away from than they ever saved you.
+              Finance Office covers bookkeeping, payroll, CFO support, Xero, and compliance. AI
+              &amp; Automation Office covers workflow automation, AI agents, AI receptionist, and AI
+              marketing ops.
             </p>
             <p style={BODY}>
-              We don&apos;t sell you a platform. We build what your business actually needs —
-              custom, operational, and handed over to you after 12 months. No ongoing licence fees.
-              No lock-in. Just working software that your team can run.
+              People Office covers employer of record, outsourced HR, and onboarding. Build Office
+              covers web apps, mobile apps, websites, business plans, and business development.
             </p>
           </div>
 
@@ -308,7 +311,7 @@ function DifferentSection() {
                 marginBottom: 12,
               }}
             >
-              Platforms we&apos;ve worked with
+              Offices under one roof
             </p>
             <div className="ticker-wrap" aria-hidden>
               <div className="ticker-track">
@@ -389,7 +392,7 @@ function WhoSection() {
 
           {/* Right: text */}
           <div>
-            <p style={{ ...EYEBROW, marginBottom: 16 }}>Who we work with</p>
+            <p style={{ ...EYEBROW, marginBottom: 16 }}>Built for SA startups. Trusted by UK SMEs.</p>
             <h2 style={H2}>
               South African startups. UK SMEs. Businesses that can&apos;t afford to wait.
             </h2>
@@ -432,7 +435,7 @@ function WhoSection() {
 type AboutStat = { value: string; label: string; numericTarget?: number; suffix?: string };
 const ABOUT_STATS: AboutStat[] = [
   { value: "12+", label: "Years combined business experience", numericTarget: 12, suffix: "+" },
-  { value: "8", label: "Services under one roof", numericTarget: 8 },
+  { value: "4", label: "Offices under one roof", numericTarget: 4 },
   { value: "R0", label: "To get started" },
   { value: "12", label: "Months to full ownership", numericTarget: 12 },
 ];
