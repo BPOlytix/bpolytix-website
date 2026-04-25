@@ -4,7 +4,17 @@ import Link from "next/link";
 import { MessageCircle } from "lucide-react";
 import { GrainOverlay } from "./GrainOverlay";
 
-export function CTABanner() {
+type CTABannerProps = {
+  headline?: string;
+  body?: string;
+  ctaLabel?: string;
+};
+
+export function CTABanner({
+  headline = "Ready to put your back office on autopilot?",
+  body = "No commitment. No invoice until we deliver. One conversation about what's slowing you down.",
+  ctaLabel = "Talk to us",
+}: CTABannerProps) {
   return (
     <section
       className="cta-section relative overflow-hidden"
@@ -25,7 +35,7 @@ export function CTABanner() {
             fontWeight: 700,
           }}
         >
-          Ready to build something you&apos;ll own?
+          {headline}
         </h2>
         <p
           className="cta-sub mb-8 max-w-[560px]"
@@ -36,7 +46,7 @@ export function CTABanner() {
             letterSpacing: "-0.011em",
           }}
         >
-          No commitment. No invoice. Just a conversation about what you need.
+          {body}
         </p>
         <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-4">
           <Link
@@ -48,7 +58,7 @@ export function CTABanner() {
                 "0 8px 2px rgba(0,0,0,0), 0 5px 2px rgba(0,0,0,0.01), 0 3px 2px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.07), 0 0 1px rgba(0,0,0,0.08)",
             }}
           >
-            Get in touch
+            {ctaLabel}
           </Link>
         </div>
         <a
