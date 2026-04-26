@@ -179,6 +179,25 @@ function AgentFlowVisual() {
 export default function AiAgentBuildPage() {
   return (
     <div className="agent-build-page">
+      <RevealSection className="agent-hero">
+        <GrainOverlay />
+        <div className="agent-hero-grid">
+          <div className="agent-hero-copy">
+            <p className="agent-section-label">AI & Automation</p>
+            <h1>An AI agent built for your exact workflow. Not a demo.</h1>
+            <p>
+              We scope, build, and deploy a custom AI agent for one specific operation in your business. You own it after
+              12 months.
+            </p>
+            <Link className="agent-hero-btn" href="/contact">
+              Scope my agent
+            </Link>
+          </div>
+
+          <AgentFlowVisual />
+        </div>
+      </RevealSection>
+
       <ServicePageTemplate
         pillarLabel="AI & Automation"
         serviceName="An AI agent built for your exact workflow. Not a demo."
@@ -219,10 +238,33 @@ export default function AiAgentBuildPage() {
         ownershipLine="Client owns the agent at month 13 - no ongoing fees."
       />
 
-      <RevealSection className="agent-pricing-cta">
+      <RevealSection className="agent-pricing-section">
         <GrainOverlay />
         <div className="agent-wrap">
-          <Link className="agent-ghost-btn" href="/contact">
+          <div className="agent-pricing-card">
+            <div className="agent-pricing-row agent-pricing-head">
+              <span>Service</span>
+              <span>ZAR</span>
+              <span>GBP</span>
+            </div>
+            <div className="agent-pricing-row">
+              <span>Build fee, once-off</span>
+              <strong className="agent-price-zar">R12,000</strong>
+              <strong className="agent-price-gbp">£500</strong>
+            </div>
+            <div className="agent-pricing-row">
+              <span>Monthly retainer (12 months)</span>
+              <strong className="agent-price-zar">R4,500/month</strong>
+              <strong className="agent-price-gbp">£190/month</strong>
+            </div>
+            <div className="agent-pricing-row agent-ownership-row">
+              <span>Ownership from month 13</span>
+              <strong>No ongoing fees</strong>
+              <strong>No ongoing fees</strong>
+            </div>
+            <p className="agent-ownership-note">Client owns the agent at month 13. No ongoing fees.</p>
+          </div>
+          <Link className="agent-pricing-btn" href="/contact">
             Talk to us about your agent
           </Link>
         </div>
@@ -280,33 +322,94 @@ export default function AiAgentBuildPage() {
           color: #F5F7FA;
         }
 
-        .agent-build-page .spt-hero .spt-cta-btn {
-          font-size: 0;
-        }
-
-        .agent-build-page .spt-hero .spt-cta-btn::after {
-          content: "Scope my agent";
-          font-size: 15px;
-        }
-
-        .agent-build-page .spt-cta-strip {
+        .agent-build-page > main > .spt-hero,
+        .agent-build-page > main > .spt-visual,
+        .agent-build-page > main > .spt-section:nth-of-type(5),
+        .agent-build-page > main > .spt-cta-strip {
           display: none;
         }
 
+        .agent-hero {
+          position: relative;
+          overflow: hidden;
+          min-height: 80vh;
+          background-color: #0D1B2A;
+          padding: 128px 0 96px;
+        }
+
+        .agent-hero-grid {
+          position: relative;
+          z-index: 1;
+          display: grid;
+          grid-template-columns: minmax(0, 0.55fr) minmax(0, 0.45fr);
+          gap: 56px;
+          align-items: center;
+          max-width: 1440px;
+          min-height: calc(80vh - 224px);
+          margin: 0 auto;
+          padding-left: 32px;
+          padding-right: 32px;
+        }
+
+        .agent-hero-copy {
+          min-width: 0;
+          max-width: 820px;
+        }
+
+        .agent-hero-copy h1 {
+          max-width: 820px;
+          margin: 0;
+          color: #F5F7FA;
+          font-family: var(--font-syne);
+          font-size: 72px;
+          font-weight: 700;
+          letter-spacing: -0.022em;
+          line-height: 1.05;
+        }
+
+        .agent-hero-copy p:not(.agent-section-label) {
+          max-width: 620px;
+          margin: 24px 0 0;
+          color: #8892A4;
+          font-family: var(--font-dm-sans);
+          font-size: 18px;
+          letter-spacing: -0.011em;
+          line-height: 1.7;
+        }
+
+        .agent-hero-btn {
+          display: inline-flex;
+          min-height: 48px;
+          align-items: center;
+          justify-content: center;
+          margin-top: 34px;
+          border-radius: 9999px;
+          background-color: #1B77F2;
+          color: #F5F7FA;
+          font-family: var(--font-dm-sans);
+          font-size: 15px;
+          font-weight: 700;
+          letter-spacing: 0;
+          line-height: 1;
+          padding: 0 24px;
+          text-decoration: none;
+          transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .agent-hero-btn:hover {
+          box-shadow: 0 0 24px rgba(27,119,242,0.4);
+          transform: translateY(-1px);
+        }
+
         .agent-build-page .spt-bento-card,
-        .agent-build-page .spt-pricing-row:first-child,
         .agent-audience-card,
         .agent-cta-band {
           border-radius: 8px !important;
         }
 
-        .agent-build-page .spt-visual {
-          padding: 72px 24px;
-        }
-
         .agent-flow-wrap {
-          width: min(100%, 980px);
-          min-height: 420px;
+          width: 100%;
+          min-height: 360px;
           border: 1px solid #1E2D3D;
           border-radius: 8px;
           background-color: #111F2E;
@@ -317,10 +420,10 @@ export default function AiAgentBuildPage() {
           display: block;
           width: 100%;
           height: 100%;
-          min-height: 420px;
+          min-height: 360px;
         }
 
-        .agent-pricing-cta,
+        .agent-pricing-section,
         .agent-audience-section,
         .agent-bottom-cta {
           position: relative;
@@ -329,9 +432,9 @@ export default function AiAgentBuildPage() {
           background-color: #0D1B2A;
         }
 
-        .agent-pricing-cta {
-          padding-top: 0;
-          padding-bottom: 72px;
+        .agent-pricing-section {
+          padding-top: 72px;
+          padding-bottom: 88px;
         }
 
         .agent-audience-section,
@@ -347,6 +450,102 @@ export default function AiAgentBuildPage() {
           margin: 0 auto;
           padding-left: 32px;
           padding-right: 32px;
+        }
+
+        .agent-pricing-card {
+          width: 100%;
+          border: 1px solid #1E2D3D;
+          border-radius: 12px;
+          background-color: #111F2E;
+          padding: 32px;
+        }
+
+        .agent-pricing-row {
+          display: grid;
+          grid-template-columns: minmax(0, 1.25fr) minmax(160px, 0.55fr) minmax(160px, 0.55fr);
+          gap: 24px;
+          align-items: center;
+          border-bottom: 1px solid #1E2D3D;
+          padding: 18px 0;
+        }
+
+        .agent-pricing-row:first-child {
+          padding-top: 0;
+        }
+
+        .agent-pricing-head span {
+          color: #8892A4;
+          font-family: var(--font-dm-sans);
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          line-height: 1.4;
+          text-transform: uppercase;
+        }
+
+        .agent-pricing-row span,
+        .agent-pricing-row strong,
+        .agent-ownership-note {
+          font-family: var(--font-dm-sans);
+          letter-spacing: 0;
+        }
+
+        .agent-pricing-row span {
+          color: #F5F7FA;
+          font-size: 16px;
+          font-weight: 700;
+          line-height: 1.4;
+        }
+
+        .agent-pricing-row strong {
+          color: #F5F7FA;
+          font-size: 17px;
+          font-weight: 700;
+          line-height: 1.35;
+        }
+
+        .agent-price-zar {
+          color: #00D4AA !important;
+        }
+
+        .agent-price-gbp {
+          color: #8892A4 !important;
+        }
+
+        .agent-ownership-row span,
+        .agent-ownership-row strong {
+          color: #F5F7FA;
+        }
+
+        .agent-ownership-note {
+          margin: 16px 0 0;
+          color: #8892A4;
+          font-size: 14px;
+          line-height: 1.6;
+        }
+
+        .agent-pricing-btn {
+          display: inline-flex;
+          min-height: 48px;
+          align-items: center;
+          justify-content: center;
+          margin-top: 22px;
+          border-radius: 8px;
+          background-color: #1B77F2;
+          color: #ffffff;
+          font-family: var(--font-dm-sans);
+          font-size: 15px;
+          font-weight: 700;
+          letter-spacing: 0;
+          line-height: 1;
+          padding: 0 22px;
+          text-decoration: none;
+          transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .agent-pricing-btn:hover {
+          box-shadow: 0 0 24px rgba(27,119,242,0.4);
+          transform: translateY(-1px);
         }
 
         .agent-section-heading {
@@ -460,7 +659,8 @@ export default function AiAgentBuildPage() {
           transform: translateY(-2px);
         }
 
-        .agent-build-page .spt-cta-btn:focus-visible,
+        .agent-hero-btn:focus-visible,
+        .agent-pricing-btn:focus-visible,
         .agent-ghost-btn:focus-visible,
         .agent-whatsapp-btn:focus-visible {
           outline: 2px solid #00D4AA;
@@ -468,13 +668,33 @@ export default function AiAgentBuildPage() {
         }
 
         @media (max-width: 900px) {
-          .agent-build-page .spt-visual {
-            padding: 56px 24px;
+          .agent-hero {
+            min-height: auto;
+            padding: 112px 0 56px;
+          }
+
+          .agent-hero-grid {
+            grid-template-columns: 1fr;
+            min-height: 0;
+            gap: 40px;
+          }
+
+          .agent-hero-copy h1 {
+            font-size: 52px;
+          }
+
+          .agent-hero-copy p:not(.agent-section-label) {
+            font-size: 16px;
           }
 
           .agent-flow-wrap,
           .agent-flow-svg {
             min-height: 360px;
+          }
+
+          .agent-pricing-section {
+            padding-top: 56px;
+            padding-bottom: 64px;
           }
 
           .agent-audience-section,
@@ -496,6 +716,11 @@ export default function AiAgentBuildPage() {
             font-size: 36px;
           }
 
+          .agent-pricing-row {
+            grid-template-columns: minmax(0, 1fr) minmax(120px, 0.55fr) minmax(120px, 0.55fr);
+            gap: 16px;
+          }
+
           .agent-cta-band,
           .agent-cta-actions {
             align-items: stretch;
@@ -508,9 +733,14 @@ export default function AiAgentBuildPage() {
         }
 
         @media (max-width: 560px) {
+          .agent-hero-grid,
           .agent-wrap {
             padding-left: 24px;
             padding-right: 24px;
+          }
+
+          .agent-hero-copy h1 {
+            font-size: 44px;
           }
 
           .agent-flow-wrap,
@@ -518,6 +748,20 @@ export default function AiAgentBuildPage() {
             min-height: 300px;
           }
 
+          .agent-pricing-card {
+            padding: 24px;
+          }
+
+          .agent-pricing-row {
+            grid-template-columns: 1fr;
+            gap: 8px;
+          }
+
+          .agent-pricing-head {
+            display: none;
+          }
+
+          .agent-pricing-btn,
           .agent-ghost-btn,
           .agent-whatsapp-btn {
             width: 100%;
@@ -525,7 +769,8 @@ export default function AiAgentBuildPage() {
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .agent-build-page .spt-cta-btn,
+          .agent-hero-btn,
+          .agent-pricing-btn,
           .agent-ghost-btn,
           .agent-whatsapp-btn,
           .agent-audience-card {
