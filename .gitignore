@@ -51,4 +51,7 @@ Thumbs.db
 # Next.js build output and cache (never commit — may contain secrets)
 .next/
 
+# Local environment variables
+.env.local
+
 attached_assets/
