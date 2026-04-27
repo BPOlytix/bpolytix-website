@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CheckCircle2, Circle } from "lucide-react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
+import ProjectFiles from "@/components/portal/ProjectFiles";
 
 type ProfileRow = {
   id: string;
@@ -69,6 +70,7 @@ export default function AdminClientDetailPage() {
   const clientId = params.id;
   const [isCheckingRole, setIsCheckingRole] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [adminUserId, setAdminUserId] = useState("");
   const [profile, setProfile] = useState<ProfileRow | null>(null);
   const [project, setProject] = useState<ProjectRow | null>(null);
   const [stages, setStages] = useState<StageRow[]>([]);
@@ -108,6 +110,7 @@ export default function AdminClientDetailPage() {
 
       if (!isMounted) return;
 
+      setAdminUserId(user.id);
       setIsCheckingRole(false);
       await loadClient();
 
@@ -316,6 +319,7 @@ export default function AdminClientDetailPage() {
             Loading...
           </p>
         ) : (
+          <>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-[minmax(0,40%)_minmax(0,60%)]">
             <section className="rounded-xl border border-[#1E2D3D] bg-[#111F2E] p-6">
               <h1
@@ -538,6 +542,16 @@ export default function AdminClientDetailPage() {
               </div>
             </section>
           </div>
+          {project ? (
+            <div className="mt-6">
+              <ProjectFiles
+                projectId={project.id}
+                currentUserId={adminUserId}
+                isAdmin={true}
+              />
+            </div>
+          ) : null}
+          </>
         )}
       </div>
     </main>

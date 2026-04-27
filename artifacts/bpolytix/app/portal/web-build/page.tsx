@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { CheckCircle2, Circle, Maximize2 } from "lucide-react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
+import ProjectFiles from "@/components/portal/ProjectFiles";
 
 type ProfileRow = {
   id: string;
@@ -228,6 +229,7 @@ export default function WebBuildPortalPage() {
           </div>
         </section>
       ) : (
+        <>
         <section className="grid gap-6 px-6 py-6 md:min-h-[calc(100vh-73px)] md:grid-cols-[280px_minmax(0,1fr)]">
           <aside className="rounded-xl bg-[#111F2E] p-6 md:min-h-full">
             <div className="mb-6">
@@ -361,6 +363,14 @@ export default function WebBuildPortalPage() {
             )}
           </section>
         </section>
+        <div className="px-6 pb-8">
+          <ProjectFiles
+            projectId={project.id}
+            currentUserId={profile?.id ?? ""}
+            isAdmin={false}
+          />
+        </div>
+        </>
       )}
 
       <style jsx>{`
