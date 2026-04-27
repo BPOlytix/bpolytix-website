@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CheckCircle2, Circle } from "lucide-react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
+import ChangeRequests from "@/components/portal/ChangeRequests";
 import ProjectFiles from "@/components/portal/ProjectFiles";
 
 type ProfileRow = {
@@ -542,6 +543,16 @@ export default function AdminClientDetailPage() {
               </div>
             </section>
           </div>
+          {project ? (
+            <div className="mt-6">
+              <ChangeRequests
+                projectId={project.id}
+                currentUserId={adminUserId}
+                isAdmin={true}
+                reviewStageActive={true}
+              />
+            </div>
+          ) : null}
           {project ? (
             <div className="mt-6">
               <ProjectFiles

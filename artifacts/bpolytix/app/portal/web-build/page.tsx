@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { CheckCircle2, Circle, Maximize2 } from "lucide-react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
+import ChangeRequests from "@/components/portal/ChangeRequests";
 import ProjectFiles from "@/components/portal/ProjectFiles";
 
 type ProfileRow = {
@@ -58,6 +59,7 @@ export default function WebBuildPortalPage() {
   const supabase = useMemo(() => createClient(), []);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [currentUserId, setCurrentUserId] = useState("");
   const [profile, setProfile] = useState<ProfileRow | null>(null);
   const [project, setProject] = useState<ProjectRow | null>(null);
   const [stages, setStages] = useState<StageRow[]>([]);
@@ -70,6 +72,11 @@ export default function WebBuildPortalPage() {
   const totalStages = sortedStages.length || 7;
   const progressPercent = Math.min(100, (completeCount / totalStages) * 100);
   const previewUrl = project?.vercel_url?.trim() || "";
+  const reviewStageActive = stages.some(
+    (s) =>
+      s.stage_name === "Client Review" &&
+      (s.status === "in-progress" || s.status === "complete"),
+  );
 
   const loadPortal = useCallback(async () => {
     const { data: userData } = await supabase.auth.getUser();
@@ -79,6 +86,8 @@ export default function WebBuildPortalPage() {
       router.replace("/login");
       return;
     }
+
+    setCurrentUserId(user.id);
 
     const { data: profileData } = await supabase
       .from("profiles")
@@ -363,6 +372,14 @@ export default function WebBuildPortalPage() {
             )}
           </section>
         </section>
+        <div className="px-6 pb-8">
+          <ChangeRequests
+            projectId={project.id}
+            currentUserId={currentUserId}
+            isAdmin={false}
+            reviewStageActive={reviewStageActive}
+          />
+        </div>
         <div className="px-6 pb-8">
           <ProjectFiles
             projectId={project.id}
