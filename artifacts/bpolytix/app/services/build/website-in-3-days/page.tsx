@@ -173,7 +173,7 @@ export default function WebsiteInThreeDaysServicePage() {
               Not a template. Not a Wix site. A Next.js marketing website, custom-designed and deployed - built by
               BPOLytix.
             </p>
-            <Link className="w3ds-primary-btn" href="/contact">
+            <Link className="w3ds-primary-btn" href="/website-in-3-days">
               Brief my website
             </Link>
           </div>
@@ -240,7 +240,7 @@ export default function WebsiteInThreeDaysServicePage() {
               Pricing varies by scope. Most 3-day builds land between R8,000-R15,000 (ZAR) or £340-£620 (GBP).
             </p>
           </div>
-          <Link className="w3ds-pricing-btn" href="/contact">
+          <Link className="w3ds-pricing-btn" href="/website-in-3-days">
             Submit your brief
           </Link>
         </div>
@@ -278,7 +278,7 @@ export default function WebsiteInThreeDaysServicePage() {
               <h2>Your site could be live by Friday.</h2>
             </div>
             <div className="w3ds-cta-actions">
-              <Link className="w3ds-ghost-btn" href="/contact">
+              <Link className="w3ds-ghost-btn" href="/website-in-3-days">
                 Submit your brief
               </Link>
               <Link className="w3ds-whatsapp-btn" href="https://wa.me/27781790363">
