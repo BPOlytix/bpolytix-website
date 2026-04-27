@@ -46,11 +46,15 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
 
   const pathname = request.nextUrl.pathname;
-  const isDashboardRoute = pathname === "/dashboard" || pathname.startsWith("/dashboard/");
+  const isProtectedRoute =
+    pathname === "/admin" ||
+    pathname.startsWith("/admin/") ||
+    pathname === "/portal" ||
+    pathname.startsWith("/portal/");
   const isLoginRoute = pathname === "/login";
   const isAuthenticated = Boolean(data?.claims);
 
-  if (!isAuthenticated && isDashboardRoute) {
+  if (!isAuthenticated && isProtectedRoute) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/login";
     redirectUrl.search = "";
@@ -62,7 +66,7 @@ export async function updateSession(request: NextRequest) {
 
   if (isAuthenticated && isLoginRoute) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/dashboard";
+    redirectUrl.pathname = "/portal/web-build";
     redirectUrl.search = "";
 
     const response = NextResponse.redirect(redirectUrl);

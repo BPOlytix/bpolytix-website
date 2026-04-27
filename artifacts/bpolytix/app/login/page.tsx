@@ -19,19 +19,25 @@ export default function LoginPage() {
     setIsLoading(true);
 
     const supabase = createClient();
-    const { error: signInError } = await supabase.auth.signInWithPassword({
+    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    setIsLoading(false);
-
     if (signInError) {
+      setIsLoading(false);
       setError("Email or password is incorrect.");
       return;
     }
 
-    router.replace("/dashboard");
+    const user = signInData.user;
+    const { data: profile } = user
+      ? await supabase.from("profiles").select("role").eq("id", user.id).single()
+      : { data: null };
+
+    const redirectPath = profile?.role === "admin" ? "/admin" : "/portal/web-build";
+
+    router.replace(redirectPath);
     router.refresh();
   }
 
