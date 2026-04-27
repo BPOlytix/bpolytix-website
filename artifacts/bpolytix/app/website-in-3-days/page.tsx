@@ -32,7 +32,11 @@ export default function WebsiteIn3DaysPage() {
     description: "",
     assetLink: "",
     requirements: "",
+    password: "",
   });
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [confirmPasswordError, setConfirmPasswordError] = useState<string | null>(null);
   const [state, setState] = useState<FormState>("idle");
   const [attachment, setAttachment] = useState<{ file: File; name: string; type: string; size: number } | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
@@ -100,10 +104,29 @@ export default function WebsiteIn3DaysPage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    if (e.target.name === "password") {
+      setPasswordError(null);
+      setConfirmPasswordError(null);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setPasswordError(null);
+    setConfirmPasswordError(null);
+
+    if (form.password.length < 8) {
+      setPasswordError("Password must be at least 8 characters");
+      setState("idle");
+      return;
+    }
+
+    if (form.password !== confirmPassword) {
+      setConfirmPasswordError("Passwords don't match");
+      setState("idle");
+      return;
+    }
+
     setState("submitting");
     try {
       const payload = new FormData();
@@ -697,6 +720,53 @@ export default function WebsiteIn3DaysPage() {
                   onChange={handleChange}
                   style={{ ...inputBase, resize: "vertical", minHeight: "90px" }}
                 />
+              </div>
+
+              <div className="mb-5">
+                <label htmlFor="password" style={labelBase}>Create a password</label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  minLength={8}
+                  value={form.password}
+                  onChange={handleChange}
+                  style={inputBase}
+                />
+                {passwordError && (
+                  <p
+                    className="mt-2"
+                    style={{ fontFamily: "var(--font-dm-sans)", fontSize: "13px", color: "#FF6B6B", lineHeight: 1.5 }}
+                  >
+                    {passwordError}
+                  </p>
+                )}
+              </div>
+
+              <div className="mb-8">
+                <label htmlFor="confirmPassword" style={labelBase}>Confirm password</label>
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  required
+                  minLength={8}
+                  value={confirmPassword}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    setConfirmPasswordError(null);
+                  }}
+                  style={inputBase}
+                />
+                {confirmPasswordError && (
+                  <p
+                    className="mt-2"
+                    style={{ fontFamily: "var(--font-dm-sans)", fontSize: "13px", color: "#FF6B6B", lineHeight: 1.5 }}
+                  >
+                    {confirmPasswordError}
+                  </p>
+                )}
               </div>
 
               <button
