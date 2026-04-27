@@ -19,7 +19,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     const supabase = createClient();
-    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+    const { error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -30,14 +30,10 @@ export default function LoginPage() {
       return;
     }
 
-    const user = signInData.user;
-    const { data: profile } = user
-      ? await supabase.from("profiles").select("role").eq("id", user.id).single()
-      : { data: null };
+    const roleRes = await fetch("/api/auth/role");
+    const { role } = roleRes.ok ? await roleRes.json() : { role: null };
 
-    const redirectPath = profile?.role === "admin" ? "/admin" : "/portal/web-build";
-
-    router.replace(redirectPath);
+    router.replace(role === "admin" ? "/admin" : "/portal/web-build");
     router.refresh();
   }
 
