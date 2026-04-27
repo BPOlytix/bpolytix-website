@@ -1,4 +1,13 @@
+import type { Metadata } from "next";
 import { Reveal } from "@/components/Reveal";
+import { createPageMetadata } from "@/app/seo";
+
+export const metadata: Metadata = createPageMetadata({
+  title: "Legal — Privacy, GDPR, POPIA, Terms & Cookies | BPOLytix",
+  description:
+    "BPOLytix legal information including privacy policy, GDPR and POPIA compliance, terms of service, and cookie policy.",
+  url: "https://bpolytix.com/legal",
+});
 
 const BG = "#0D1B2A";
 const SURFACE = "#111F2E";
