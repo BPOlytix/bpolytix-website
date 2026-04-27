@@ -77,22 +77,6 @@ export default function WebsiteIn3DaysPage() {
     setFileError(null);
   };
 
-  const readFileAsBase64 = (file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = reader.result;
-        if (typeof result !== "string") {
-          reject(new Error("Unexpected file reader result"));
-          return;
-        }
-        const base64 = result.includes(",") ? result.split(",")[1] : result;
-        resolve(base64);
-      };
-      reader.onerror = () => reject(reader.error ?? new Error("File read failed"));
-      reader.readAsDataURL(file);
-    });
-
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -122,21 +106,18 @@ export default function WebsiteIn3DaysPage() {
     e.preventDefault();
     setState("submitting");
     try {
-      const payload: Record<string, unknown> = { ...form };
+      const payload = new FormData();
+      Object.entries(form).forEach(([key, value]) => {
+        payload.append(key, value);
+      });
 
       if (attachment) {
-        const content = await readFileAsBase64(attachment.file);
-        payload.attachment = {
-          name: attachment.name,
-          type: attachment.type,
-          content,
-        };
+        payload.append("attachment", attachment.file, attachment.name);
       }
 
       const res = await fetch("/api/website-brief", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: payload,
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data?.success) {

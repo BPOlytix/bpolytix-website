@@ -1,23 +1,61 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req: Request) {
   try {
-    const {
-      businessName,
-      name,
-      email,
-      description,
-      assetLink,
-      requirements,
-      attachment,
-    } = await req.json();
+    const formData = await req.formData();
+    const businessName = getStringField(formData, "businessName");
+    const name = getStringField(formData, "name");
+    const email = getStringField(formData, "email");
+    const description = getStringField(formData, "description");
+    const assetLink = getStringField(formData, "assetLink");
+    const requirements = getStringField(formData, "requirements");
+    const attachment = formData.get("attachment");
 
     if (!businessName || !name || !email || !description) {
       return NextResponse.json(
         { error: "Missing required fields: businessName, name, email, description" },
-        { status: 500 }
+        { status: 400 }
       );
+    }
+
+    let uploadedFile:
+      | {
+          originalName: string;
+          path: string;
+          contentType: string;
+          size: number;
+        }
+      | null = null;
+
+    if (attachment instanceof File && attachment.size > 0) {
+      const supabase = await createClient();
+      const originalName = attachment.name || "brief-upload";
+      const fileName = `${Date.now()}_${sanitizeFileName(originalName)}`;
+      const fileBuffer = Buffer.from(await attachment.arrayBuffer());
+      const contentType = attachment.type || "application/octet-stream";
+
+      const { data, error } = await supabase.storage
+        .from("website-briefs")
+        .upload(fileName, fileBuffer, {
+          contentType,
+          upsert: false,
+        });
+
+      if (error) {
+        return NextResponse.json(
+          { error: error.message || "Failed to upload file" },
+          { status: 500 }
+        );
+      }
+
+      uploadedFile = {
+        originalName,
+        path: data.path,
+        contentType,
+        size: attachment.size,
+      };
     }
 
     const apiKey = process.env.RESEND_API_KEY;
@@ -42,6 +80,17 @@ export async function POST(req: Request) {
       ``,
       `Specific requirements:`,
       `${requirements && String(requirements).trim() ? requirements : "(none provided)"}`,
+      ``,
+      `Uploaded file:`,
+      uploadedFile
+        ? [
+            `Original filename: ${uploadedFile.originalName}`,
+            `Storage bucket: website-briefs`,
+            `Storage path: ${uploadedFile.path}`,
+            `Content type: ${uploadedFile.contentType}`,
+            `Size: ${uploadedFile.size} bytes`,
+          ].join("\n")
+        : "(none provided)",
     ].join("\n");
 
     const emailPayload: Parameters<typeof resend.emails.send>[0] = {
@@ -51,20 +100,6 @@ export async function POST(req: Request) {
       subject: `New website brief from ${businessName} — ${name}`,
       text,
     };
-
-    if (
-      attachment &&
-      typeof attachment === "object" &&
-      typeof attachment.name === "string" &&
-      typeof attachment.content === "string"
-    ) {
-      emailPayload.attachments = [
-        {
-          filename: attachment.name,
-          content: attachment.content,
-        },
-      ];
-    }
 
     const result = await resend.emails.send(emailPayload);
 
@@ -80,4 +115,18 @@ export async function POST(req: Request) {
     const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
   }
+}
+
+function getStringField(formData: FormData, key: string) {
+  const value = formData.get(key);
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function sanitizeFileName(fileName: string) {
+  const safeName = fileName
+    .replace(/[\\/]/g, "_")
+    .replace(/\0/g, "")
+    .trim();
+
+  return safeName || "brief-upload";
 }
