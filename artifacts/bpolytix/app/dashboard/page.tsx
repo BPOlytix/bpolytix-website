@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { OnboardingChecklist } from "@/components/dashboard/OnboardingChecklist";
 import { createClient } from "@/lib/supabase/client";
 
 export default function DashboardPage() {
@@ -47,12 +48,9 @@ export default function DashboardPage() {
         >
           Welcome to your dashboard
         </h2>
-        <p
-          className="mt-4 text-lg leading-8 text-[#8892A4]"
-          style={{ fontFamily: "var(--font-dm-sans)" }}
-        >
-          Your onboarding checklist and documents will appear here.
-        </p>
+        <div className="mt-8">
+          <OnboardingChecklist />
+        </div>
       </section>
     </main>
   );
