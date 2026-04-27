@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
-import { createClient as createServerClient } from "@/lib/supabase/server";
+
 
 export async function POST(req: Request) {
   try {
@@ -125,13 +125,12 @@ export async function POST(req: Request) {
       | null = null;
 
     if (attachment instanceof File && attachment.size > 0) {
-      const supabase = await createServerClient();
       const originalName = attachment.name || "brief-upload";
       const fileName = `${Date.now()}_${sanitizeFileName(originalName)}`;
       const fileBuffer = Buffer.from(await attachment.arrayBuffer());
       const contentType = attachment.type || "application/octet-stream";
 
-      const { data, error } = await supabase.storage
+      const { data, error } = await supabaseAdmin.storage
         .from("website-briefs")
         .upload(fileName, fileBuffer, {
           contentType,
