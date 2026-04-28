@@ -53,6 +53,10 @@ const dateFormatter = new Intl.DateTimeFormat("en-GB", {
   year: "numeric",
 });
 
+function formatStageName(stageName: string | null) {
+  return stageName === "Brief Received" ? "Details Received" : stageName;
+}
+
 export default function WebBuildPortalPage() {
   const router = useRouter();
   const shouldReduceMotion = useReducedMotion();
@@ -193,7 +197,7 @@ export default function WebBuildPortalPage() {
           className="text-left text-[18px] font-bold text-[#8892A4] md:text-center"
           style={{ fontFamily: "var(--font-syne)" }}
         >
-          Web Build Portal
+          Your Website
         </p>
         <div className="flex items-center gap-4 md:justify-end">
           <span
@@ -220,7 +224,7 @@ export default function WebBuildPortalPage() {
               className="text-[24px] font-bold text-[#F5F7FA]"
               style={{ fontFamily: "var(--font-syne)" }}
             >
-              No active web build.
+              No active website.
             </h1>
             <p
               className="mt-3 text-[15px] text-[#8892A4]"
@@ -461,7 +465,7 @@ function StageItem({
           }`}
           style={{ fontFamily: "var(--font-dm-sans)" }}
         >
-          {stage.stage_name}
+          {formatStageName(stage.stage_name)}
         </p>
         {isComplete ? (
           <p

@@ -101,7 +101,7 @@ const WORK_STEPS: WorkStep[] = [
     body: "we map every task you want to automate",
   },
   {
-    title: "Build brief",
+    title: "Build details",
     body: "we specify what each automation does and what triggers it",
   },
   {

@@ -150,9 +150,9 @@ export default function AdminPage() {
           fullName: profile.full_name || "Unnamed client",
           company: profile.company || "-",
           email: profile.email || "-",
-          projectType: project?.type || "-",
+          projectType: formatProjectType(project?.type || null),
           status: project?.status || "in-progress",
-          currentStage: currentStage?.stage_name || "-",
+          currentStage: formatStageName(currentStage?.stage_name || null),
           createdAt: project?.created_at || profile.created_at,
         };
       });
@@ -178,6 +178,15 @@ export default function AdminPage() {
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return "-";
     return dateFormatter.format(date);
+  }
+
+  function formatProjectType(type: string | null) {
+    if (type === "web-build") return "Website";
+    return type || "-";
+  }
+
+  function formatStageName(stageName: string | null) {
+    return stageName === "Brief Received" ? "Details Received" : stageName || "-";
   }
 
   if (isCheckingRole) {
@@ -218,7 +227,7 @@ export default function AdminPage() {
               >
                 {isLoadingClients
                   ? "Loading clients..."
-                  : "No clients yet. Clients will appear here after they submit a brief."}
+                  : "No clients yet. Clients will appear here after they send their details."}
               </p>
             </div>
           ) : (

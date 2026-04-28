@@ -10,7 +10,7 @@ import { Reveal } from "@/components/Reveal";
 const FEATURES = [
   "See it first — pay only when you're satisfied. No upfront fees.",
   "Unlimited pages to market your brand",
-  "Live chat included at no extra cost",
+  "Contact form included at no extra cost",
   "Option to add a client portal (available as an upgrade)",
   "Works perfectly on mobile and all devices",
   "No hidden costs — everything is included",
@@ -200,7 +200,7 @@ export default function WebsiteIn3DaysPage() {
               fontWeight: 700,
             }}
           >
-            Your business online in 72 hours.
+            Tell Us What You Need
           </h1>
           <p
             className="w3d-sub mt-6 max-w-[640px]"
@@ -212,7 +212,7 @@ export default function WebsiteIn3DaysPage() {
               letterSpacing: "-0.011em",
             }}
           >
-            We design and deploy a production-ready website in 3 days. No invoice
+            We design and deploy a production-ready custom website in 3 business days. No invoice
             until you&apos;ve seen it and approved it.
           </p>
           <p
@@ -237,7 +237,7 @@ export default function WebsiteIn3DaysPage() {
                 boxShadow: "0 4px 16px rgba(27,119,242,0.3)",
               }}
             >
-              Start my 3-day build
+              Get Started
               <ArrowRight size={15} />
             </button>
           </div>
@@ -321,7 +321,7 @@ export default function WebsiteIn3DaysPage() {
                     fontWeight: 700,
                   }}
                 >
-                  R850 / £40
+                  R1,200 / £60
                 </p>
                 <p
                   className="mt-2"
@@ -346,7 +346,7 @@ export default function WebsiteIn3DaysPage() {
                     fontWeight: 700,
                   }}
                 >
-                  R299 / £15
+                  From R299 / £15
                   <span style={{ fontSize: "16px", color: "#8892A4", fontWeight: 500 }}> / month</span>
                 </p>
                 <p
@@ -357,7 +357,7 @@ export default function WebsiteIn3DaysPage() {
                     color: "#8892A4",
                   }}
                 >
-                  Monthly
+                  Monthly for 12 months
                 </p>
               </div>
 
@@ -372,7 +372,7 @@ export default function WebsiteIn3DaysPage() {
                   fontWeight: 500,
                 }}
               >
-                After 12 months — the website is yours.
+                After 12 months, the website is yours. No more monthly fees.
               </p>
               <p
                 className="mt-2"
@@ -383,7 +383,7 @@ export default function WebsiteIn3DaysPage() {
                   lineHeight: 1.5,
                 }}
               >
-                Only your domain renewal to pay.
+                You own the code, the domain, everything.
               </p>
 
               <button
@@ -395,7 +395,7 @@ export default function WebsiteIn3DaysPage() {
                   boxShadow: "0 4px 16px rgba(27,119,242,0.25)",
                 }}
               >
-                Start my 3-day build
+                Get Started
                 <ArrowRight size={15} />
               </button>
             </div>
@@ -429,7 +429,7 @@ export default function WebsiteIn3DaysPage() {
         <GrainOverlay />
         <Reveal className="relative z-10 mx-auto max-w-[760px] px-6 sm:px-8">
           <p className="mb-4 text-[13px]" style={{ color: "#8892A4", fontFamily: "var(--font-dm-sans)" }}>
-            Your brief
+            Website details
           </p>
 
           {state === "success" ? (
@@ -451,12 +451,12 @@ export default function WebsiteIn3DaysPage() {
                 className="mb-3"
                 style={{ fontFamily: "var(--font-syne)", fontSize: "28px", color: "#F5F7FA", letterSpacing: "-0.022em", fontWeight: 700 }}
               >
-                Brief received.
+                Details received.
               </h2>
               <p
                 style={{ fontFamily: "var(--font-dm-sans)", fontSize: "16px", color: "#8892A4", lineHeight: 1.7 }}
               >
-                We&apos;ve got your brief. Expect a site to review within 3 business days.
+                We&apos;ve got your details. Expect a site to review within 3 business days.
                 We&apos;ll be in touch if we need anything else.
               </p>
             </div>
@@ -475,13 +475,13 @@ export default function WebsiteIn3DaysPage() {
                 className="mb-2"
                 style={{ fontFamily: "var(--font-syne)", fontSize: "22px", color: "#F5F7FA", letterSpacing: "-0.022em", fontWeight: 600 }}
               >
-                Tell us about your business.
+                Tell Us What You Need
               </h2>
               <p
                 className="mb-7"
                 style={{ fontFamily: "var(--font-dm-sans)", fontSize: "14px", color: "#8892A4", lineHeight: 1.6 }}
               >
-                No brief is too short. Fill in what you know — we&apos;ll do the research.
+                Fill in what you know. We&apos;ll do the research.
               </p>
 
               <div className="mb-5">
@@ -779,7 +779,7 @@ export default function WebsiteIn3DaysPage() {
                   cursor: state === "submitting" ? "wait" : "pointer",
                 }}
               >
-                {state === "submitting" ? "Sending…" : "Send my brief"}
+                {state === "submitting" ? "Sending…" : "Get Started"}
                 {state !== "submitting" && <ArrowRight size={15} />}
               </button>
 

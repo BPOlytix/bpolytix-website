@@ -62,7 +62,7 @@ function ThreeDayTimelineVisual() {
   const days = [
     {
       day: "Day 1",
-      title: "Design brief + wireframe",
+      title: "Details + wireframe",
       x: 72,
       y: 92,
     },
@@ -168,13 +168,13 @@ export default function WebsiteInThreeDaysServicePage() {
         <div className="w3ds-hero-grid">
           <div className="w3ds-hero-copy">
             <p className="w3ds-section-label">Build</p>
-            <h1>A production-ready website. Live in 3 business days.</h1>
+            <h1>Custom Website</h1>
             <p>
               Not a template. Not a Wix site. A Next.js marketing website, custom-designed and deployed - built by
               BPOLytix.
             </p>
             <Link className="w3ds-primary-btn" href="/website-in-3-days">
-              Brief my website
+              Tell us what you need
             </Link>
           </div>
 
@@ -184,17 +184,17 @@ export default function WebsiteInThreeDaysServicePage() {
 
       <ServicePageTemplate
         pillarLabel="Build"
-        serviceName="A production-ready website. Live in 3 business days."
+        serviceName="Custom Website"
         hookLine="Not a template. Not a Wix site. A Next.js marketing website, custom-designed and deployed - built by BPOLytix."
         description={[
-          "Web agencies can take 6-12 weeks before your website is even on Google. We've often come across those NO CODE website build platforms, you end up paying hundreds in credits, yet you're left with a un-completed website.",
-          "BPOLytix builds a custom marketing website for you! Your presence is on Google, customer communication on Whats App and contact forms. Give us your ideas, we will build it in 3 business days.",
-          "This is for SA startups and UK SMEs that need a professional web presence immediately.",
+          "Web agencies can take 6–12 weeks before your website is even on Google. And those no-code website platforms? You end up paying hundreds in credits and you're still left with an unfinished website.",
+          "BPOLytix builds a custom website for you. Your business goes live on Google, with WhatsApp and contact forms built in. Just tell us what you need — we'll have it live in 3 business days.",
+          "This is for SA startups and UK SMEs that need a professional web presence now.",
         ]}
         deliverables={[
           {
-            title: "Discovery call and written brief",
-            body: "Day 1 AM starts with a focused call and a written brief so the build has a clear direction.",
+            title: "Discovery call and written details",
+            body: "Day 1 AM starts with a focused call and written details so the build has a clear direction.",
           },
           {
             title: "Custom design",
@@ -223,11 +223,11 @@ export default function WebsiteInThreeDaysServicePage() {
         ]}
         animatedVisual={<ThreeDayTimelineVisual />}
         pricing={[
-          { label: "Pricing", zar: "Custom quote", gbp: "Custom quote" },
-          { label: "Quote timing", zar: "Within 24 hours", gbp: "Within 24 hours" },
-          { label: "Typical range", zar: "R8,000-R15,000", gbp: "£340-£620" },
+          { label: "Setup fee", zar: "R1,200 once-off", gbp: "£60 once-off" },
+          { label: "Monthly fee", zar: "From R299/month", gbp: "From £15/month" },
+          { label: "Term", zar: "12 months", gbp: "12 months" },
         ]}
-        ownershipLine="Pricing varies by scope. Brief first, price within 24 hours."
+        ownershipLine="After 12 months, the website is yours. No more monthly fees. You own the code, the domain, everything."
       />
 
       <RevealSection className="w3ds-pricing-section">
@@ -235,13 +235,13 @@ export default function WebsiteInThreeDaysServicePage() {
         <div className="w3ds-wrap">
           <div className="w3ds-pricing-card">
             <p className="w3ds-section-label">Pricing</p>
-            <h2>Custom quote - brief first, price within 24 hours.</h2>
+            <h2>R1,200 setup, then from R299/month for 12 months.</h2>
             <p>
-              Pricing varies by scope. Most 3-day builds land between R8,000-R15,000 (ZAR) or £340-£620 (GBP).
+              Setup is once-off. Monthly support starts from R299/month for 12 months. After 12 months, the website is yours. No more monthly fees. You own the code, the domain, everything.
             </p>
           </div>
           <Link className="w3ds-pricing-btn" href="/website-in-3-days">
-            Submit your brief
+            Tell us what you need
           </Link>
         </div>
       </RevealSection>
@@ -279,7 +279,7 @@ export default function WebsiteInThreeDaysServicePage() {
             </div>
             <div className="w3ds-cta-actions">
               <Link className="w3ds-ghost-btn" href="/website-in-3-days">
-                Submit your brief
+                Tell us what you need
               </Link>
               <Link className="w3ds-whatsapp-btn" href="https://wa.me/27781790363">
                 <MessageCircle size={18} color="#00D4AA" strokeWidth={2} />

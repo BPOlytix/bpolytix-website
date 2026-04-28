@@ -522,7 +522,7 @@ function PersonalEdgeSection() {
         <div className="mt-7 flex flex-col gap-5">
           <p style={BODY}>
             We put our work in front of you before we ask for a cent. If it doesn&apos;t meet the
-            brief, we fix it. If it does, you pay — and after 12 months, you own it outright.
+            agreed scope, we fix it. If it does, you pay — and after 12 months, you own it outright.
           </p>
           <p style={BODY}>
             That&apos;s not a marketing line. It&apos;s how we operate, because we&apos;ve been on

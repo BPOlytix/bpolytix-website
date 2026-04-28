@@ -95,7 +95,7 @@ export async function POST(req: Request) {
     const { error: stagesError } = await supabaseAdmin.from("project_stages").insert([
       {
         project_id: projectData.id,
-        stage_name: "Brief Received",
+        stage_name: "Details Received",
         stage_order: 1,
         status: "complete",
         completed_at: new Date().toISOString(),
@@ -125,7 +125,7 @@ export async function POST(req: Request) {
       | null = null;
 
     if (attachment instanceof File && attachment.size > 0) {
-      const originalName = attachment.name || "brief-upload";
+      const originalName = attachment.name || "details-upload";
       const fileName = `${Date.now()}_${sanitizeFileName(originalName)}`;
       const fileBuffer = Buffer.from(await attachment.arrayBuffer());
       const contentType = attachment.type || "application/octet-stream";
@@ -191,7 +191,7 @@ export async function POST(req: Request) {
       from: "BPOLytix <no-reply@bpolytix.com>",
       to: "mitesh@bpolytix.com",
       replyTo: email,
-      subject: `New website brief from ${businessName} — ${name}`,
+      subject: `New website details from ${businessName} — ${name}`,
       text,
     };
 
@@ -208,7 +208,7 @@ export async function POST(req: Request) {
       from: "BPOLytix <no-reply@bpolytix.com>",
       to: email,
       replyTo: "mitesh@bpolytix.com",
-      subject: "We've received your website brief",
+      subject: "We've received your website details",
       html: buildConfirmationHtml(name, email),
     });
 
@@ -237,24 +237,24 @@ function sanitizeFileName(fileName: string) {
     .replace(/\0/g, "")
     .trim();
 
-  return safeName || "brief-upload";
+  return safeName || "details-upload";
 }
 
 function buildConfirmationHtml(clientName: string, clientEmail: string) {
   return `
     <div style="margin:0;padding:32px;background:#0D1B2A;color:#F5F7FA;font-family:'DM Sans',sans-serif;line-height:1.6;">
       <p style="margin:0 0 18px;">Hi ${escapeHtml(clientName)},</p>
-      <p style="margin:0 0 18px;">We've received your website build brief. Your web build is now in progress.</p>
-      <p style="margin:0 0 10px;">You now have access to your Web Build Portal, where you can:</p>
+      <p style="margin:0 0 18px;">We've received your website details. Your website is now in progress.</p>
+      <p style="margin:0 0 10px;">You now have access to Your Website, where you can:</p>
       <ul style="margin:0 0 18px 20px;padding:0;">
-        <li>Track your web build progress over the next 72 hours</li>
+        <li>Track your website progress over the next 72 hours</li>
         <li>Preview your website when it's ready</li>
         <li>Request changes</li>
         <li>Confirm the build to go live</li>
       </ul>
       <p style="margin:0 0 18px;">Log in to your portal: <a href="https://bpolytix.com/login" style="color:#1B77F2;">https://bpolytix.com/login</a></p>
       <p style="margin:0 0 6px;">Your login email: ${escapeHtml(clientEmail)}</p>
-      <p style="margin:0 0 18px;">Your password: the one you created when submitting the brief.</p>
+      <p style="margin:0 0 18px;">Your password: the one you created when submitting your details.</p>
       <p style="margin:0 0 18px;">If you have any questions, reply to this email or WhatsApp us at +27 78 179 0363.</p>
       <p style="margin:0;">&mdash; The BPOLytix Build Team</p>
     </div>

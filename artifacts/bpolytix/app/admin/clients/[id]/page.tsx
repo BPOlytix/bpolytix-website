@@ -62,6 +62,10 @@ const dateFormatter = new Intl.DateTimeFormat("en-GB", {
   minute: "2-digit",
 });
 
+function formatStageName(stageName: string | null) {
+  return stageName === "Brief Received" ? "Details Received" : stageName;
+}
+
 export default function AdminClientDetailPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
@@ -430,7 +434,7 @@ export default function AdminClientDetailPage() {
                 className="mb-6 text-[20px] font-bold leading-tight text-[#F5F7FA]"
                 style={{ fontFamily: "var(--font-syne)" }}
               >
-                Web Build Progress
+                Website Stages
               </h2>
 
               <div className="relative space-y-5">
@@ -472,7 +476,7 @@ export default function AdminClientDetailPage() {
                           className="text-[16px] font-medium text-[#F5F7FA]"
                           style={{ fontFamily: "var(--font-dm-sans)" }}
                         >
-                          {stage.stage_name}
+                          {formatStageName(stage.stage_name)}
                         </p>
                         <p
                           className="text-left text-[13px] text-[#8892A4] md:text-right"

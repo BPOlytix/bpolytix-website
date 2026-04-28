@@ -172,7 +172,7 @@ export default function BusinessPlansPage() {
               bodies and UK investors.
             </p>
             <Link className="bp-primary-btn" href="/contact">
-              Brief my business plan
+              Tell us about my business plan
             </Link>
           </div>
 
@@ -264,7 +264,7 @@ export default function BusinessPlansPage() {
             </div>
           </div>
           <Link className="bp-pricing-btn" href="/contact">
-            Brief my business plan
+            Tell us about my business plan
           </Link>
         </div>
       </RevealSection>
@@ -302,7 +302,7 @@ export default function BusinessPlansPage() {
             </div>
             <div className="bp-cta-actions">
               <Link className="bp-ghost-btn" href="/contact">
-                Start the brief
+                Get started
               </Link>
               <Link className="bp-whatsapp-btn" href="https://wa.me/27781790363">
                 <MessageCircle size={18} color="#00D4AA" strokeWidth={2} />

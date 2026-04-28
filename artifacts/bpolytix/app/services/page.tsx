@@ -140,9 +140,9 @@ const SERVICES = [
   {
     icon: Globe,
     practice: "Web Design",
-    title: "Website in 3 Days",
+    title: "Custom Website",
     tagline: "Your business online in 72 hours.",
-    desc: "We design and deploy a production-ready website in 3 days. No invoice until you've seen it and approved it.",
+    desc: "We design and deploy a production-ready custom website in 3 business days. No invoice until you've seen it and approved it.",
     includes: [
       "See it first — pay only when you're satisfied. No upfront fees.",
       "Unlimited pages to market your brand",

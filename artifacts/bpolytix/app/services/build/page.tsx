@@ -68,7 +68,7 @@ const SERVICES: BuildService[] = [
     ],
   },
   {
-    name: "Website in 3 Days",
+    name: "Custom Website",
     summary: "A proper website, live in 3 working days. Fixed price, yours to keep.",
     href: "/services/build/website-in-3-days",
     whatItIs:

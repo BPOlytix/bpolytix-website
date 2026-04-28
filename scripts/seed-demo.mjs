@@ -239,7 +239,7 @@ async function main() {
   // Step 6 — project stages
   console.log('\n6 / 7  Creating 7 project stages…');
   await dbInsert('project_stages', [
-    { project_id: projectId, stage_order: 1, stage_name: 'Brief Received',     status: 'complete',    completed_at: '2026-04-15T07:00:00+00:00' },
+    { project_id: projectId, stage_order: 1, stage_name: 'Details Received',   status: 'complete',    completed_at: '2026-04-15T07:00:00+00:00' },
     { project_id: projectId, stage_order: 2, stage_name: 'Planning & Sitemap', status: 'complete',    completed_at: '2026-04-17T12:30:00+00:00' },
     { project_id: projectId, stage_order: 3, stage_name: 'Design Mockup',      status: 'complete',    completed_at: '2026-04-20T09:00:00+00:00' },
     { project_id: projectId, stage_order: 4, stage_name: 'Development',        status: 'complete',    completed_at: '2026-04-24T14:00:00+00:00' },
@@ -257,17 +257,17 @@ async function main() {
   const heroPNG    = makePNG(400, 300, 230, 126,  34);  // #E67E22 — brand amber accent
   const brandPDF   = makePDF('Molefe Interiors - Brand Guidelines. Primary: #2C3E50, Accent: #E67E22, Font: Montserrat');
   const reviewPDF  = makePDF('Staging review complete. 3 minor layout adjustments flagged - see change requests below.');
-  const briefPDF   = makePDF('Molefe Interiors - Website Brief. Demo placeholder document.');
+  const briefPDF   = makePDF('Molefe Interiors - Website Details. Demo placeholder document.');
   const docxBuf    = Buffer.from('Welcome to Molefe Interiors. We design spaces that feel like home.', 'utf-8');
   const crPNG1     = makePNG(400, 300,  44,  62,  80);  // mobile header — dark
   const crPNG2     = makePNG(400, 300,  27, 119, 242);  // about page — brand blue
   const crPNG3     = makePNG(400, 300,   0, 212, 170);  // contact form — brand green
 
-  // Upload brief to website-briefs bucket
+  // Upload details file to website-briefs bucket
   try {
     await storageUpload('website-briefs', 'demo-brief.pdf', briefPDF, 'application/pdf');
     console.log('  ✓ website-briefs/demo-brief.pdf');
-  } catch (e) { console.warn('  ⚠ Brief PDF:', e.message); }
+  } catch (e) { console.warn('  ⚠ Details PDF:', e.message); }
 
   // Project files
   const uploaderAdmin = adminId ?? demoId;

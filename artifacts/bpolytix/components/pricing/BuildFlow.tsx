@@ -273,10 +273,10 @@ const BUILD_PILLAR_FLOWS: Record<string, BuildPillarFlow> = {
     ],
   },
   "website-in-3-days": {
-    serviceName: "Website in 3 Days",
+    serviceName: "Custom Website",
     kind: "countdown",
     nodes: [
-      { label: "Day 0: brief in", icon: ClipboardList, badge: "Day 0" },
+      { label: "Day 0: details in", icon: ClipboardList, badge: "Day 0" },
       { label: "Day 1: build", icon: Code, badge: "Day 1" },
       { label: "Day 2: review", icon: SearchCheck, badge: "Day 2" },
       { label: "Day 3: live", icon: Rocket, badge: "Day 3" },

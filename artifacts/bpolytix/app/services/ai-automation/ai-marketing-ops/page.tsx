@@ -41,7 +41,7 @@ const TEMPLATE_BASE: Pick<
 const COVERAGE_CARDS: BentoCard[] = [
   {
     title: "Posts, captions, and copy — written and scheduled.",
-    body: "We produce social content for your business every week. Written in your voice, scheduled to the right platforms, and built around what your customers actually search for. No brief needed from you once we know your business.",
+    body: "We produce social content for your business every week. Written in your voice, scheduled to the right platforms, and built around what your customers actually search for. No extra details needed from you once we know your business.",
     className: "card-large",
   },
   {
@@ -161,7 +161,7 @@ function ContentPipelineVisual() {
   const canAnimate = inView && !reduceMotion;
 
   const nodes = [
-    { x: 78, y: 92, label: "Content Brief" },
+    { x: 78, y: 92, label: "Content Details" },
     { x: 222, y: 92, label: "AI Draft" },
     { x: 366, y: 92, label: "Scheduled Post" },
     { x: 366, y: 238, label: "Analytics" },

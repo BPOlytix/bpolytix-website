@@ -285,7 +285,7 @@ export default function ProjectFiles({ projectId, currentUserId, isAdmin }: Prop
         >
           {isAdmin
             ? "Files shared between you and the client"
-            : "Upload logos, images, copy, or any files for your web build"}
+            : "Upload logos, images, copy, or any files for your website"}
         </p>
       </div>
 

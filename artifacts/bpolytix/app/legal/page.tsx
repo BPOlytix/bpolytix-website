@@ -266,7 +266,7 @@ export default function LegalPage() {
           <SubHeading>No Invoice Before Satisfaction</SubHeading>
           <P>
             We do not invoice for project work until you have reviewed the deliverable and
-            confirmed it meets the agreed brief. This applies to all development and design
+            confirmed it meets the agreed scope. This applies to all development and design
             engagements. Ongoing service retainers (bookkeeping, CFO-as-a-Service, business
             development) are invoiced monthly in arrears.
           </P>

@@ -64,7 +64,7 @@ function OnboardingFlowVisual() {
     { label: "Documents collected", x: 258, y: 136 },
     { label: "System access granted", x: 258, y: 190 },
     { label: "Policy pack delivered", x: 258, y: 244 },
-    { label: "First-day brief", x: 258, y: 298 },
+    { label: "First-day details", x: 258, y: 298 },
   ];
 
   return (

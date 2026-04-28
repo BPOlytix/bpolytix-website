@@ -39,7 +39,7 @@ const PILLARS: Pillar[] = [
     icon: Layers,
     name: "Build Office",
     tagline: "We build it. You own it.",
-    desc: "Custom web apps, Android apps, websites in three days, business plans, and growth pipeline work. Fixed-price, no lock-in.",
+    desc: "Custom web apps, Android apps, Custom Website, business plans, and growth pipeline work. Fixed-price, no lock-in.",
     href: "/services/build",
   },
 ];
