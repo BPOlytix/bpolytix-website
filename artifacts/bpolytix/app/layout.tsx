@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Syne, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { TawkChat } from "@/components/TawkChat";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -41,7 +40,6 @@ export default function RootLayout({
     <html lang="en" className={`${syne.variable} ${dmSans.variable} ${jetbrains.variable}`}>
       <body>
         {children}
-        <TawkChat />
         <WhatsAppButton />
         <Analytics />
       </body>

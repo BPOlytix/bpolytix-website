@@ -354,11 +354,6 @@ export default function LegalPage() {
                     "Session",
                   ],
                   [
-                    "Tawk.to",
-                    "Live chat functionality — stores chat session state",
-                    "Session / 6 months",
-                  ],
-                  [
                     "Preference cookies",
                     "Remembers if you have dismissed banners",
                     "30 days",
@@ -392,16 +387,8 @@ export default function LegalPage() {
           <hr style={dividerStyle} />
           <SubHeading>Your Choices</SubHeading>
           <P>
-            You can control cookies through your browser settings. Disabling cookies may affect
-            the live chat functionality on this site. No other site functionality requires cookies
-            to operate.
-          </P>
-
-          <hr style={dividerStyle} />
-          <SubHeading>Third-Party Cookies</SubHeading>
-          <P>
-            Tawk.to may set its own cookies for live chat session management. Their cookie policy
-            is available at tawk.to/privacy-policy.
+            You can control cookies through your browser settings. No core site functionality
+            requires cookies to operate.
           </P>
         </LegalCard>
       </section>
