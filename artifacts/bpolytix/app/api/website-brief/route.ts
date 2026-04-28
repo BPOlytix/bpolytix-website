@@ -189,7 +189,7 @@ export async function POST(req: Request) {
 
     const adminEmailPayload: Parameters<typeof resend.emails.send>[0] = {
       from: "BPOLytix <no-reply@bpolytix.com>",
-      to: "mitesh@bpolytix.com",
+      to: "info@bpolytix.com",
       replyTo: email,
       subject: `New website details from ${businessName} — ${name}`,
       text,
@@ -207,7 +207,7 @@ export async function POST(req: Request) {
     const confirmationResult = await resend.emails.send({
       from: "BPOLytix <no-reply@bpolytix.com>",
       to: email,
-      replyTo: "mitesh@bpolytix.com",
+      replyTo: "info@bpolytix.com",
       subject: "We've received your website details",
       html: buildConfirmationHtml(name, email),
     });

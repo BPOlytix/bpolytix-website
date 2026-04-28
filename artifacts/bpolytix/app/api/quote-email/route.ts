@@ -213,7 +213,7 @@ export async function POST(req: Request) {
 
     const adminResult = await resend.emails.send({
       from: "BPOLytix <no-reply@bpolytix.com>",
-      to: "mitesh@bpolytix.com",
+      to: "info@bpolytix.com",
       replyTo: email,
       subject: `New calculator quote — ${body.quoteRef} — ${body.industry}`,
       text: buildAdminText(body),
@@ -232,7 +232,7 @@ export async function POST(req: Request) {
     const prospectResult = await resend.emails.send({
       from: "BPOLytix <no-reply@bpolytix.com>",
       to: email,
-      replyTo: "mitesh@bpolytix.com",
+      replyTo: "info@bpolytix.com",
       subject: `Your BPOLytix cost analysis — ${body.quoteRef}`,
       html: buildProspectHtml(body),
     });

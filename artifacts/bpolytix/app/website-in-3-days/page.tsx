@@ -789,8 +789,8 @@ export default function WebsiteIn3DaysPage() {
                   style={{ fontFamily: "var(--font-dm-sans)", fontSize: "13px", color: "#FF6B6B" }}
                 >
                   Something went wrong. Please email us directly at{" "}
-                  <a href="mailto:mitesh@bpolytix.com" style={{ color: "#1B77F2" }}>
-                    mitesh@bpolytix.com
+                  <a href="mailto:info@bpolytix.com" style={{ color: "#1B77F2" }}>
+                    info@bpolytix.com
                   </a>
                 </p>
               )}
