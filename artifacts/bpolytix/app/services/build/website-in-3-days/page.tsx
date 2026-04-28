@@ -187,8 +187,8 @@ export default function WebsiteInThreeDaysServicePage() {
         serviceName="A production-ready website. Live in 3 business days."
         hookLine="Not a template. Not a Wix site. A Next.js marketing website, custom-designed and deployed - built by BPOLytix."
         description={[
-          "Web agencies can take 6-12 weeks before anything useful goes live. No-code builders often look generic and still leave you doing the hard parts yourself.",
-          "BPOLytix builds a custom marketing website, deploys it, connects the contact form, and helps with the domain setup in 3 business days.",
+          "Web agencies can take 6-12 weeks before your website is even on Google. We've often come across those NO CODE website build platforms, you end up paying hundreds in credits, yet you're left with a un-completed website.",
+          "BPOLytix builds a custom marketing website for you! Your presence is on Google, customer communication on Whats App and contact forms. Give us your ideas, we will build it in 3 business days.",
           "This is for SA startups and UK SMEs that need a professional web presence immediately.",
         ]}
         deliverables={[
